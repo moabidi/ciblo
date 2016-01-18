@@ -15,6 +15,13 @@ use Doctrine\ORM\Query\Expr;
 
 class VisitRepository extends EntityRepository{
 
+    public function getCountVisit(){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder->select('SUM(v.nbVist) as totalVisit')
+            ->from($this->_entityName, 'v');
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
     public function getResolutionDistribution($limit){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
@@ -23,7 +30,7 @@ class VisitRepository extends EntityRepository{
                     ->add('orderBy', new Expr\GroupBy('v.resolution'));
                     ->add('orderBy', new Expr\OrderBy('nb', 'DESC'));*/
 
-      $queryBuilder->select('v.resolution as name, COUNT(v.resolution) as y')
+      $queryBuilder->select('v.resolution as name, SUM(v.nbVist) as y')
       ->from($this->_entityName, 'v')
       ->groupBy('v.resolution')
       ->orderBy('y','DESC')
@@ -34,10 +41,10 @@ class VisitRepository extends EntityRepository{
     public function getDeviceDistribuation($limit){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('v.prepherique, COUNT(v.prepherique) as nb')
+        $queryBuilder->select('v.prepherique as name, SUM(v.nbVist) as y')
             ->from($this->_entityName, 'v')
             ->groupBy('v.prepherique')
-            ->orderBy('nb','DESC')
+            ->orderBy('y','DESC')
             ->setMaxResults( $limit );;
         return $queryBuilder->getQuery()->getArrayResult();
     }
@@ -45,10 +52,10 @@ class VisitRepository extends EntityRepository{
     public function getOsDistribuation($limit){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('v.os, COUNT(v.os) as nb')
+        $queryBuilder->select('v.os as name, SUM(v.nbVist) as y')
             ->from($this->_entityName, 'v')
             ->groupBy('v.os')
-            ->orderBy('nb','DESC')
+            ->orderBy('y','DESC')
             ->setMaxResults( $limit );;
         return $queryBuilder->getQuery()->getArrayResult();
     }
@@ -56,10 +63,10 @@ class VisitRepository extends EntityRepository{
     public function getNavigatorDistribuation($limit){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('v.navigateur, COUNT(v.navigateur) as nb')
+        $queryBuilder->select('v.navigateur as name, SUM(v.nbVist) as y')
             ->from($this->_entityName, 'v')
             ->groupBy('v.navigateur')
-            ->orderBy('nb','DESC')
+            ->orderBy('y','DESC')
             ->setMaxResults( $limit );;
         return $queryBuilder->getQuery()->getArrayResult();
     }

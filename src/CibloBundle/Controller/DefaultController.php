@@ -9,49 +9,56 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/", name="home")
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
         $visitRepository    = $this->get('ciblo.customer_repository.visit');
+        $count              = $visitRepository->getCountVisit();
         $result             = $visitRepository->getResolutionDistribution(15);
-        $data               = json_encode($result);
-        //echo $data; die();
-        return $this->render('CibloBundle:Default:index.html.twig',array('data'=>$data));
+        $title              = 'Répartitions des résolutions en Décembre 2015';
+        return $this->getResponse($result,$count,$title);
     }
 
     /**
-     * @Route("/device")
+     * @Route("/device", name="device")
      */
     public function getDeviceDistribuationAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $visitRepository = $this->get('ciblo.customer_repository.visit');
-        $result = $visitRepository->getDeviceDistribuation(15);
-        var_dump($result);die();
-        return $this->render('CibloBundle:Default:index.html.twig');
+        $visitRepository    = $this->get('ciblo.customer_repository.visit');
+        $count              = $visitRepository->getCountVisit();
+        $result             = $visitRepository->getDeviceDistribuation(15);
+        $title              = 'Répartitions des péréphiriques en Décembre 2015';
+        return $this->getResponse($result,$count,$title);
     }
 
     /**
-     * @Route("/os")
+     * @Route("/os", name="os")
      */
     public function getOsDistribuationAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $visitRepository = $this->get('ciblo.customer_repository.visit');
-        $result = $visitRepository->getOsDistribuation(15);
-        var_dump($result);die();
-        return $this->render('CibloBundle:Default:index.html.twig');
+        $visitRepository    = $this->get('ciblo.customer_repository.visit');
+        $count              = $visitRepository->getCountVisit();
+        $result             = $visitRepository->getOsDistribuation(15);
+        $title              = 'Répartitions des systemes en Décembre 2015';
+        return $this->getResponse($result,$count,$title);
     }
 
     /**
-     * @Route("/navigator")
+     * @Route("/navigator", name="navigator")
      */
     public function getNavigatorDistribuationAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $visitRepository = $this->get('ciblo.customer_repository.visit');
-        $result = $visitRepository->getNavigatorDistribuation(15);
-        var_dump($result);die();
-        return $this->render('CibloBundle:Default:index.html.twig');
+        $visitRepository    = $this->get('ciblo.customer_repository.visit');
+        $count              = $visitRepository->getCountVisit();
+        $result             = $visitRepository->getNavigatorDistribuation(15);
+        $title              = 'Répartitions des navigateurs en Décembre 2015';
+        return $this->getResponse($result,$count,$title);
+    }
+
+    private function getResponse($result,$count,$title){
+        foreach( $result as &$row){
+            $row['y'] = $row['y']*100/$count['totalVisit'];
+        }
+        $data   = json_encode($result);
+        return $this->render('CibloBundle:Default:index.html.twig',array('data'=>$data,'title'=>$title));
     }
 
 }

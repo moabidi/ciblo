@@ -1,33 +1,33 @@
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-9 sidebar">
     <ul class="nav nav-sidebar">
-        <li class="active">
-            <div class="active"><span>Répartition graphique</span><icon class="toggle"></icon></div>
-            <ul style="display: block;">
-                <li class="active">
-                    <a href="http://www.highcharts.com/demo/line-basic">
+        <li class="{% if app.request.attributes.get('_route') not in ['taux_ca','taux_orders'] %}active{% endif %}">
+            <div class="{% if app.request.attributes.get('_route') not in ['taux_ca','taux_orders'] %}active{% endif %}"><span>Répartition graphique</span><icon class="toggle"></icon></div>
+            <ul style="{% if app.request.attributes.get('_route') not in ['taux_ca','taux_orders'] %}display: block;{% else %}display: none;{% endif %}">
+                <li class="{% if app.request.attributes.get('_route') == 'home' %}active{% endif %}">
+                    <a href="/">
                         Répartition des visites
                     </a>
                 </li>
-                <li class="">
-                    <a href="http://www.highcharts.com/demo/line-ajax">
+                <li class="{% if app.request.attributes.get('_route') == 'orders' %}active{% endif %}">
+                    <a href="/orders">
                         Répartition des ventes
                     </a>
                 </li>
-                <li class="">
-                    <a href="http://www.highcharts.com/demo/line-labels">
+                <li class="{% if app.request.attributes.get('_route') == 'ca' %}active{% endif %}">
+                    <a href="/ca">
                         Répartition des chiffres d'affaires
                     </a>
                 </li>
             </ul>
         </li>
-        <li class="">
-            <div class=""><span>Evolution du taux</span><icon class="toggle"></icon></div>
-            <ul style="display: none;">
-                <li class="">
-                    <a href="">Evolution du taux de conversion</a>
+        <li class="{% if app.request.attributes.get('_route') in ['taux_ca','taux_orders'] %}active{% endif %}">
+            <div class="{% if app.request.attributes.get('_route') in ['taux_ca','taux_orders'] %}active{% endif %}"><span>Evolution du taux</span><icon class="toggle"></icon></div>
+            <ul style="{% if app.request.attributes.get('_route') in ['taux_ca','taux_orders'] %}display: block;{% else %}display: none;{% endif %}">
+                <li class="{% if app.request.attributes.get('_route') == 'taux_orders' %}active{% endif %}">
+                    <a href="/taux_orders">Evolution du taux de conversion</a>
                 </li>
-                <li class="">
-                    <a href="">Evolution du taux de panier moyen</a>
+                <li class="{% if app.request.attributes.get('_route') == 'taux_ca' %}active{% endif %}">
+                    <a href="/taux_ca">Evolution du taux de panier moyen</a>
                 </li>
             </ul>
         </li>

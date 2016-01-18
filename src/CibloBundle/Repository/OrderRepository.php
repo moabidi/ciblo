@@ -15,12 +15,19 @@ use Doctrine\ORM\Query\Expr;
 
 class OrderRepository extends EntityRepository{
 
+    public function getCountOrders(){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder->select('COUNT(o) as totalOrders')
+            ->from($this->_entityName, 'o');
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
     public function getOrdersDistribution($limit){
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('o.date, SUBSTRING(o.date, 1, 10) as day ,COUNT(o) as nb')
+        $queryBuilder->select('o.date, SUBSTRING(o.date, 1, 10) as name ,COUNT(o) as y')
             ->from($this->_entityName, 'o')
-            ->groupBy('day')
-            ->orderBy('nb','DESC')
+            ->groupBy('name')
+            ->orderBy('y','DESC')
             ->setMaxResults( $limit );;
         return $queryBuilder->getQuery()->getArrayResult();
     }
@@ -28,10 +35,10 @@ class OrderRepository extends EntityRepository{
     public function getCADistribuation($limit){
 
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder->select('SUBSTRING(o.date, 1, 10) as day, SUM(o.totalPaid) as total')
+        $queryBuilder->select('SUBSTRING(o.date, 1, 10) as name, SUM(o.totalPaid) as y')
             ->from($this->_entityName, 'o')
-            ->groupBy('day')
-            ->orderBy('total','DESC')
+            ->groupBy('name')
+            ->orderBy('y','DESC')
             ->setMaxResults( $limit );;
         return $queryBuilder->getQuery()->getArrayResult();
     }
