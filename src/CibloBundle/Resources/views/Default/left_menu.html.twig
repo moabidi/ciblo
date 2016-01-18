@@ -3,7 +3,7 @@
         <li class="{% if app.request.attributes.get('_route') not in ['taux_ca','taux_orders'] %}active{% endif %}">
             <div class="{% if app.request.attributes.get('_route') not in ['taux_ca','taux_orders'] %}active{% endif %}"><span>Répartition graphique</span><icon class="toggle"></icon></div>
             <ul style="{% if app.request.attributes.get('_route') not in ['taux_ca','taux_orders'] %}display: block;{% else %}display: none;{% endif %}">
-                <li class="{% if app.request.attributes.get('_route') == 'home' %}active{% endif %}">
+                <li class="{% if app.request.attributes.get('_route') in ['home','device','os','navigator'] %}active{% endif %}">
                     <a href="/">
                         Répartition des visites
                     </a>
