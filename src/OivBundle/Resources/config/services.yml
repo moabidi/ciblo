@@ -1,0 +1,27 @@
+parameters:
+    oiv.entity.education.class: OivBundle\Entity\EducationData
+    oiv.entity.naming.class: OivBundle\Entity\NamingData
+    oiv.entity.stat.class: OivBundle\Entity\StatData
+    oiv.entity.variety.class: OivBundle\Entity\VarietyData
+
+services:
+    oiv.education_repository:
+        class: OivBundle\Repository\EducationDataRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [%oiv.entity.education.class%]
+        
+    oiv.naming_repository:
+        class: OivBundle\Repository\NamingDataRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [%oiv.entity.naming.class%]
+        
+    oiv.stat_repository:
+        class: OivBundle\Repository\StatDataRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [%oiv.entity.stat.class%]
+        
+    oiv.variety_repository:
+        class: OivBundle\Repository\VarietyDataRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [%oiv.entity.variety.class%]
+        

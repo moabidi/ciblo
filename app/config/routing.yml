@@ -1,3 +1,7 @@
+oiv:
+    resource: "@OivBundle/Controller/"
+    type:     annotation
+    prefix:   /statistiques
 ciblo:
     resource: "@CibloBundle/Controller/"
     type:     annotation

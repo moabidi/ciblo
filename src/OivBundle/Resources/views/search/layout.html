@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+ <?php include 'blocs/head.html' ?>
+
+<body class="body-front  ">
+
+<div id="popup-cookie" class="shown">
+    <div class="popup-cookie-content">
+        <p class="popup-text">
+            Ce site utilise des traceurs pour vous offrir une meilleure experience sur notre site.			<a href="/fr/mentions-legales" class="popup-lnk">En savoir plus</a>
+        </p>
+    </div>
+    <div class="popup-cookie-content">
+        <button class="Button Button_blanc Button_blanc-rose">OK</button>
+    </div>
+
+</div>
+
+<?php include 'bocs/nav_mobile.html'?>
+
+<div id="page">
+
+    <?php include 'bocs/header.html'?>
+    <?php include 'blocs/filter_search.html'?>
+    <?php include 'blocs/result-search.html'?>
+    <?php include 'blocs/fiche_country.html'?>
+    <?php include 'blocs/result_stats_country.html'?>
+
+    <div class="bandeau-bottom Bg-noise">
+        <div class="Content_center">
+            <a href="/fr/" class="bandeau-bottom-lnk Content_center">Retour à la page d'accueil</a>
+        </div>
+    </div>
+    <?php include 'blocs/footer.html' ?>
+</div>
+<script type="text/javascript">
+    var rootUrl  = '/';
+    var userLang = 'fr';
+    var isMobile = '';
+    var isTablet = '';
+    var isIos    = '';
+    var host     = 'www.oiv.int';
+</script>
+<script></script>
+<!--
+<script src="js/pdf.js"></script>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery.colorbox.min.js"></script>
+<script src="js/chosen.jquery.min.js"></script>
+<script src="js/Chart.min.js"></script>
+<script src="js/main.min.js"></script>
+<script src="js/debug.js"></script>
+-->
+<script src="http://www.oiv.int/js/lib/pdfjs/build/pdf.js"></script>
+<script src="http://www.oiv.int/js/lib/jQuery/jquery-2.1.4.min.js"></script>
+<script src="http://www.oiv.int/js/frontend/lib/jquery.colorbox.min.js"></script>
+<script src="http://www.oiv.int/js/lib/jQuery/chosen.jquery.min.js"></script>
+<script src="http://www.oiv.int/js/frontend/lib/Chart.min.js"></script>
+<script src="http://www.oiv.int/js/frontend/main.min.js"></script>
+<script src="http://www.oiv.int/citrus-debug/js/debug.js"></script>
+
+</html>

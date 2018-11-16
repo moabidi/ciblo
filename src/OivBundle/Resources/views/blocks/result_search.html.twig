@@ -1,0 +1,102 @@
+<!--
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+-->
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="result-search container search-table">
+    <div class="search-box">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>303 Records Found</h5>
+            </div>
+            <div class="col-md-9">
+                <input type="text" id="myInput" class="form-control" placeholder="recherche par mot clé dans tous les resultats">
+                <script>
+                    $(document).ready(function () {
+                        $("#myInput").on("keyup", function () {
+                            var value = $(this).val().toLowerCase();
+                            $("#resultSearch tr").filter(function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            });
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-list table-responsive table-wrapper-scroll-y">
+        <table class="table" id="resultSearch">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Cépages</th>
+                <th>Import de vin</th>
+                <th>Export de vin</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>PHP</td>
+                <td>Web Development</td>
+                <td>xx </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+            <tr>
+                <td>java</td>
+                <td>Oracle Development</td>
+                <td>xxx </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+            <tr>
+                <td>HTML</td>
+                <td>Web Development</td>
+                <td>Meunier </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+            <tr>
+                <td>PHP</td>
+                <td>Web Development</td>
+                <td>xxx </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+            <tr>
+                <td>PHP</td>
+                <td>Web Development</td>
+                <td>xx </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+            <tr>
+                <td>java</td>
+                <td>Oracle Development</td>
+                <td>xxx </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+            <tr>
+                <td>HTML</td>
+                <td>Web Development</td>
+                <td>Meunier </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+            <tr>
+                <td>PHP</td>
+                <td>Web Development</td>
+                <td>xxx </td>
+                <td>5000</td>
+                <td>6200</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>

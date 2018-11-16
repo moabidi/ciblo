@@ -1,0 +1,56 @@
+<div class="result-search container search-table">
+    <div class="search-box">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>50 Records Found</h5>
+            </div>
+            <div class="col-md-9">
+                <input type="text" id="inputStat" class="form-control" placeholder="Search all fields e.g. HTML">
+                <script>
+                    $(document).ready(function () {
+                        $("#inputStat").on("keyup", function () {
+                            var value = $(this).val().toLowerCase();
+                            $("#resultStats tr").filter(function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            });
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="search-list table-responsive table-wrapper-scroll-y table-fixed" >
+        <table class="table" id="resultStats">
+            <thead>
+            <tr>
+                <th>Code Pay</th>
+                <th>Pay</th>
+                <th>Nom Cépage</th>
+                <th>ViVc</th>
+                <th>Date</th>
+                <th>Code Pay</th>
+                <th>Pay</th>
+                <th>Nom Cépage</th>
+                <th>ViVc</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>FRA</td>
+                <td>FRANCE</td>
+                <td>chasan B<?php echo $i; ?></td>
+                <td>2350</td>
+                <td>1990</td>
+                <td>FRA</td>
+                <td>FRANCE</td>
+                <td>chasan B</td>
+                <td>2350</td>
+                <td>1990</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

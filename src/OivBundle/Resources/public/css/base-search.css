@@ -1,0 +1,143 @@
+/** Start Filter Search **/
+body .filter-search {
+    padding-top: 50px;
+    font-size: 17px;
+    border-bottom: 0;
+}
+.filter-search .dropdown.dropdown-lg .dropdown-menu {
+    margin-top: -1px;
+    padding: 6px 20px;
+}
+.filter-search .input-group-btn .btn-group {
+    display: flex !important;
+}
+.filter-search .btn-group .btn {
+    border-radius: 0;
+    margin-left: -1px;
+}
+.filter-search .btn-group .btn:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+.filter-search .btn-group .form-horizontal .btn[type="submit"] {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.filter-search .form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+.filter-search .form-group .form-control:last-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+@media screen and (min-width: 768px) {
+    .filter-search .adv-search {
+        width: 500px;
+        margin: 0 auto;
+    }
+    .filter-search .dropdown.dropdown-lg {
+        position: static !important;
+    }
+    .filter-search .dropdown.dropdown-lg .dropdown-menu {
+        min-width: 500px;
+    }
+}
+/** End Filter Search **/
+
+/** Start Result Search **/
+@-moz-document url-prefix() {
+    fieldset {
+        display: table-cell;
+    }
+}
+@media screen and (max-width: 480px) {
+    .search-list thead {
+        display: block;
+    }
+}
+.result-search {
+    margin-bottom: 20px;
+}
+
+.result-search .search-table{
+    padding: 10%;
+    margin-top: -6%;
+    font-size: 17px;
+}
+.result-search .search-box{
+    background: #c1c1c1;
+    border: 1px solid #ababab;
+    padding: 2%;
+}
+.result-search .search-box input:focus{
+    box-shadow:none;
+    border:2px solid #eeeeee;
+}
+.result-search .search-list{
+    background: #fff;
+    border: 1px solid #ababab;
+    border-top: none;
+}
+.result-search .search-list h3{
+    background: #eee;
+    padding: 3%;
+    margin-bottom: 0%;
+}
+.table-wrapper-scroll-y {
+    display: block;
+    max-height: 400px;
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+.result-search table td, .result-search table th {
+    border-right: 1px solid #ddd;
+}
+
+/*.table-fixed{*/
+    /*width: 100%;*/
+    /*background-color: #f3f3f3;*/
+/*}*/
+/*.table-fixed thead{*/
+    /*width: 98%;*/
+    /*background-color: #f3f3f3;*/
+/*}*/
+/*.table-fixed tbody{*/
+    /*height:200px;*/
+    /*overflow-y:auto;*/
+    /*width: 100%;*/
+/*}*/
+
+/*.table-fixed thead,.table-fixed  tbody,.table-fixed tr,.table-fixed td,.table-fixed th{*/
+    /*display:block;*/
+/*}*/
+
+/*.table-fixed tbody td{*/
+    /*float:left;*/
+/*}*/
+
+
+/*.table-fixed thead tr th{*/
+    /*float:left;*/
+    /*background-color: #f39c12;*/
+    /*border-color:#e67e22;*/
+/*}*/
+
+
+/** End Result Search **/
+
+/*** Start fiche country  **/
+.fiche-country {
+    padding: 20px 15px;
+}
+.fiche-country .pager li a {
+    margin: 10px;
+}
+.fiche-country .info .thumbnail {
+    background: url('../../img/frontend/bg-menu.png') repeat transparent;
+}
+.fiche-country .pager {
+    background: #c1c1c1;
+}
+/*** End fiche country  **/

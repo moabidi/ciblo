@@ -1,0 +1,16 @@
+<div id="stat" class="row hide">
+    <div class="col-md-12">
+        {% for fieldName, filter in filters.StatData %}
+            {% if filter.values|length %}
+                <div class="col-md-4 form-group">
+                    <label class="control-label">{{ filter.label }}</label>
+                    <select id="{{ 'StatData-' ~ fieldName }}" name="{{ fieldName }}" class="form-control">
+                        {% for value in filter.values %}
+                            <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
