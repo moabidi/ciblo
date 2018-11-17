@@ -4,7 +4,7 @@
         {% if filter.values|length %}
         <div class="col-md-4 form-group">
             <label class="control-label">{{ filter.label }}</label>
-            <select id="{{ 'NamingData-' ~ fieldName }}" name="{{ fieldName }}" class="form-control">
+            <select data-view="naming" id="{{ 'NamingData-' ~ fieldName }}" name="{{ fieldName }}" class="form-control">
                {% for value in filter.values %}
                 <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
                 {% endfor %}

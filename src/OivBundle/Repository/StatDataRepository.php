@@ -43,7 +43,7 @@ class StatDataRepository extends BaseRepository
         }
         $result =  $queryBuilder->getQuery()->getOneOrNullResult();
         if (isset($result['value'])) {
-            return $result['value'];
+            return floatval($result['value']) ? floatval($result['value']):'0';
         }
         return null;
     }

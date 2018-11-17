@@ -21,11 +21,12 @@
 <div id="page">
 
     {% include 'OivBundle:blocks:header.html.twig' %}
+    <div class="full-search">
     {% include 'OivBundle:blocks:filter_search.html.twig' %}
     {% include 'OivBundle:blocks:result_search.html.twig' %}
     {% include 'OivBundle:blocks:fiche_country.html.twig' %}
     {% include 'OivBundle:blocks:result_stats_country.html.twig' %}
-
+    </div>
     <div class="bandeau-bottom Bg-noise">
         <div class="Content_center">
             <a href="/fr/" class="bandeau-bottom-lnk Content_center">Retour à la page d'accueil</a>

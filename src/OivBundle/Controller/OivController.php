@@ -31,7 +31,7 @@ class OivController extends Controller
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
         $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData',['countryCode' => 'FRA', 'year' => '2016']);
-        var_dump($aParams['globalResult']);die;
+        //var_dump($aParams['globalResult']);die;
         return $this->render('OivBundle:search:result.html.twig', $aParams);
     }
 
@@ -108,7 +108,7 @@ class OivController extends Controller
     {
         $Products = [
             [
-                'label' => 'Raisin frais ( toutes usages)',
+                'label' => 'Raisin frais',
                 'stat' => [
                     'prod' => 'C_PROD_GRP',
                     'export' => 'I_EXPORT_GRP',

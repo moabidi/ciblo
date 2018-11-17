@@ -1,3 +1,11 @@
+#page .full-search {
+    font-size: 17px;
+}
+#page .full-search table th {
+    background: #AE2B4A;
+    color: #FFFFFF;
+}
+
 /** Start Filter Search **/
 body .filter-search {
     padding-top: 50px;
@@ -75,10 +83,10 @@ body .filter-search {
     box-shadow:none;
     border:2px solid #eeeeee;
 }
-.result-search .search-list{
+.result-search .search-list, .fiche-country .search-list{
     background: #fff;
     border: 1px solid #ababab;
-    border-top: none;
+    /*border-top: none;*/
 }
 .result-search .search-list h3{
     background: #eee;
@@ -91,7 +99,7 @@ body .filter-search {
     overflow-y: auto;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
-.result-search table td, .result-search table th {
+.result-search table td, .result-search table th,.fiche-country table td, .fiche-country table th {
     border-right: 1px solid #ddd;
 }
 
@@ -134,8 +142,8 @@ body .filter-search {
 .fiche-country .pager li a {
     margin: 10px;
 }
-.fiche-country .info .thumbnail {
-    background: url('../../img/frontend/bg-menu.png') repeat transparent;
+.fiche-country .info .thumbnail, .fiche-country .info .caption {
+    background: #C1C1C1;
 }
 .fiche-country .pager {
     background: #c1c1c1;

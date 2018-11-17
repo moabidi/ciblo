@@ -16,4 +16,14 @@ $(function(){
             $('#year').parent().removeClass('hide').addClass('show');
         }
     });
+
+    /**
+     * Search on keyup
+     */
+    $("#myInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#resultSearch tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
 });
