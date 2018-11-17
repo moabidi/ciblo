@@ -12,33 +12,18 @@
     <div class="search-list table-responsive table-wrapper-scroll-y table-fixed" >
         <table class="table" id="resultStats">
             <thead>
-            <tr>
-                <th>Code Pay</th>
-                <th>Pay</th>
-                <th>Nom Cépage</th>
-                <th>ViVc</th>
-                <th>Date</th>
-                <th>Code Pay</th>
-                <th>Pay</th>
-                <th>Nom Cépage</th>
-                <th>ViVc</th>
-                <th>Date</th>
-            </tr>
+            {% for fieldName, value in globalResult.0 %}
+                <th>{{ fieldName }}</th>
+            {% endfor %}
             </thead>
             <tbody>
-
-            <tr>
-                <td>FRA</td>
-                <td>FRANCE</td>
-                <td>chasan B<?php echo $i; ?></td>
-                <td>2350</td>
-                <td>1990</td>
-                <td>FRA</td>
-                <td>FRANCE</td>
-                <td>chasan B</td>
-                <td>2350</td>
-                <td>1990</td>
-            </tr>
+            {% for row in globalResult %}
+                <tr>
+                    {% for fieldName, value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
 

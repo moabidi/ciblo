@@ -10,6 +10,7 @@ namespace OivBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,17 +28,50 @@ class OivController extends Controller
 
         //var_dump($this->getStatsCountry(['countryCode'=>'FRA','year'=>'2016']));die;
         $aParams['stats'] = $this->getStatsCountry(['countryCode' => 'FRA', 'year' => '2016']);
+        $aParams['allStats'] = $this->getStatsCountry(['countryCode' => 'FRA', 'year' => '2016']);
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
         $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData',['countryCode' => 'FRA', 'year' => '2016']);
+        $aParams['globalStatResult'] = $this->getResultGLobalStatSearch('EducationData',['countryCode' => 'FRA', 'year' => '2016']);
         //var_dump($aParams['globalResult']);die;
         return $this->render('OivBundle:search:result.html.twig', $aParams);
     }
 
+    /**
+     * @Route("/country", name="country-stat-search")
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function statCountryAction(Request $request)
     {
+        $aCriteria = [];
+        $result = $this->getStatsCountry($aCriteria);
+        return new JsonResponse($result);
+    }
 
+    /**
+     * @Route("/global", name="global-search")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function globalSearchAction(Request $request)
+    {
+        $aCriteria = [];
+        $result = $this->getResultGLobalSearch($aCriteria);
+        return new JsonResponse($result);
+    }
+
+    /**
+     * @Route("/global-country", name="global-country-search")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function globalStatSearchAction(Request $request)
+    {
+        $aCriteria = [];
+        $result = $this->getResultGLobalSearch($aCriteria);
+        return new JsonResponse($result);
     }
 
     /**
@@ -51,50 +85,27 @@ class OivController extends Controller
     }
 
     /**
+     * @param string $table
+     * @param array $aCriteria
+     * @return array
+     */
+    private function getResultGLobalStatSearch($table, $aCriteria = [])
+    {
+        return $this->getDoctrine()->getRepository('OivBundle:'.$table)->getGlobalResult($aCriteria);
+    }
+
+    /**
      * @return array
      */
     private function getFiltredFiled()
     {
-        $aFiltredFields = [
-            'StatData' =>
-                [
-                    'versioning' => 'label Versionning',
-                    'countryCode' => 'label countryCode',
-                    'statType' => 'label statType'
-                ],
-            'EducationData' =>
-                [
-                    'countryCode' => 'label countryCode',
-                    'formationTitle' => 'label formationTitle',
-                    'university' => 'label university',
-                    'tutelle' => 'label tutelle',
-                    'level' => 'label level',
-                    'diploma' => 'label diploma',
-                    'cooperation' => 'label cooperation',
-                ],
-            'NamingData' =>
-                [
-                    'countryCode' => 'label countryCode',
-                    'appellationName' => 'label appellationName',
-                    'appellationCode' => 'label appellationCode',
-                    'typeInternationalCode' => 'label typeInternationalCode',
-                    'productCategoryName' => 'label productCategoryName',
-                    'productType' => 'label productType',
-                ],
-            'VarietyData' =>
-                [
-                    'countryCode' => 'label countryCode',
-                    'areaCultivated' => 'label areaCultivated',
-                    'areaYear' => 'label areaYear',
-                    'grapeVarietyName' => 'label grapeVarietyName',
-                    'codeVivc' => 'label codeVivc',
-                    'grapeVarietyName' => 'label grapeVarietyName',
-                ],
-        ];
-        foreach($aFiltredFields as $table => &$fields) {
-            foreach($fields as $field => $label) {
-                $aValues = $this->getDoctrine()->getRepository('OivBundle:'.$table)->getDistinctValueField($field);
-                $fields[$field] = ['label' => $label,'values'=>$aValues];
+        $aTableType = ['StatData','EducationData','NamingData','VarietyData'];
+        foreach ($aTableType as $table) {
+            $repository = $this->getDoctrine()->getRepository('OivBundle:' . $table);
+            $aFiltredFields[$table] = $repository->getTaggedFields('filter');
+            foreach ($aFiltredFields[$table] as $field => &$field) {
+                $aValues = $repository->getDistinctValueField($field);
+                $field = ['label' => $field, 'values' => $aValues];
             }
         }
         return $aFiltredFields;
@@ -104,9 +115,27 @@ class OivController extends Controller
      * @param array $aCriteria
      * @return array
      */
-    private function getStatsCountry($aCriteria = [])
+    private function getStatsCountry($aCriteria = [], $minDate=false, $maxDate=false)
     {
-        $Products = [
+        $repository = $this->get('oiv.stat_repository');
+        return [
+            'products' => $this->getStatProducts($aCriteria),
+            'graphProducts' => $this->getStatProducts(array_merge($aCriteria, ['minDate'=>'1900', 'maxDate'=>'2018'])),
+            'globalArea' => $repository->getValueStatType('A_SURFACE', $aCriteria),
+            'usedArea' => $repository->getValueStatType('C_PROD_GRP', $aCriteria),
+            'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria),
+            'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
+            'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria)
+        ];
+    }
+
+    /**
+     * @param $aCriteria
+     * @return []
+     */
+    private function getStatProducts($aCriteria = [])
+    {
+        $aProducts = [
             [
                 'label' => 'Raisin frais',
                 'stat' => [
@@ -149,18 +178,25 @@ class OivController extends Controller
             ]
         ];
         $repository = $this->get('oiv.stat_repository');
-        foreach ($Products as &$product) {
+        foreach ($aProducts as &$product) {
             foreach ($product['stat'] as $key => &$statType) {
                 $product['stat'][$key] = $repository->getValueStatType($statType, $aCriteria);
             }
         }
-        return [
-            'products' => $Products,
-            'globalArea' => $repository->getValueStatType('A_SURFACE', $aCriteria),
-            'usedArea' => $repository->getValueStatType('C_PROD_GRP', $aCriteria),
-            'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria),
-            'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
-            'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria)
-        ];
+        //var_dump($aProducts);die;
+        return $aProducts;
+    }
+
+    private function formatDataGraph($aData)
+    {
+        foreach($aData as $product){
+            array_walk($product, function($value, $key) {
+                $product['name'] = $key;
+                foreach($value as $stat) {
+                    $product['data'] = $stat['value'];
+                    $product['xAxis'] = $stat['year'];
+                }
+            });
+        }
     }
 }

@@ -36,4 +36,29 @@ class EducationDataRepository extends BaseRepository
         }
         return null;
     }
+
+    /**
+     * @return array
+     */
+    public static function getConfigFields() {
+        return [
+            'versioning' => [],
+            'countryCode' => ['filter','tab1','tab2'],
+            'formationTitle' => ['filter'],
+            'university' => ['filter'],
+            'tutelle' => ['tab1','tab2'],
+            'level' => ['filter','tab1','tab2'],
+            'diploma' => ['tab1','tab2'],
+            'cooperation' => ['tab1','tab2'],
+            'month'=> ['tab1','tab2'],
+            'hourCourses'=>['tab1','tab2'],
+            'credits'=>['tab1','tab2'],
+            'prior'=>['tab1','tab2'],
+            'deadline'=>['tab1','tab2'],
+            'contact'=>['tab1','tab2'],
+            'adress'=>['tab1','tab2'],
+            'lastDate'=>['tab1','tab2'],
+            'internetAdress'=>['tab1','tab2']
+        ];
+    }
 }

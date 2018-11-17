@@ -22,7 +22,10 @@ class BaseRepository extends EntityRepository
             ->from($this->_entityName, 'o')
             ->distinct('o.'.$field)
             ->orderBy('o.'.$field);
-        return $queryBuilder->getQuery()->getArrayResult();
+//        return $queryBuilder->getQuery()->getArrayResult();
+//        var_dump($result);die;
+        $result = $queryBuilder->getQuery()->getArrayResult();
+        return $this->reformatArray($result);
     }
 
     /**
@@ -44,6 +47,47 @@ class BaseRepository extends EntityRepository
                 ->where('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')
                 ->setParameter('countryCode', $aCriteria['countryCode']);
         }
-        return $queryBuilder->getQuery()->getArrayResult();
+        $result = $queryBuilder->getQuery()->getArrayResult();
+        return $this->reformatArray($result);
+    }
+
+    public static function getTaggedFields($tag)
+    {
+        $aFields =[];
+        foreach (static::getConfigFields() as $name => $aTags) {
+            if (in_array($tag, $aTags)) {
+                $aFields[$name] = $name;
+            }
+        }
+        return $aFields;
+    }
+
+    /**
+     * @param $result
+     * @return mixed
+     */
+    protected function reformatArray($result)
+    {
+        if (count($result)) {
+            array_walk($result, function(&$v,$k){
+                if( isset($v[0]) && is_array($v[0])) {
+                    $s = $v[0];
+                    foreach ($s as &$f) {
+                        if ($f instanceof \DateTime) {
+                            $f = $f->format('Y-m-d');
+                        }
+                    }
+                    unset($v[0]);
+                    $v = array_merge($v, $s);
+                }elseif(is_array($v)) {
+                    foreach ($v as &$f) {
+                        if ($f instanceof \DateTime) {
+                            $f = $f->format('Y-m-d');
+                        }
+                    }
+                }
+            });
+        }
+        return $result;
     }
 }

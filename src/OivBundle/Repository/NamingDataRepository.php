@@ -36,4 +36,26 @@ class NamingDataRepository extends BaseRepository
         }
         return null;
     }
+
+    /**
+     * @return array
+     */
+    public static function getConfigFields()
+    {
+        return [
+            'versioning' => [],
+            'countryCode' => ['filter', 'tab1', 'tab2'],
+            'appellationCode' => ['filter', 'tab1', 'tab2'],
+            'appellationName' => ['filter', 'tab1', 'tab2'],
+            'parentCode' => ['tab1', 'tab2'],
+            'parentName' => ['tab1', 'tab2'],
+            'typeNationalCode' => ['filter', 'tab1', 'tab2'],
+            'typeInternationalCode' => ['filter', 'tab1', 'tab2'],
+            'productCategoryName' => ['filter', 'tab1', 'tab2'],
+            'productType' => ['filter', 'tab1', 'tab2'],
+            'referenceName' => ['tab1', 'tab2'],
+            'lastDate' => ['tab1', 'tab2'],
+            'url' => ['tab1', 'tab2']
+        ];
+    }
 }

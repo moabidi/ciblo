@@ -5,7 +5,7 @@ $(function($){
 
     $.handleSearch = new function() {
 
-        _sendRequest = function(uri, method, data, view) {
+        this._sendRequest = function(uri, method, data, view) {
             $.ajax({
                 'uri':uri,
                 'method': method,
@@ -16,38 +16,39 @@ $(function($){
                 alert('error response');
                 console.log('error response');
             });
-        }
+        };
 
-        _handleSuccess = function(response, view) {
+        this._handleSuccess = function(response, view) {
             switch (view) {
                 case 'global': this._refreshGlobalView(response);break;
                 case 'stat': this._refreshStatView(response);break;
                 case 'graph': this._refreshGraphView(response);break;
                 case 'variety': this._refreshVarietyView(response);break;
             }
-        }
+        };
 
-        _handleFailure = function(error) {
+        this._handleFailure = function(error) {
             alert('error response');
             console.log('error response');
-        }
+        };
 
-        _refreshGlobalView = function(response) {
+        this._refreshGlobalView = function(response) {
             this._refreshTableResult(response,'resultSearch');
-        }
-        _refreshStatView = function(response) {
+        };
 
-        }
+        this._refreshStatView = function(response) {
 
-        _refreshGraphView = function(response) {
+        };
 
-        }
+        this._refreshGraphView = function(response) {
 
-        _refreshVarietyView = function(response) {
+        };
+
+        this._refreshVarietyView = function(response) {
             this._refreshTableResult(response,'resultStats');
-        }
+        };
 
-        _refreshTableResult = function (idTable,content) {
+        this._refreshTableResult = function (idTable,content) {
             var hearder = '';
             var body = '';
             $.each(content.result.labelfields, function(key, val){
@@ -61,16 +62,17 @@ $(function($){
                 body += '</tr>';
             });
             $('#'+idTable).html('<thead><tr>'+hearder+'</tr></thead><tbody>'+body+'</tbody>');
-        }
-        _initSearchButton = function(btn, view) {
+        };
+
+        this._initSearchButton = function(btn, view) {
             $('#'+btn).on('click', function() {
                 var uri = '/statistics/'+view;
                 var data = $.handleSearch._getFiltersData(view);
-                this._sendRequest(uri, method, data,view)
+                $.handleSearch._sendRequest(uri, method, data,view)
             });
-        }
+        };
 
-        _getFiltersData = function (view) {
+        this._getFiltersData = function (view) {
             var data = 'dbType='+$('#dbType').val();
             var slectedFilters = '[data-view='+view+']';
             if (view == 'global') {
@@ -87,8 +89,8 @@ $(function($){
 
     $(document).ready(function(){
         $.handleSearch._initSearchButton('btn-global-search','global');
-        $.handleSearch._initSearchButton('btn-stat-search','stat');
-        $.handleSearch._initSearchButton('btn-graph-search','graph');
-        $.handleSearch._initSearchButton('btn-variety-search','variety');
+        $.handleSearch._initSearchButton('btn-country-search','country');
+        $.handleSearch._initSearchButton('btn-product-search','country-statistic');
+        $.handleSearch._initSearchButton('btn-global-country-search','global-country');
     });
 })
