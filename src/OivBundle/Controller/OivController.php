@@ -27,12 +27,17 @@ class OivController extends Controller
         //var_dump($repo->getCountVariety(['countryCode'=>'FRA']));die;
 
         //var_dump($this->getStatsCountry(['countryCode'=>'FRA','year'=>'2016']));die;
-        $aParams['stats'] = $this->getStatsCountry(['countryCode' => 'FRA', 'year' => '2016']);
+        $selectedYear = '2016';
+        $selectedCodeCountry = 'FRA';
+        $aCriteria = ['countryCode' => $selectedCodeCountry, 'year' => $selectedYear];
+        $aParams['stats'] = $this->getStatsCountry($aCriteria);
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
-        $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData', ['countryCode' => 'FRA', 'year' => '2016']);
-        $aParams['globalStatResult'] = $this->getResultGLobalStatSearch('EducationData', ['countryCode' => 'FRA', 'year' => '2016']);
+        $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData', $aCriteria);
+        $aParams['globalStatResult'] = $this->getResultGLobalStatSearch('EducationData', $aCriteria);
+        $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => 'FRA']);
+        $aParams['selectedYear'] = $selectedYear;
         //var_dump($aParams['globalResult']);die;
         return $this->render('OivBundle:search:result.html.twig', $aParams);
     }
@@ -143,9 +148,9 @@ class OivController extends Controller
                 'name' => 'rfresh',
                 'stat' => [
                     'prod' => 'C_PROD_GRP',
+                    'consumption' => '',
                     'export' => 'I_EXPORT_GRP',
-                    'import' => 'H_IMPORT_GRP',
-                    'consumption' => ''
+                    'import' => 'H_IMPORT_GRP'
                 ]
 
             ],
@@ -154,9 +159,9 @@ class OivController extends Controller
                 'name' => 'rin',
                 'stat' => [
                     'prod' => 'P_PRODUCTION_WINE',
+                    'consumption' => 'S_CONSUMPTION_WINE',
                     'export' => 'R_EXPORT_WINE',
-                    'import' => 'Q_IMPORT_WINE',
-                    'consumption' => 'S_CONSUMPTION_WINE'
+                    'import' => 'Q_IMPORT_WINE'
                 ]
 
             ],
@@ -165,9 +170,9 @@ class OivController extends Controller
                 'name' => 'rtable',
                 'stat' => [
                     'prod' => '',
+                    'consumption' => 'L_COMSUMPTION_TABLE_GRP',
                     'export' => '',
-                    'import' => '',
-                    'consumption' => 'L_COMSUMPTION_TABLE_GRP'
+                    'import' => ''
                 ]
 
             ],
@@ -176,9 +181,9 @@ class OivController extends Controller
                 'name' => 'rsec',
                 'stat' => [
                     'prod' => 'G_PROD_DRIED_GRP',
+                    'consumption' => 'N_CONSUMPTION_DRIED_GRP',
                     'export' => 'K_EXPORT_DRIED_GRP',
                     'import' => 'J_IMPORT_DRIED_GRP',
-                    'consumption' => 'N_CONSUMPTION_DRIED_GRP'
                 ]
 
             ]
@@ -189,7 +194,9 @@ class OivController extends Controller
                 if ($single) {
                     $result = $repository->getSingleValueStatType($statType, $aCriteria);
                     $product['stat'][$key] = $result['val'];
-                    $product['measure'][$key] = $result['measure'];
+                    if ($result['measure']) {
+                        $product['measure'] = $result['measure'];
+                    }
                 }else{
                     $result = $repository->getMultiValueStatType($statType, $aCriteria);
                     $product['stat'][$key] = $result;

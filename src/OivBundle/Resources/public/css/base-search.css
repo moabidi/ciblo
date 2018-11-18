@@ -5,6 +5,14 @@
     background: #AE2B4A;
     color: #FFFFFF;
 }
+#page .btn {
+    color: #FFFFFF;
+    background: #AE2B4A;
+}
+#page .btn:hover {
+    color: #FFFFFF;
+    background: #2A6496;
+}
 
 /** Start Filter Search **/
 body .filter-search {

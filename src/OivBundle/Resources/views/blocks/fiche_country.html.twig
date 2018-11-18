@@ -3,16 +3,25 @@
         <div class="info col-sm-12 col-md-6">
             <div aria-label="...">
                 <ul class="pager">
-                    <li class="next disabled"><a href="#" onclick="return false">2019 <span
-                                    aria-hidden="true">&rarr;</span></a></li>
+                    <li data-year="{{ selectedYear+1 }}" id="nextYear" class="next {% if selectedYear+1 > "now"|date('Y') %}disabled{% endif %}">
+                        <a href="#">
+                            <span class="year">{{ selectedYear+1 }}</span>
+                            <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    </li>
                     <li class="centred">
-                        <img src="{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}" class="flag flag-fr"
+                        <img src="{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}" class="flag flag-{{ selectedCountry.iso2|lower }}"
                              alt="France"/>
-                        <span id="country-name" class="country">France</span>
-                        <img src="{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}" class="flag flag-fr"
+                        <span id="country-name" class="country">{{ selectedCountry.countryNameFr }}</span>
+                        <img src="{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}" class="flag flag-{{ selectedCountry.iso2|lower }}"
                              alt="France"/>
                     </li>
-                    <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> 2017</a></li>
+                    <li data-year="{{ selectedYear-1 }}" id="prevYear" class="previous">
+                        <a href="#">
+                            <span aria-hidden="true">&larr;</span>
+                            <span class="year">{{ selectedYear-1 }}</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="thumbnail">
@@ -21,12 +30,14 @@
                     <!--<h3>Thumbnail label</h3>-->
                     <ul>
                         <li>
-                            <a href="#"><strong>Superficie </strong>: <span
-                                        class="badge">{{ stats.usedArea.val ~ ' / ' ~ stats.globalArea.val }}</span></a>
+                            <a href="#">
+                                <strong>Superficie </strong>:
+                                <span class="badge">{{ stats.usedArea.val ~ ' / ' ~ stats.globalArea.val }} {{ stats.globalArea.measure }}</span>
+                            </a>
                         </li>
                     </ul>
                     <div class="search-list table-responsive table-wrapper-scroll-y table-fixed">
-                        <table class="table">
+                        <table id="products" class="table">
                             <thead>
                             <th></th>
                             <th>Production</th>
@@ -36,31 +47,35 @@
                             </thead>
                             <tbody>
                             {% for product in stats.products %}
-                                <tr>
-                                    <td>{{ product.label }} {% if loop.index0 == 0 %}<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Raisin frais ( toutes usages)"></span>{% endif %}</td>
+                                <tr id="{{ product.name }}" data-measure="{{ product.measure }}">
                                     <td>
-                                        <span class="badge" {% if product.stat.prod is null  %}data-toggle="tooltip" title="Pas de production"{% endif %}>{{ product.stat.prod is null ? '-':product.stat.prod ~ ' ' ~ product.measure.prod }}</span>
-                                        <span class="btn btn-default btn-lg">
-                                            <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                        </span>
+                                        <a class="product" data-graph="container-g{{ loop.index }}" href="#">
+                                            {{ product.label }} {% if loop.index0 == 0 %}<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Raisin frais ( toutes usages)"></span>{% endif %}
+                                        </a>
                                     </td>
                                     <td>
-                                        <span class="badge" {% if product.stat.consumption is null %}data-toggle="tooltip" title="Pas de consommation"{% endif %}>{{ product.stat.consumption is null ? '-':product.stat.consumption ~ ' ' ~ product.measure.consumption }}</span>
-                                        <span class="btn btn-default btn-lg">
+                                        <span class="badge" {% if product.stat.prod is null  %}data-toggle="tooltip" title="Pas de production"{% endif %}>{{ product.stat.prod is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.prod ~ '</span> ' ~ product.measure)|raw }}</span>
+                                        <a data-graph="container-g{{ loop.index }}" data-statType="prod" class="stat-type btn btn-default btn-md">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                        </span>
+                                        </a>
                                     </td>
-                                    <td>
-                                        <span class="badge" {% if product.stat.export is null %}data-toggle="tooltip" title="Pas d'export"{% endif %}>{{ product.stat.export is null ? '-':product.stat.export ~ ' ' ~ product.measure.export }}</span>
-                                        <span class="btn btn-default btn-lg">
+                                    <td class="product" data-graph="container-g2">
+                                        <span class="badge" {% if product.stat.consumption is null %}data-toggle="tooltip" title="Pas de consommation"{% endif %}>{{ product.stat.consumption is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.consumption ~ '</span> ' ~ product.measure)|raw }}</span>
+                                        <a data-graph="container-g{{ loop.index }}" data-statType="consumption" class="stat-type btn btn-default btn-md">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                        </span>
+                                        </a>
                                     </td>
-                                    <td>
-                                        <span class="badge" {% if product.stat.import is null %}data-toggle="tooltip" title="Pas d'import"{% endif %}>{{ product.stat.import is null ? '-':product.stat.import ~ ' ' ~ product.measure.import }}</span>
-                                        <span class="btn btn-default btn-lg">
+                                    <td class="product" data-graph="container-g3">
+                                        <span class="badge" {% if product.stat.export is null %}data-toggle="tooltip" title="Pas d'export"{% endif %}>{{ product.stat.export is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.export ~ '</span> ' ~ product.measure)|raw }}</span>
+                                        <a data-graph="container-g{{ loop.index }}" data-statType="export" class="stat-type btn btn-default btn-md">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                        </span>
+                                        </a>
+                                    </td>
+                                    <td class="product" data-graph="container-g4">
+                                        <span class="badge" {% if product.stat.import is null %}data-toggle="tooltip" title="Pas d'import"{% endif %}>{{ product.stat.import is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.import ~ '</span> ' ~ product.measure)|raw }}</span>
+                                        <a data-graph="container-g{{ loop.index }}" data-statType="import" class="stat-type btn btn-default btn-md">
+                                            <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -83,22 +98,43 @@
             </div>
         </div>
         <div class="info col-sm-12 col-md-6">
-            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g1" class="show graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g2" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g3" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g4" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
             <script type="text/javascript">
                 $(document).ready(function () {
                     setTimeout(function() {
-                        var g1 = $.statCharts;
-                        var g2 = $.statCharts;
-                        var g3 = $.statCharts;
-                        var g4 = $.statCharts;
+                        $.handleSearch._g1 = $.statCharts;
+                        $.handleSearch._g2 = $.statCharts;
+                        $.handleSearch._g3 = $.statCharts;
+                        $.handleSearch._g4 = $.statCharts;
 
-                        g1._container = 'container';
-                        g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
-                        g1._data = {{ stats.graphProducts.rfresh|json_encode|raw }};
-                        g1._title = {{ 'Statistiques annuelles de Raisin frais'|json_encode|raw  }};
-                        g1._mesure = '{{ stats.products.0.measure.prod |raw }}';
-                        g1._init();
+                        $.handleSearch._g1._container = 'container-g1';
+                        $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g1._data = {{ stats.graphProducts.rfresh|json_encode|raw }};
+                        $.handleSearch._g1._title = {{ ('Statistiques annuelles de '~ stats.products.0.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';
+                        $.handleSearch._g1._init();
+                        $.handleSearch._g2._container = 'container-g2';
+                        $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g2._data = {{ stats.graphProducts.rin|json_encode|raw }};
+                        $.handleSearch._g2._title = {{ ('Statistiques annuelles de '~ stats.products.1.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g2._mesure = '{{ stats.products.1.measure |raw }}';
+                        $.handleSearch._g2._init();
+                        $.handleSearch._g3._container = 'container-g3';
+                        $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g1._data = {{ stats.graphProducts.rtable|json_encode|raw }};
+                        $.handleSearch._g3._title = {{ ('Statistiques annuelles de '~ stats.products.2.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g3._mesure = '{{ stats.products.2.measure |raw }}';
+                        $.handleSearch._g3._init();
+                        $.handleSearch._g4._container = 'container-g4';
+                        $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g4._data = {{ stats.graphProducts.rsec|json_encode|raw }};
+                        $.handleSearch._g4._title = {{ ('Statistiques annuelles de '~ stats.products.3.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';
+                        $.handleSearch._g4._init();
                     });
                 });
             </script>
