@@ -11,57 +11,80 @@ namespace OivBundle\Repository;
 class StatDataRepository extends BaseRepository
 {
 
+    private $_queryBuilder;
+
     /**
      * SELECT VALUE FROM oivdataw.stat_data where COUNTRY_CODE='FRA'  and  YEAR='2016' and  stat_type='C_PROD_GRP'
-     * @param string $staType
+     * @param string $statType
      * @param array $aCriteria
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getValueStatType($staType, $aCriteria = [])
+    public function getSingleValueStatType($statType, $aCriteria = [])
     {
-        if (!$staType) {
+        if (!$statType) {
             return null;
         }
 
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder
+        $this->makeQuery(array_merge($aCriteria,['statType'=>$statType]));
+        $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();
+        if (isset($result['value'])) {
+            $val = floatval($result['value']) ? floatval($result['value']):'0';
+            $measure = $result['measureType'];
+            return ['val' => $val, 'measure' => $measure];
+        }
+        return null;
+    }
+
+    /**
+     * @param $statType
+     * @param array $aCriteria
+     * @return null
+     */
+    public function getMultiValueStatType($statType, $aCriteria = [])
+    {
+        if (!$statType) {
+            return null;
+        }
+        $this->makeQuery(array_merge($aCriteria,['statType'=>$statType]));
+        return $this->_queryBuilder->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @param array $aCriteria
+     */
+    private function makeQuery($aCriteria = [])
+    {
+        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $this->_queryBuilder
             ->select('o.year, o.value, o.measureType')
             ->from($this->_entityName, 'o')
             ->where('o.statType = :statType')
-            ->setParameter('statType',$staType);
+            ->setParameter('statType',$aCriteria['statType']);
 
         if (isset($aCriteria['countryCode'])) {
-            $queryBuilder
+            $this->_queryBuilder
                 ->Andwhere('o.countryCode = :countryCode')
                 ->setParameter('countryCode',$aCriteria['countryCode']);
         }
 
         if( (isset($aCriteria['minDate']) && $aCriteria['minDate']) || (isset($aCriteria['maxDate']) && $aCriteria['minDate'])){
             if (isset($aCriteria['minDate'])) {
-                $queryBuilder
+                $this->_queryBuilder
                     ->Andwhere('o.year >= :minDate')
                     ->setParameter('minDate', $aCriteria['minDate']);
             }
             if (isset($aCriteria['maxDate'])) {
-                $queryBuilder
+                $this->_queryBuilder
                     ->Andwhere('o.year <= :maxDate')
                     ->setParameter('maxDate', $aCriteria['maxDate']);
             }
-            $queryBuilder->groupBy('o.year, o.value, o.measureType');
-            $result = $queryBuilder->getQuery()->getArrayResult();
-            //var_dump($result);die;
-            return $result;
         }elseif (isset($aCriteria['year'])) {
-            $queryBuilder
+            $this->_queryBuilder
                 ->Andwhere('o.year = :year')
                 ->setParameter('year',$aCriteria['year']);
         }
-        $result =  $queryBuilder->getQuery()->getOneOrNullResult();
-        if (isset($result['value'])) {
-            return floatval($result['value']) ? floatval($result['value']):'0';
-        }
-        return null;
+        $this->_queryBuilder->groupBy('o.year, o.value, o.measureType');
     }
 
     /**
@@ -72,28 +95,28 @@ class StatDataRepository extends BaseRepository
      */
     public function getGlobalResult($aCriteria = [])
     {
-        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $queryBuilder
+        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $this->_queryBuilder
             ->select('o')
             ->from($this->_entityName, 'o')
             ->where('1=1');
 
         if (isset($aCriteria['statType'])) {
-            $queryBuilder
+            $this->_queryBuilder
                 ->where('o.statType = :statType')
                 ->setParameter('statType', $aCriteria['statType']);
         }
         if (isset($aCriteria['countryCode'])) {
-            $queryBuilder
+            $this->_queryBuilder
                 ->Andwhere('o.countryCode = :countryCode')
                 ->setParameter('countryCode',$aCriteria['countryCode']);
         }
         if (isset($aCriteria['year'])) {
-            $queryBuilder
+            $this->_queryBuilder
                 ->Andwhere('o.year = :year')
                 ->setParameter('year',$aCriteria['year']);
         }
-        $result = $queryBuilder->getQuery()->getArrayResult();
+        $result = $this->_queryBuilder->getQuery()->getArrayResult();
 //        if (count($result)) {
 //            array_walk($result, function(&$v,$k){
 //                $s = $v[0];//var_dump($v,$k);die;

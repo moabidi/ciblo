@@ -22,7 +22,7 @@
                     <ul>
                         <li>
                             <a href="#"><strong>Superficie </strong>: <span
-                                        class="badge">{{ stats.usedArea ~ ' / ' ~ stats.globalArea }}</span></a>
+                                        class="badge">{{ stats.usedArea.val ~ ' / ' ~ stats.globalArea.val }}</span></a>
                         </li>
                     </ul>
                     <div class="search-list table-responsive table-wrapper-scroll-y table-fixed">
@@ -39,25 +39,25 @@
                                 <tr>
                                     <td>{{ product.label }} {% if loop.index0 == 0 %}<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Raisin frais ( toutes usages)"></span>{% endif %}</td>
                                     <td>
-                                        <span class="badge" {% if product.stat.prod is null  %}data-toggle="tooltip" title="Pas de production"{% endif %}>{{ product.stat.prod is null ? '-':product.stat.prod }}</span>
+                                        <span class="badge" {% if product.stat.prod is null  %}data-toggle="tooltip" title="Pas de production"{% endif %}>{{ product.stat.prod is null ? '-':product.stat.prod ~ ' ' ~ product.measure.prod }}</span>
                                         <span class="btn btn-default btn-lg">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge" {% if product.stat.consumption is null %}data-toggle="tooltip" title="Pas de consommation"{% endif %}>{{ product.stat.consumption is null ? '-':product.stat.consumption }}</span>
+                                        <span class="badge" {% if product.stat.consumption is null %}data-toggle="tooltip" title="Pas de consommation"{% endif %}>{{ product.stat.consumption is null ? '-':product.stat.consumption ~ ' ' ~ product.measure.consumption }}</span>
                                         <span class="btn btn-default btn-lg">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge" {% if product.stat.export is null %}data-toggle="tooltip" title="Pas d'export"{% endif %}>{{ product.stat.export is null ? '-':product.stat.export }}</span>
+                                        <span class="badge" {% if product.stat.export is null %}data-toggle="tooltip" title="Pas d'export"{% endif %}>{{ product.stat.export is null ? '-':product.stat.export ~ ' ' ~ product.measure.export }}</span>
                                         <span class="btn btn-default btn-lg">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge" {% if product.stat.import is null %}data-toggle="tooltip" title="Pas d'import"{% endif %}>{{ product.stat.import is null ? '-':product.stat.import }}</span>
+                                        <span class="badge" {% if product.stat.import is null %}data-toggle="tooltip" title="Pas d'import"{% endif %}>{{ product.stat.import is null ? '-':product.stat.import ~ ' ' ~ product.measure.import }}</span>
                                         <span class="btn btn-default btn-lg">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                         </span>
@@ -85,40 +85,20 @@
         <div class="info col-sm-12 col-md-6">
             <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
-            <script type="application/javascript">
+            <script type="text/javascript">
                 $(document).ready(function () {
                     setTimeout(function() {
-                        $.statCharts._container = 'container';
-                        $.statCharts._xAxis = 'Jan',
-                                'Feb',
-                                'Mar',
-                                'Apr',
-                                'May',
-                                'Jun',
-                                'Jul',
-                                'Aug',
-                                'Sep',
-                                'Oct',
-                                'Nov',
-                                'Dec';
-                        $.statCharts._data = [{
-                            name: 'Tokyo',
-                            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+                        var g1 = $.statCharts;
+                        var g2 = $.statCharts;
+                        var g3 = $.statCharts;
+                        var g4 = $.statCharts;
 
-                        }, {
-                            name: 'New York',
-                            data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-
-                        }, {
-                            name: 'London',
-                            data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
-
-                        }, {
-                            name: 'Berlin',
-                            data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
-
-                        }];
-                        $.statCharts._init();
+                        g1._container = 'container';
+                        g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        g1._data = {{ stats.graphProducts.rfresh|json_encode|raw }};
+                        g1._title = {{ 'Statistiques annuelles de Raisin frais'|json_encode|raw  }};
+                        g1._mesure = '{{ stats.products.0.measure.prod |raw }}';
+                        g1._init();
                     });
                 });
             </script>

@@ -8,6 +8,9 @@ $(function ($) {
         this._xAxis = [];
         this._container = '';
         this._data = '';
+        this._title = '';
+        this._subtitle = '';
+        this._mesure = '';
 
         this._init = function () {
 
@@ -16,10 +19,10 @@ $(function ($) {
                     type: 'column'
                 },
                 title: {
-                    text: 'Monthly Average Rainfall'
+                    text: this._title
                 },
                 subtitle: {
-                    text: 'Source: WorldClimate.com'
+                    text: this._subtitle
                 },
                 xAxis: {
                     categories: this._xAxis,
@@ -28,21 +31,21 @@ $(function ($) {
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Rainfall (mm)'
+                        text: 'Mesures ('+this._mesure+')'
                     }
                 },
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:.1f} '+this._mesure+'</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
                 },
                 plotOptions: {
                     column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
+                        pointPadding: 0.1,
+                        borderWidth: 10
                     }
                 },
                 series: this._data

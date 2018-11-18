@@ -28,12 +28,11 @@ class OivController extends Controller
 
         //var_dump($this->getStatsCountry(['countryCode'=>'FRA','year'=>'2016']));die;
         $aParams['stats'] = $this->getStatsCountry(['countryCode' => 'FRA', 'year' => '2016']);
-        $aParams['allStats'] = $this->getStatsCountry(['countryCode' => 'FRA', 'year' => '2016']);
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
-        $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData',['countryCode' => 'FRA', 'year' => '2016']);
-        $aParams['globalStatResult'] = $this->getResultGLobalStatSearch('EducationData',['countryCode' => 'FRA', 'year' => '2016']);
+        $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData', ['countryCode' => 'FRA', 'year' => '2016']);
+        $aParams['globalStatResult'] = $this->getResultGLobalStatSearch('EducationData', ['countryCode' => 'FRA', 'year' => '2016']);
         //var_dump($aParams['globalResult']);die;
         return $this->render('OivBundle:search:result.html.twig', $aParams);
     }
@@ -81,7 +80,7 @@ class OivController extends Controller
      */
     private function getResultGLobalSearch($table, $aCriteria = [])
     {
-        return $this->getDoctrine()->getRepository('OivBundle:'.$table)->getGlobalResult($aCriteria);
+        return $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria);
     }
 
     /**
@@ -91,7 +90,7 @@ class OivController extends Controller
      */
     private function getResultGLobalStatSearch($table, $aCriteria = [])
     {
-        return $this->getDoctrine()->getRepository('OivBundle:'.$table)->getGlobalResult($aCriteria);
+        return $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria);
     }
 
     /**
@@ -99,7 +98,7 @@ class OivController extends Controller
      */
     private function getFiltredFiled()
     {
-        $aTableType = ['StatData','EducationData','NamingData','VarietyData'];
+        $aTableType = ['StatData', 'EducationData', 'NamingData', 'VarietyData'];
         foreach ($aTableType as $table) {
             $repository = $this->getDoctrine()->getRepository('OivBundle:' . $table);
             $aFiltredFields[$table] = $repository->getTaggedFields('filter');
@@ -115,14 +114,17 @@ class OivController extends Controller
      * @param array $aCriteria
      * @return array
      */
-    private function getStatsCountry($aCriteria = [], $minDate=false, $maxDate=false)
+    private function getStatsCountry($aCriteria = [], $minDate = false, $maxDate = false)
     {
         $repository = $this->get('oiv.stat_repository');
+        $minData = '1990';
+        $maxDate = '2018';
+        $allStats = $this->getStatProducts(array_merge($aCriteria, ['minDate' => $minData, 'maxDate' => $maxDate]));
         return [
-            'products' => $this->getStatProducts($aCriteria),
-            'graphProducts' => $this->getStatProducts(array_merge($aCriteria, ['minDate'=>'1900', 'maxDate'=>'2018'])),
-            'globalArea' => $repository->getValueStatType('A_SURFACE', $aCriteria),
-            'usedArea' => $repository->getValueStatType('C_PROD_GRP', $aCriteria),
+            'products' => $this->getStatProducts($aCriteria,true),
+            'graphProducts' => $this->formatDataGraph($allStats,$minData,$maxDate),
+            'globalArea' => $repository->getSingleValueStatType('A_SURFACE', $aCriteria),
+            'usedArea' => $repository->getSingleValueStatType('C_PROD_GRP', $aCriteria),
             'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria),
             'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
             'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria)
@@ -133,11 +135,12 @@ class OivController extends Controller
      * @param $aCriteria
      * @return []
      */
-    private function getStatProducts($aCriteria = [])
+    private function getStatProducts($aCriteria = [], $single = false)
     {
         $aProducts = [
             [
                 'label' => 'Raisin frais',
+                'name' => 'rfresh',
                 'stat' => [
                     'prod' => 'C_PROD_GRP',
                     'export' => 'I_EXPORT_GRP',
@@ -148,6 +151,7 @@ class OivController extends Controller
             ],
             [
                 'label' => 'Vin',
+                'name' => 'rin',
                 'stat' => [
                     'prod' => 'P_PRODUCTION_WINE',
                     'export' => 'R_EXPORT_WINE',
@@ -158,6 +162,7 @@ class OivController extends Controller
             ],
             [
                 'label' => 'Raisin de tables',
+                'name' => 'rtable',
                 'stat' => [
                     'prod' => '',
                     'export' => '',
@@ -168,6 +173,7 @@ class OivController extends Controller
             ],
             [
                 'label' => 'Raisin sec',
+                'name' => 'rsec',
                 'stat' => [
                     'prod' => 'G_PROD_DRIED_GRP',
                     'export' => 'K_EXPORT_DRIED_GRP',
@@ -180,23 +186,46 @@ class OivController extends Controller
         $repository = $this->get('oiv.stat_repository');
         foreach ($aProducts as &$product) {
             foreach ($product['stat'] as $key => &$statType) {
-                $product['stat'][$key] = $repository->getValueStatType($statType, $aCriteria);
+                if ($single) {
+                    $result = $repository->getSingleValueStatType($statType, $aCriteria);
+                    $product['stat'][$key] = $result['val'];
+                    $product['measure'][$key] = $result['measure'];
+                }else{
+                    $result = $repository->getMultiValueStatType($statType, $aCriteria);
+                    $product['stat'][$key] = $result;
+                }
             }
         }
         //var_dump($aProducts);die;
         return $aProducts;
     }
 
-    private function formatDataGraph($aData)
+    private function formatDataGraph($aData, $minDate, $maxDate)
     {
-        foreach($aData as $product){
-            array_walk($product, function($value, $key) {
-                $product['name'] = $key;
-                foreach($value as $stat) {
-                    $product['data'] = $stat['value'];
-                    $product['xAxis'] = $stat['year'];
-                }
-            });
+        $formattedData = ['xAxis'=>[]];
+        for($y = $minDate; $y<=$maxDate; $y++) {
+            $formattedData['xAxis'][]= $y;
         }
+
+        foreach ($aData as $product) {
+            $productName = $product['name'];
+            $formattedData[$productName] = [];
+            array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $minDate, $maxDate) {
+                $typeStat = ['name' => $key, 'data' => []];
+                for($y = $minDate; $y<=$maxDate; $y++) {
+                    $typeStat['data'][$y] = 0;
+                }
+                if ($value) {
+                    foreach ($value as $stat) {
+                        $typeStat['data'][$stat['year']] = in_array($stat['year'],$formattedData['xAxis']) ? floatval($stat['value']):0;
+                    }
+                }
+                $typeStat['data'] = array_values($typeStat['data']);
+                //var_dump($typeStat);die;
+                $formattedData[$productName][] = $typeStat;
+            });
+            //var_dump($formattedData );die;
+        }
+        return $formattedData;
     }
 }

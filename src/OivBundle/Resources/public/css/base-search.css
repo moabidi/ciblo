@@ -1,5 +1,5 @@
 #page .full-search {
-    font-size: 17px;
+    font-size: 14px;
 }
 #page .full-search table th {
     background: #AE2B4A;
@@ -103,34 +103,26 @@ body .filter-search {
     border-right: 1px solid #ddd;
 }
 
-/*.table-fixed{*/
-    /*width: 100%;*/
-    /*background-color: #f3f3f3;*/
-/*}*/
-/*.table-fixed thead{*/
-    /*width: 98%;*/
-    /*background-color: #f3f3f3;*/
-/*}*/
-/*.table-fixed tbody{*/
-    /*height:200px;*/
-    /*overflow-y:auto;*/
-    /*width: 100%;*/
-/*}*/
+.table-fixed {
+    overflow-y: auto;
+    height: 500px;
+}
 
-/*.table-fixed thead,.table-fixed  tbody,.table-fixed tr,.table-fixed td,.table-fixed th{*/
-    /*display:block;*/
-/*}*/
+.table-fixed table {
+    border-collapse: collapse;
+    width: 100%;
+}
 
-/*.table-fixed tbody td{*/
-    /*float:left;*/
-/*}*/
+.table-fixed th,
+.table td {
+    padding: 8px 16px;
+}
 
-
-/*.table-fixed thead tr th{*/
-    /*float:left;*/
-    /*background-color: #f39c12;*/
-    /*border-color:#e67e22;*/
-/*}*/
+.table-fixed th {
+    position: sticky;
+    top: 0;
+    background: #eee;
+}
 
 
 /** End Result Search **/
