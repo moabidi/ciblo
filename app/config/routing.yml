@@ -1,7 +1,9 @@
 oiv:
     resource: "@OivBundle/Controller/"
     type:     annotation
-    prefix:   /statistiques
+    prefix:   /{_locale}/statistiques
+    requirements:
+            _locale: 'fr|en'
 ciblo:
     resource: "@CibloBundle/Controller/"
     type:     annotation

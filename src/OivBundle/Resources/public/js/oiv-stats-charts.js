@@ -45,7 +45,7 @@ $(function ($) {
                 plotOptions: {
                     column: {
                         pointPadding: 0.1,
-                        borderWidth: 10
+                        borderWidth: 2
                     }
                 },
                 series: this._data

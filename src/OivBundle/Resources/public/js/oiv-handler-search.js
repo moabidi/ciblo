@@ -14,7 +14,7 @@ $(function($){
 
         this._sendRequest = function(uri, method, data, view) {
             $.ajax({
-                'uri':uri,
+                'url':uri,
                 'method': method,
                 'data': data
             }).done(function(response){
@@ -30,7 +30,7 @@ $(function($){
                 case 'global': this._refreshGlobalView(response);break;
                 case 'stat': this._refreshStatView(response);break;
                 case 'graph': this._refreshGraphView(response);break;
-                case 'variety': this._refreshVarietyView(response);break;
+                case 'global-country': this._refreshDataCountryView(response);break;
             }
         };
 
@@ -51,11 +51,11 @@ $(function($){
 
         };
 
-        this._refreshVarietyView = function(response) {
+        this._refreshDataCountryView = function(response) {
             this._refreshTableResult(response,'resultStats');
         };
 
-        this._refreshTableResult = function (idTable,content) {
+        this._refreshTableResult = function (contentn, idTable) {
             var hearder = '';
             var body = '';
             $.each(content.result.labelfields, function(key, val){
@@ -72,26 +72,32 @@ $(function($){
         };
 
         this._initSearchButton = function(btn, view) {
-            $('#'+btn).on('click', function() {
-                var uri = '/statistics/'+view;
-                var data = $.handleSearch._getFiltersData(view);
-                $.handleSearch._sendRequest(uri, method, data,view)
+            $(btn).on('click', function() {console.log(view);
+                var uri = '/statistiques/'+view;
+                var data = $.handleSearch._getFiltersData($(this),view);
+                $.handleSearch._sendRequest(uri, 'POST', data,view);
+                return false;
             });
         };
 
-        this._getFiltersData = function (view) {
-            var data = 'dbType='+$('#dbType').val();
-            var slectedFilters = '[data-view='+view+']';
-            if (view == 'global') {
-                slectedFilters = '#'+$('#dbType').val()+' '+slectedFilters;
-            }
-            $(slectedFilters).each(function(){
-                if ($(this).val()) {
-                    data += $(this).attr('name') + '=' + $(this).val() + '&';
+        this._getFiltersData = function (btn,view) {
+            var data = 'dbType='+$(btn).attr('data-dbType');
+            if (view == 'global-country') {
+                data += '&year='+ $('#country-name').attr('data-statYear')+
+                '&countryCode='+$('#country-name').attr('data-statCountry')+'&view=tab3';
+            } else if (view == 'global') {
+                var slectedFilters = '[data-view=' + view + ']';
+                if (view == 'global') {
+                    slectedFilters = '#' + $('#dbType').val() + ' ' + slectedFilters;
                 }
-            });
+                $(slectedFilters).each(function () {
+                    if ($(this).val()) {
+                        data += $(this).attr('name') + '=' + $(this).val() + '&';
+                    }
+                });
+            }
             return data;
-        }
+        };
 
         this._initStatButton = function() {
             $('a.product').on('click', function(){
@@ -100,7 +106,7 @@ $(function($){
                 console.log($(this).attr('data-graph'));
                 return false;
             });
-        }
+        };
 
         this._initStatTypeButton = function() {
 
@@ -125,9 +131,11 @@ $(function($){
             $('#nextYear,#prevYear').on('click', function () {
                if ( $(this).attr('data-year')) {
                    var year = parseInt($(this).attr('data-year'));
-                   //console.log(g1);console.log(g2);
+
                    $('#nextYear .year').html(year+1);
                    $('#prevYear .year').html(year-1);
+
+                   $('#country-name').attr('data-statYear',year);
                    $('#nextYear').attr('data-year',year+1);
                    $('#prevYear').attr('data-year',year-1);
                    $('#products tbody tr').each(function(){
@@ -137,31 +145,30 @@ $(function($){
                        var data = {'prod':'','consumption':'','export':'','import':''};
                        var indexYear = -1;
                        var dataProduct;
-                       console.log(year,product,$.handleSearch._g1);
+
                        switch (product) {
                            case 'rfresh':
                                indexYear = $.handleSearch._g1._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g1._data;
+                               dataProduct = $.handleSearch._g1._data;break;
                            case 'rin':
                                indexYear = $.handleSearch._g2._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g2._data;
+                               dataProduct = $.handleSearch._g2._data;break;
                            case 'rtable':
                                indexYear = $.handleSearch._g3._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g3._data;
+                               dataProduct = $.handleSearch._g3._data;break;
                            case 'rsec':
                                indexYear = $.handleSearch._g4._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g4._data;
+                               dataProduct = $.handleSearch._g4._data;break;
                        }
-                       console.log(indexYear);
-                       console.log(dataProduct);
+                       //console.log(product,indexYear,dataProduct);
                        data.prod = typeof dataProduct[0].data[indexYear] != 'undefined'? dataProduct[0].data[indexYear]:'0';
                        data.consumption = typeof dataProduct[1].data[indexYear] != 'undefined'? dataProduct[1].data[indexYear]:'0';
                        data.export = typeof dataProduct[2].data[indexYear] != 'undefined'? dataProduct[2].data[indexYear]:'0';
                        data.import = typeof dataProduct[3].data[indexYear] != 'undefined'? dataProduct[3].data[indexYear]:'0';
-                       console.log(data);
+                       //console.log(data);
                        $('#'+product+' .stat-type').each(function () {
                            var statType = $(this).attr('data-statType');
-                            $(this).parent().find('.valStatType').parent().html('<span class="valStatType">'+data[statType]+'</span> '+measure );
+                            $(this).parent().find('.valStatType').parent().html('<span class="valStatType">'+data[statType]+'</span> ' );
                        });
                    });
                }
@@ -171,10 +178,10 @@ $(function($){
     }
 
     $(document).ready(function(){
-        $.handleSearch._initSearchButton('btn-global-search','global');
+        $.handleSearch._initSearchButton('#btn-global-search','global');
         $.handleSearch._initSearchButton('btn-country-search','country');
         $.handleSearch._initSearchButton('btn-product-search','country-statistic');
-        $.handleSearch._initSearchButton('btn-global-country-search','global-country');
+        $.handleSearch._initSearchButton('.btn-global-country-search','global-country');
         $.handleSearch._initStatButton();
         $.handleSearch._initStatTypeButton();
         $.handleSearch._changeYearStat();

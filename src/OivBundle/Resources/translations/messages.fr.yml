@@ -1,0 +1,64 @@
+countryCode: Pays
+formationTitle: Titre de formation
+university: Université
+tutelle: Tutelle
+level: Niveau
+diploma: Diplome
+cooperation:  Copération
+month: Mois
+hourCourses: Heure de cours
+credits: Crédit
+prior: Priorité
+deadline: Limite
+contact: Contact
+adress: Addresse
+lastDate: Derniere date
+internetAdress: Adresse internet
+#Appelation
+appellationCode: Code Appélation
+appellationName: Nom  Appélation
+parentCode: Code parent
+parentName: Nom parent
+typeNationalCode: Code national type
+typeInternationalCode: Code international type
+productCategoryName: Nom catégorie de produit
+productType: Type de produit
+referenceName: Nom de reference
+url: Lien
+#Stat
+statType: Type de statisqtique
+measureType: Type de mesure
+metricCompType: Type Complémentaire metric
+year: Année
+value: Valeur
+infoSource: Source
+grapesDestination: Destination
+#Variety
+isMainVariety: Variété principale
+areaCultivated: Surface cultuvée
+areaYear: Année surface cultuvé
+grapeVarietyName: Nom variété
+codeVivc: Code VIVC
+varietyNationalNameVivc: Nom national VIVC
+synonym: Synonyme
+nationalVarietyId: Id variété nationale
+grapeColor: Couleur
+internetAdress: Lien cépage
+area: Superficie
+count variety: Nombre de cépage
+count education: Nombre de formation
+production: Production
+consumption: Consommation
+import: Import
+export: Export
+total count variety: Nombre total de cépage
+total count education: Nombre total  de formation
+place: Lieu
+data type: Type de données
+all world: Tout le monde
+Naming: Appéllations
+Variety: Cépages
+Education: Formations
+Statistic: Statisqtiques
+Choose: Sélectionner
+Annual statistics of: Statistiques annuelles de

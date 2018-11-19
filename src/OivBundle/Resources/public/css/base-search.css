@@ -13,6 +13,24 @@
     color: #FFFFFF;
     background: #2A6496;
 }
+.float-right{
+    float: right;
+}
+.float-left{
+    float: left;
+}
+.display-flex{
+    display: flex;
+}
+
+.js-loading-overlay {
+    background-color: rgba(0,0,0,.7);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
 /** Start Filter Search **/
 body .filter-search {
@@ -147,5 +165,8 @@ body .filter-search {
 }
 .fiche-country .pager {
     background: #c1c1c1;
+}
+.fiche-country .table-fixed {
+    height: auto;
 }
 /*** End fiche country  **/

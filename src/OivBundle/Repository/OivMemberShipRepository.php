@@ -19,7 +19,7 @@ class OivMemberShipRepository extends BaseRepository
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function isMemberChip($aCriteria = [])
+    public function isMemberShip($aCriteria = [])
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder
@@ -28,8 +28,10 @@ class OivMemberShipRepository extends BaseRepository
         if (isset($aCriteria['countryCode'])) {
             $queryBuilder
                 ->where('o.iso3 = :countryCode')
-                ->where('o.lastDate  = (SELECT MAX(v.lastDate) FROM '.$this->_entityName.' v WHERE v.countryCode = :countryCode)')
-                ->setParameter('countryCode', $aCriteria['countryCode']);
+                //->where('o.lastDate  = (SELECT MAX(v.lastDate) FROM '.$this->_entityName.' v WHERE v.iso3 = :countryCode)')
+                ->andWhere('o.year  = :year')
+                ->setParameter('countryCode', $aCriteria['countryCode'])
+                ->setParameter('year', $aCriteria['year']);
         }
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
         if (isset($result['oivMembership'])) {

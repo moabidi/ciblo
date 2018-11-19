@@ -44,7 +44,7 @@ class NamingDataRepository extends BaseRepository
     {
         return [
             'versioning' => [],
-            'countryCode' => ['filter', 'tab1', 'tab2'],
+            'countryCode' => ['tab1', 'tab2'],
             'appellationCode' => ['filter', 'tab1', 'tab2'],
             'appellationName' => ['filter', 'tab1', 'tab2'],
             'parentCode' => ['tab1', 'tab2'],

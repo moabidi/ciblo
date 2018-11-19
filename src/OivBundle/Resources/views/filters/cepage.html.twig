@@ -5,6 +5,7 @@
                 <div class="col-md-4 form-group">
                     <label class="control-label">{{ filter.label }}</label>
                     <select id="{{ 'VarietyData-' ~ fieldName }}" name="{{ fieldName }}" class="form-control">
+                        <option value="">{{ 'Choose'|trans }}</option>
                         {% for value in filter.values %}
                             <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
                         {% endfor %}

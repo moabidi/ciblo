@@ -43,7 +43,7 @@ class VarietyDataRepository extends BaseRepository
     public static function getConfigFields() {
         return [
             'versioning' => [],
-            'countryCode' => ['filter','tab1','tab2'],
+            'countryCode' => ['tab1','tab2'],
             'isMainVariety' => ['filter','tab1','tab2'],
             'areaCultivated' => ['filter','tab1','tab2'],
             'areaYear' => ['filter','tab1','tab2'],

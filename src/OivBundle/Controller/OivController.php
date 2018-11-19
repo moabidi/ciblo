@@ -34,9 +34,10 @@ class OivController extends Controller
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
-        $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData', $aCriteria);
-        $aParams['globalStatResult'] = $this->getResultGLobalStatSearch('EducationData', $aCriteria);
+        $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData', $aCriteria,'tab1');
+        $aParams['globalStatResult'] = $this->getResultGLobalSearch('EducationData', $aCriteria,'tab2');
         $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => 'FRA']);
+        $aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
         $aParams['selectedYear'] = $selectedYear;
         //var_dump($aParams['globalResult']);die;
         return $this->render('OivBundle:search:result.html.twig', $aParams);
@@ -62,7 +63,15 @@ class OivController extends Controller
     public function globalSearchAction(Request $request)
     {
         $aCriteria = [];
-        $result = $this->getResultGLobalSearch($aCriteria);
+        if ($request->request->has('countryCode')) {
+            $aCriteria['countryCode'] = $request->request->get('countryCode');
+        }
+        if ($request->request->has('year')) {
+            $aCriteria['year'] = $request->request->get('year');
+        }
+        $table = $request->request->get('dbType');
+        $view = $request->request->get('view');
+        $result = $this->getResultGLobalSearch($table, $aCriteria, $view);
         return new JsonResponse($result);
     }
 
@@ -74,7 +83,15 @@ class OivController extends Controller
     public function globalStatSearchAction(Request $request)
     {
         $aCriteria = [];
-        $result = $this->getResultGLobalSearch($aCriteria);
+        if ($request->request->has('countryCode')) {
+            $aCriteria['countryCode'] = $request->request->get('countryCode');
+        }
+        if ($request->request->has('year')) {
+            $aCriteria['year'] = $request->request->get('year');
+        }
+        $table = $request->request->get('table');
+        $view = $request->request->get('view');
+        $result = $this->getResultGLobalSearch($table, $aCriteria, $view);
         return new JsonResponse($result);
     }
 
@@ -83,19 +100,21 @@ class OivController extends Controller
      * @param array $aCriteria
      * @return array
      */
-    private function getResultGLobalSearch($table, $aCriteria = [])
+    private function getResultGLobalSearch($table, $aCriteria = [], $view=false)
     {
-        return $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria);
-    }
+        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria);
+        if (in_array($view, ['tab1','tab2'])) {
+            $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
+            array_walk($result, function (&$v, $k) use ($selectedFields) {
+                $selectedData = [];
+                foreach ($selectedFields as $field) {
+                    $selectedData[$field] = $v[$field];
+                }
+                $v = $selectedData;
+            });
+        }
 
-    /**
-     * @param string $table
-     * @param array $aCriteria
-     * @return array
-     */
-    private function getResultGLobalStatSearch($table, $aCriteria = [])
-    {
-        return $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria);
+        return $result;
     }
 
     /**

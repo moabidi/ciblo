@@ -43,7 +43,7 @@ class EducationDataRepository extends BaseRepository
     public static function getConfigFields() {
         return [
             'versioning' => [],
-            'countryCode' => ['filter','tab1','tab2'],
+            'countryCode' => ['tab1','tab2'],
             'formationTitle' => ['filter'],
             'university' => ['filter'],
             'tutelle' => ['tab1','tab2'],

@@ -3,8 +3,9 @@
         {% for fieldName, filter in filters.StatData %}
             {% if filter.values|length %}
                 <div class="col-md-4 form-group">
-                    <label class="control-label">{{ filter.label }}</label>
+                    <label class="control-label">{{ fieldName|trans }}</label>
                     <select id="{{ 'StatData-' ~ fieldName }}" name="{{ fieldName }}" class="form-control">
+                        <option value="">{{ 'Choose'|trans }}</option>
                         {% for value in filter.values %}
                             <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
                         {% endfor %}

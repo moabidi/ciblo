@@ -29,7 +29,7 @@ class StatDataRepository extends BaseRepository
         $this->makeQuery(array_merge($aCriteria,['statType'=>$statType]));
         $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();
         if (isset($result['value'])) {
-            $val = floatval($result['value']) ? floatval($result['value']):'0';
+            $val = intval($result['value']) ? intval($result['value']):'0';
             $measure = $result['measureType'];
             return ['val' => $val, 'measure' => $measure];
         }
@@ -134,7 +134,7 @@ class StatDataRepository extends BaseRepository
     public static function getConfigFields() {
         return [
             'versioning' => [],
-            'countryCode' => ['filter','tab1','tab2'],
+            'countryCode' => ['tab1','tab2'],
             'statType' => ['filter','tab1','tab2'],
             'measureType' => ['tab1','tab2'],
             'metricCompType' => ['filter','tab1','tab2'],
