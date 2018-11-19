@@ -64,7 +64,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="product" data-graph="container-g2">
+                                    <td class="product" data-graph="container-g{{ loop.index }}">
                                         <div class="display-flex">
                                         <span class="badge" {% if product.stat.consumption is null %}data-toggle="tooltip" title="Pas de consommation"{% endif %}>{{ product.stat.consumption is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.consumption ~ '</span> ' )|raw }}</span>
                                         <a data-graph="container-g{{ loop.index }}" data-statType="consumption" class="stat-type btn btn-default btn-xs">
@@ -72,7 +72,7 @@
                                         </a>
                                         </div>
                                     </td>
-                                    <td class="product" data-graph="container-g3">
+                                    <td class="product" data-graph="container-g{{ loop.index }}">
                                         <div class="display-flex">
                                             <span class="badge" {% if product.stat.export is null %}data-toggle="tooltip" title="Pas d'export"{% endif %}>{{ product.stat.export is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.export ~ '</span> ' )|raw }}</span>
                                             <a data-graph="container-g{{ loop.index }}" data-statType="export" class="stat-type btn btn-default btn-xs">
@@ -80,7 +80,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td class="product" data-graph="container-g4">
+                                    <td class="product" data-graph="container-g{{ loop.index }}">
                                         <div class="display-flex">
                                             <span class="badge" {% if product.stat.import is null %}data-toggle="tooltip" title="Pas d'import"{% endif %}>{{ product.stat.import is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.import ~ '</span> ' )|raw }}</span>
                                             <a data-graph="container-g{{ loop.index }}" data-statType="import" class="stat-type btn btn-default btn-xs">
@@ -111,7 +111,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="btn-global-country-search" data-dbType="EducationData" href="#">
+                                    <a class="btn-global-country-search" data-dbType="NamingData" href="#">
                                         <strong>IG/AO </strong>
                                         <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="Nombre d'appelation géographique"></span>:
                                         <span class="badge float-right">{{ stats.nbNaming }}</span>
@@ -132,38 +132,51 @@
             <script type="text/javascript">
                 $(document).ready(function () {
                     setTimeout(function() {
+                        var lang = {
+                            downloadCSV: "{{ ('Download CSV'|trans)|raw }}",
+                            downloadJPEG: "{{ ('Download JPEG image'|trans)|raw }}",
+                            downloadPDF: "{{ ('Download PDF document'|trans)|raw }}",
+                            downloadPNG: "{{ ('Download PNG image'|trans)|raw }}",
+                            downloadSVG: "{{ ('Download SVG vector image'|trans)|raw }}",
+                            downloadXLS: "{{ ('Download XLS'|trans)|raw }}"
+                        };
                         $.handleSearch._g1 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g2 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g3 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g4 = jQuery.extend(true, {}, $.statCharts);
-console.log({{ stats.graphProducts.rfresh|json_encode|raw }});
+
                         $.handleSearch._g1._container = 'container-g1';
                         $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g1._data = {{ stats.graphProducts.rfresh|json_encode|raw }};
-                        $.handleSearch._g1._title = {{ (('Annual statistics of'|trans) ~ ' ' ~ stats.products.0.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g1._title = {{ (('Annual statistics of'|trans) ~ ' ' ~ stats.products.0.label ~ ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
                         $.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';
-console.log($.handleSearch._g1._data);
+                        $.handleSearch._g1._lang =  lang;
                         $.handleSearch._g1._init();
-console.log($.handleSearch._g1._data);
+
                         $.handleSearch._g2._container = 'container-g2';
                         $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g2._data = {{ stats.graphProducts.rin|json_encode|raw }};
-                        $.handleSearch._g2._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.1.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g2._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.1.label ~ ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
                         $.handleSearch._g2._mesure = '{{ stats.products.1.measure |raw }}';
+                        $.handleSearch._g2._lang =  lang;
                         $.handleSearch._g2._init();
+
                         $.handleSearch._g3._container = 'container-g3';
                         $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g3._data = {{ stats.graphProducts.rtable|json_encode|raw }};
-                        $.handleSearch._g3._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.2.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g3._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.2.label ~  ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
                         $.handleSearch._g3._mesure = '{{ stats.products.2.measure |raw }}';
+                        $.handleSearch._g3._lang =  lang;
                         $.handleSearch._g3._init();
+
                         $.handleSearch._g4._container = 'container-g4';
                         $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g4._data = {{ stats.graphProducts.rsec|json_encode|raw }};
-                        $.handleSearch._g4._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.3.label ~ ' en '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g4._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.3.label ~  ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
                         $.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';
+                        $.handleSearch._g4._lang =  lang;
                         $.handleSearch._g4._init();
-console.log($.handleSearch._g1._data);
+
                     });
                 });
             </script>

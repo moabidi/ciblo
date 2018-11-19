@@ -11,9 +11,12 @@ $(function ($) {
         this._title = '';
         this._subtitle = '';
         this._mesure = '';
+        this._lang = {};
 
         this._init = function () {
-
+            Highcharts.setOptions({
+                lang: this._lang
+            });
             Highcharts.chart(this._container, {
                 chart: {
                     type: 'column'

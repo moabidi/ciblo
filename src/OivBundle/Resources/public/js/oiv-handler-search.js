@@ -18,7 +18,7 @@ $(function($){
                 'method': method,
                 'data': data
             }).done(function(response){
-                this._handleSuccess(response, view);
+                $.handleSearch._handleSuccess(response, view);
             }).fail(function(error){
                 alert('error response');
                 console.log('error response');
@@ -27,10 +27,10 @@ $(function($){
 
         this._handleSuccess = function(response, view) {
             switch (view) {
-                case 'global': this._refreshGlobalView(response);break;
-                case 'stat': this._refreshStatView(response);break;
-                case 'graph': this._refreshGraphView(response);break;
-                case 'global-country': this._refreshDataCountryView(response);break;
+                case 'global': $.handleSearch._refreshGlobalView(response);break;
+                case 'stat': $.handleSearch._refreshStatView(response);break;
+                case 'graph': $.handleSearch._refreshGraphView(response);break;
+                case 'global-country': $.handleSearch._refreshDataCountryView(response);break;
             }
         };
 
@@ -40,7 +40,7 @@ $(function($){
         };
 
         this._refreshGlobalView = function(response) {
-            this._refreshTableResult(response,'resultSearch');
+            $.handleSearch._refreshTableResult(response,'resultSearch');
         };
 
         this._refreshStatView = function(response) {
@@ -52,16 +52,16 @@ $(function($){
         };
 
         this._refreshDataCountryView = function(response) {
-            this._refreshTableResult(response,'resultStats');
+            $.handleSearch._refreshTableResult(response,'resultStats');
         };
 
-        this._refreshTableResult = function (contentn, idTable) {
+        this._refreshTableResult = function (content, idTable) {
             var hearder = '';
             var body = '';
-            $.each(content.result.labelfields, function(key, val){
+            $.each(content.labelfields, function(key, val){
                 hearder += '<th>'+val+'</th>';
             });
-            $.each(response.result.data, function(key, items){
+            $.each(content.data, function(key, items){
                 body += '<tr>';
                 $.each(items, function(key, val){
                     body += '<td>'+val+'</td>';
@@ -73,7 +73,7 @@ $(function($){
 
         this._initSearchButton = function(btn, view) {
             $(btn).on('click', function() {console.log(view);
-                var uri = '/statistiques/'+view;
+                var uri = '/fr/statistiques/'+view;
                 var data = $.handleSearch._getFiltersData($(this),view);
                 $.handleSearch._sendRequest(uri, 'POST', data,view);
                 return false;
@@ -84,7 +84,7 @@ $(function($){
             var data = 'dbType='+$(btn).attr('data-dbType');
             if (view == 'global-country') {
                 data += '&year='+ $('#country-name').attr('data-statYear')+
-                '&countryCode='+$('#country-name').attr('data-statCountry')+'&view=tab3';
+                '&countryCode='+$('#country-name').attr('data-statCountry')+'&view=tab2';
             } else if (view == 'global') {
                 var slectedFilters = '[data-view=' + view + ']';
                 if (view == 'global') {
@@ -116,13 +116,15 @@ $(function($){
                 $('.graph').removeClass('show').addClass('hide');
                 $('#'+containerGraph).addClass('show');
                 if (indexType != '-1') {
-                    $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item').trigger('click');
+                    $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item').not('.highcharts-legend-item-hidden').trigger('click');
                     $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item:eq('+indexType+')').trigger('click');
                 }
-                console.log($(this).attr('data-graph'));
-                console.log($(this).attr('data-statType'));
-                console.log(indexType);
-                console.log($('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item:eq('+indexType+')'));
+                return false;
+            });
+
+            $('.product').on('click', function(){
+                var containerGraph = $(this).attr('data-graph');
+                $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item.highcharts-legend-item-hidden').trigger('click');
                 return false;
             });
         }

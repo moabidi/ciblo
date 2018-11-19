@@ -89,10 +89,17 @@ class OivController extends Controller
         if ($request->request->has('year')) {
             $aCriteria['year'] = $request->request->get('year');
         }
-        $table = $request->request->get('table');
+        $table = $request->request->get('dbType');
         $view = $request->request->get('view');
         $result = $this->getResultGLobalSearch($table, $aCriteria, $view);
-        return new JsonResponse($result);
+        $labelfields = [];
+        if (count($result)) {
+            $translator = $this->get('translator');
+            foreach($result[0] as $field => $val) {
+                $labelfields[] = $translator->trans($field);
+            }
+        }
+        return new JsonResponse(['data' => $result, 'labelfields'=>$labelfields]);
     }
 
     /**

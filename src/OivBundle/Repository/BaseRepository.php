@@ -44,7 +44,7 @@ class BaseRepository extends EntityRepository
         if (isset($aCriteria['countryCode'])) {
             $queryBuilder
                 ->where('o.countryCode = :countryCode')
-                ->where('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')
+                ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')
                 ->setParameter('countryCode', $aCriteria['countryCode']);
         }
         $result = $queryBuilder->getQuery()->getArrayResult();
