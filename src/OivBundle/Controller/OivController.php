@@ -27,16 +27,16 @@ class OivController extends Controller
         //var_dump($repo->getCountVariety(['countryCode'=>'FRA']));die;
 
         //var_dump($this->getStatsCountry(['countryCode'=>'FRA','year'=>'2016']));die;
-        $selectedYear = '2016';
-        $selectedCodeCountry = 'FRA';
+        $selectedYear = date('Y')-2;
+        $selectedCodeCountry = '';
         $aCriteria = ['countryCode' => $selectedCodeCountry, 'year' => $selectedYear];
         $aParams['stats'] = $this->getStatsCountry($aCriteria);
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
-        $aParams['globalResult'] = $this->getResultGLobalSearch('EducationData', $aCriteria,'tab1');
-        $aParams['globalStatResult'] = $this->getResultGLobalSearch('EducationData', $aCriteria,'tab2');
-        $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => 'FRA']);
+        $aParams['globalResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab1');
+        $aParams['globalStatResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab2');
+        $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => $selectedCodeCountry]);
         $aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
         $aParams['selectedYear'] = $selectedYear;
         //var_dump($aParams['globalResult']);die;
@@ -63,15 +63,24 @@ class OivController extends Controller
     public function globalSearchAction(Request $request)
     {
         $aCriteria = [];
-        if ($request->request->has('countryCode')) {
-            $aCriteria['countryCode'] = $request->request->get('countryCode');
+        $result = [];
+        $table = ucfirst($request->request->get('dbType')).'Data';
+        if (class_exists('OivBundle\\Entity\\'.$table)) {
+            if ($request->request->has('countryCode')) {
+                $aCriteria['countryCode'] = $request->request->get('countryCode');
+            }
+            if ($request->request->has('year')) {
+                $aCriteria['year'] = $request->request->get('year');
+            }
+            foreach($request->request->all() as $field => $val) {
+                if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
+                    $aCriteria[$field] = $val;
+                }
+            }
+            $result = $this->getResultGLobalSearch($table, $aCriteria, 'tab1');
+            $result = $this->formatDataTable($result);
         }
-        if ($request->request->has('year')) {
-            $aCriteria['year'] = $request->request->get('year');
-        }
-        $table = $request->request->get('dbType');
-        $view = $request->request->get('view');
-        $result = $this->getResultGLobalSearch($table, $aCriteria, $view);
+        //var_dump($result);
         return new JsonResponse($result);
     }
 
@@ -92,14 +101,8 @@ class OivController extends Controller
         $table = $request->request->get('dbType');
         $view = $request->request->get('view');
         $result = $this->getResultGLobalSearch($table, $aCriteria, $view);
-        $labelfields = [];
-        if (count($result)) {
-            $translator = $this->get('translator');
-            foreach($result[0] as $field => $val) {
-                $labelfields[] = $translator->trans($field);
-            }
-        }
-        return new JsonResponse(['data' => $result, 'labelfields'=>$labelfields]);
+        $result = $this->formatDataTable($result);
+        return new JsonResponse($result);
     }
 
     /**
@@ -170,7 +173,7 @@ class OivController extends Controller
     {
         $aProducts = [
             [
-                'label' => 'Raisin frais',
+                'label' => 'Raisins totales',
                 'name' => 'rfresh',
                 'stat' => [
                     'prod' => 'C_PROD_GRP',
@@ -195,7 +198,7 @@ class OivController extends Controller
                 'label' => 'Raisin de tables',
                 'name' => 'rtable',
                 'stat' => [
-                    'prod' => '',
+                    'prod' => 'F_PROD_TABLE_GRP',
                     'consumption' => 'L_COMSUMPTION_TABLE_GRP',
                     'export' => '',
                     'import' => ''
@@ -233,6 +236,12 @@ class OivController extends Controller
         return $aProducts;
     }
 
+    /**
+     * @param $aData
+     * @param $minDate
+     * @param $maxDate
+     * @return array ['xAxis' => ['p1' => ['y1','Yn']], 'p1'=>['d1','dn'], 'pn'=>['d1','dm']]
+     */
     private function formatDataGraph($aData, $minDate, $maxDate)
     {
         $formattedData = ['xAxis'=>[]];
@@ -243,14 +252,18 @@ class OivController extends Controller
         foreach ($aData as $product) {
             $productName = $product['name'];
             $formattedData[$productName] = [];
+            $formattedData['xAxis'][$productName] = [];
             array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $minDate, $maxDate) {
                 $typeStat = ['name' => $key, 'data' => []];
-                for($y = $minDate; $y<=$maxDate; $y++) {
-                    $typeStat['data'][$y] = 0;
-                }
+//                for($y = $minDate; $y<=$maxDate; $y++) {
+//                    $typeStat['data'][$y] = 0;
+//                }
                 if ($value) {
                     foreach ($value as $stat) {
-                        $typeStat['data'][$stat['year']] = in_array($stat['year'],$formattedData['xAxis']) ? floatval($stat['value']):0;
+                        if ($stat['value']) {
+                            $typeStat['data'][$stat['year']] = floatval($stat['value']);
+                            $formattedData['xAxis'][$productName][] = $stat['year'];
+                        }
                     }
                 }
                 $typeStat['data'] = array_values($typeStat['data']);
@@ -260,5 +273,23 @@ class OivController extends Controller
             //var_dump($formattedData );die;
         }
         return $formattedData;
+    }
+
+    /** format and translate data table
+     * @param $data
+     * @return array
+     */
+    public function formatDataTable($data)
+    {
+        $aResult = [];
+        if (count($data)) {
+            $translator = $this->get('translator');
+            $aResult['labelfields'] = [];
+            foreach($data[0] as $field => $val) {
+                $aResult['labelfields'][] = $translator->trans($field);
+            }
+            $aResult['data'] = $data;
+        }
+        return $aResult;
     }
 }

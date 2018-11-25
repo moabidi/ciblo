@@ -8,9 +8,11 @@
 
 namespace OivBundle\Repository;
 
+use Doctrine\ORM\QueryBuilder;
+
 class StatDataRepository extends BaseRepository
 {
-
+    /**@var QueryBuilder $_queryBuilder */
     private $_queryBuilder;
 
     /**
@@ -27,6 +29,8 @@ class StatDataRepository extends BaseRepository
         }
 
         $this->makeQuery(array_merge($aCriteria,['statType'=>$statType]));
+//        var_dump($this->_queryBuilder->getQuery()->getDQL());
+//        var_dump($this->_queryBuilder->getQuery()->getResult());die;
         $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();
         if (isset($result['value'])) {
             $val = intval($result['value']) ? intval($result['value']):'0';
@@ -57,34 +61,34 @@ class StatDataRepository extends BaseRepository
     {
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $this->_queryBuilder
-            ->select('o.year, o.value, o.measureType')
+            ->select('o.year, SUM(o.value) as value, o.measureType')
             ->from($this->_entityName, 'o')
             ->where('o.statType = :statType')
             ->setParameter('statType',$aCriteria['statType']);
 
-        if (isset($aCriteria['countryCode'])) {
+        if (!empty($aCriteria['countryCode'])) {
             $this->_queryBuilder
                 ->Andwhere('o.countryCode = :countryCode')
                 ->setParameter('countryCode',$aCriteria['countryCode']);
         }
 
-        if( (isset($aCriteria['minDate']) && $aCriteria['minDate']) || (isset($aCriteria['maxDate']) && $aCriteria['minDate'])){
-            if (isset($aCriteria['minDate'])) {
+        if( !empty($aCriteria['minDate']) || !empty($aCriteria['maxDate'])){
+            if (!empty($aCriteria['minDate'])) {
                 $this->_queryBuilder
                     ->Andwhere('o.year >= :minDate')
                     ->setParameter('minDate', $aCriteria['minDate']);
             }
-            if (isset($aCriteria['maxDate'])) {
+            if (!empty($aCriteria['maxDate'])) {
                 $this->_queryBuilder
                     ->Andwhere('o.year <= :maxDate')
                     ->setParameter('maxDate', $aCriteria['maxDate']);
             }
-        }elseif (isset($aCriteria['year'])) {
+        }elseif (!empty($aCriteria['year'])) {
             $this->_queryBuilder
                 ->Andwhere('o.year = :year')
                 ->setParameter('year',$aCriteria['year']);
         }
-        $this->_queryBuilder->groupBy('o.year, o.value, o.measureType');
+        $this->_queryBuilder->groupBy('o.year, o.measureType');
     }
 
     /**
@@ -101,30 +105,22 @@ class StatDataRepository extends BaseRepository
             ->from($this->_entityName, 'o')
             ->where('1=1');
 
-        if (isset($aCriteria['statType'])) {
+        if (!empty($aCriteria['statType'])) {
             $this->_queryBuilder
                 ->where('o.statType = :statType')
                 ->setParameter('statType', $aCriteria['statType']);
         }
-        if (isset($aCriteria['countryCode'])) {
+        if (!empty($aCriteria['countryCode'])) {
             $this->_queryBuilder
                 ->Andwhere('o.countryCode = :countryCode')
                 ->setParameter('countryCode',$aCriteria['countryCode']);
         }
-        if (isset($aCriteria['year'])) {
+        if (!empty($aCriteria['year'])) {
             $this->_queryBuilder
                 ->Andwhere('o.year = :year')
                 ->setParameter('year',$aCriteria['year']);
         }
         $result = $this->_queryBuilder->getQuery()->getArrayResult();
-//        if (count($result)) {
-//            array_walk($result, function(&$v,$k){
-//                $s = $v[0];//var_dump($v,$k);die;
-//                unset($v[0]);
-//                $v = array_merge($v,$s);
-//            });
-//        }
-//        return $result;
         return $this->reformatArray($result);
     }
 

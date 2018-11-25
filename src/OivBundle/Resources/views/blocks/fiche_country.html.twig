@@ -10,13 +10,13 @@
                         </a>
                     </li>
                     <li class="centred">
-                        <img src="{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}" class="flag flag-{{ selectedCountry.iso2|lower }}"
+                        <img src="{% if selectedCountry.iso3|default() %}{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
                              alt="France"/>
-                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3 }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry.countryNameFr }}</span>
+                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3|default('oiv') }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry.countryNameFr|default('All world') }}</span>
                         {% if isMemberShip %}
                         <span class="country">Membre Oiv</span>
                         {% endif %}
-                        <img src="{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}" class="flag flag-{{ selectedCountry.iso2|lower }}"
+                        <img src="{% if selectedCountry.iso3|default() %}{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
                              alt="France"/>
                     </li>
                     <li data-year="{{ selectedYear-1 }}" id="prevYear" class="previous">
@@ -31,22 +31,34 @@
                 <!--<img src="..." alt="...">-->
                 <div class="caption">
                     <!--<h3>Thumbnail label</h3>-->
-                    <ul>
-                        <li>
-                            <a href="#">
-                                <strong>{{ 'area'|trans }} </strong>:
-                                <span class="badge">{{ stats.usedArea.val ~ ' / ' ~ stats.globalArea.val }} {{ stats.globalArea.measure }}</span>
-                            </a>
-                        </li>
-                    </ul>
+                    {#<ul>#}
+                        {#<li>#}
+                            {#<a href="#">#}
+                                {#<strong>{{ 'area'|trans }} </strong>:#}
+                                {#<span class="badge">{{ stats.usedArea.val ~ '(1000  QX) / ' ~ stats.globalArea.val }} (1000 HA) #}{##}{# stats.globalArea.measure #}{##}{#</span>#}
+                                {#<span class="badge">{{ stats.globalArea.val }} (1000 HA) #}{# stats.globalArea.measure #}{#</span>#}
+                            {#</a>#}
+                        {#</li>#}
+                    {#</ul>#}
+                    <table class="table ">
+                        <thead>
+                        <th class="text-center">{{ 'area'|trans }}</th>
+                        </thead>
+                        <tbody class="bg-wihte">
+                        <tr>
+                            {#<td class="text-center"><a>{% if stats.globalArea.val %}{{ (stats.globalArea.val * 1000 )|number_format(0, '.',' ') }} HA {% else %} 0 HA{% endif %}</a></td>#}
+                            <td class="text-center"><a>{% if stats.globalArea.val %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} (1000 HA) {% else %} 0 HA{% endif %}</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <div class="search-list table-responsive table-wrapper-scroll-y table-fixed">
                         <table id="products" class="table">
                             <thead>
                             <th></th>
                             <th>{{ 'production'|trans }}</th>
                             <th>{{ 'consumption'|trans }}</th>
-                            <th>{{ 'import'|trans }}</th>
                             <th>{{ 'export'|trans }}</th>
+                            <th>{{ 'import'|trans }}</th>
                             </thead>
                             <tbody>
                             {% for product in stats.products %}
@@ -58,7 +70,7 @@
                                     </td>
                                     <td>
                                         <div class="display-flex">
-                                            <span class="badge" {% if product.stat.prod is null  %}data-toggle="tooltip" title="Pas de production"{% endif %}>{{ product.stat.prod is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.prod ~ '</span> ' )|raw }}</span>
+                                            <span class="badge" {% if product.stat.prod is null  %}data-toggle="tooltip" title="Pas de production"{% endif %}>{{ product.stat.prod is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.prod|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
                                             <a data-graph="container-g{{ loop.index }}" data-statType="prod" class="stat-type btn btn-default btn-xs">
                                                 <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                             </a>
@@ -66,7 +78,7 @@
                                     </td>
                                     <td class="product" data-graph="container-g{{ loop.index }}">
                                         <div class="display-flex">
-                                        <span class="badge" {% if product.stat.consumption is null %}data-toggle="tooltip" title="Pas de consommation"{% endif %}>{{ product.stat.consumption is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.consumption ~ '</span> ' )|raw }}</span>
+                                        <span class="badge" {% if product.stat.consumption is null %}data-toggle="tooltip" title="Pas de consommation"{% endif %}>{{ product.stat.consumption is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.consumption|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
                                         <a data-graph="container-g{{ loop.index }}" data-statType="consumption" class="stat-type btn btn-default btn-xs">
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                         </a>
@@ -74,7 +86,7 @@
                                     </td>
                                     <td class="product" data-graph="container-g{{ loop.index }}">
                                         <div class="display-flex">
-                                            <span class="badge" {% if product.stat.export is null %}data-toggle="tooltip" title="Pas d'export"{% endif %}>{{ product.stat.export is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.export ~ '</span> ' )|raw }}</span>
+                                            <span class="badge" {% if product.stat.export is null %}data-toggle="tooltip" title="Pas d'export"{% endif %}>{{ product.stat.export is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.export|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
                                             <a data-graph="container-g{{ loop.index }}" data-statType="export" class="stat-type btn btn-default btn-xs">
                                                 <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                             </a>
@@ -82,7 +94,7 @@
                                     </td>
                                     <td class="product" data-graph="container-g{{ loop.index }}">
                                         <div class="display-flex">
-                                            <span class="badge" {% if product.stat.import is null %}data-toggle="tooltip" title="Pas d'import"{% endif %}>{{ product.stat.import is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.import ~ '</span> ' )|raw }}</span>
+                                            <span class="badge" {% if product.stat.import is null %}data-toggle="tooltip" title="Pas d'import"{% endif %}>{{ product.stat.import is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.import|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
                                             <a data-graph="container-g{{ loop.index }}" data-statType="import" class="stat-type btn btn-default btn-xs">
                                                 <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                             </a>
@@ -93,33 +105,83 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul>
-                                <li>
-                                    <a class="btn-global-country-search" data-dbType="VarietyData" href="#">
-                                        <strong>{{ 'count variety'|trans }} </strong>
-                                        <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count variety'|trans }}"></span>:
-                                        <span class="badge float-right">{{ stats.nbVariety }}</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="btn-global-country-search" data-dbType="EducationData" href="#">
-                                        <strong>{{ 'count education'|trans }} </strong>
-                                        <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count education'|trans }}"></span>:
-                                        <span class="badge float-right">{{ stats.nbEducation }}</span>
-                                    </a>
-                                </li>
-                                <li>
+                    <table class="table ">
+                        <thead>
+                            <th class="text-center">
+                                {{ 'Variety'|trans }}
+                                <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count variety'|trans }}"></span>
+                            </th>
+                        </thead>
+                        <tbody class="bg-wihte">
+                        <tr>
+                            <td class="text-center">
+                                <a class="btn-global-country-search" data-dbType="VarietyData" href="#">
+                                    {{ stats.nbVariety|number_format(0, '.',' ') }}
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="table ">
+                        <thead>
+                            <th class="text-center">
+                                {{ 'count education'|trans }}
+                                <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count education'|trans }}"></span>
+                            </th>
+                        </thead>
+                        <tbody class="bg-wihte">
+                        <tr>
+                            <td class="text-center">
+                                <a class="btn-global-country-search" data-dbType="EducationData" href="#">
+                                    {{ stats.nbEducation|number_format(0, '.',' ') }}
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="table ">
+                        <thead>
+                            <th class="text-center">
+                                IG/AO <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="Nombre d'appelation géographique"></span>
+                            </th>
+                        </thead>
+                        <tbody class="bg-wihte">
+                            <tr>
+                                <td class="text-center">
                                     <a class="btn-global-country-search" data-dbType="NamingData" href="#">
-                                        <strong>IG/AO </strong>
-                                        <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="Nombre d'appelation géographique"></span>:
-                                        <span class="badge float-right">{{ stats.nbNaming }}</span>
+                                        {{ stats.nbNaming|number_format(0, '.',' ') }}
                                     </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {#<div class="row">#}
+                        {#<div class="col-md-6">#}
+                            {#<ul>#}
+                                {#<li>#}
+                                    {#<a class="btn-global-country-search" data-dbType="VarietyData" href="#">#}
+                                        {#<strong>{{ 'count variety'|trans }} </strong>#}
+                                        {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count variety'|trans }}"></span>:#}
+                                        {#<span class="badge float-right">{{ stats.nbVariety }}</span>#}
+                                    {#</a>#}
+                                {#</li>#}
+                                {#<li>#}
+                                    {#<a class="btn-global-country-search" data-dbType="EducationData" href="#">#}
+                                        {#<strong>{{ 'count education'|trans }} </strong>#}
+                                        {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count education'|trans }}"></span>:#}
+                                        {#<span class="badge float-right">{{ stats.nbEducation }}</span>#}
+                                    {#</a>#}
+                                {#</li>#}
+                                {#<li>#}
+                                    {#<a class="btn-global-country-search" data-dbType="NamingData" href="#">#}
+                                        {#<strong>IG/AO </strong>#}
+                                        {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="Nombre d'appelation géographique"></span>:#}
+                                        {#<span class="badge float-right">{{ stats.nbNaming }}</span>#}
+                                    {#</a>#}
+                                {#</li>#}
+                            {#</ul>#}
+                        {#</div>#}
+                    {#</div>#}
                 </div>
             </div>
         </div>
@@ -146,37 +208,41 @@
                         $.handleSearch._g4 = jQuery.extend(true, {}, $.statCharts);
 
                         $.handleSearch._g1._container = 'container-g1';
-                        $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis.rfresh|json_encode|raw }};
                         $.handleSearch._g1._data = {{ stats.graphProducts.rfresh|json_encode|raw }};
-                        $.handleSearch._g1._title = {{ (('Annual statistics of'|trans) ~ ' ' ~ stats.products.0.label ~ ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
-                        $.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';
+                        $.handleSearch._g1._title = {{ (stats.products.0.label|trans)|json_encode|raw  }};
+                        {#$.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';#}
+                        $.handleSearch._g1._mesure = '1000 QX';
                         $.handleSearch._g1._lang =  lang;
                         $.handleSearch._g1._init();
 
                         $.handleSearch._g2._container = 'container-g2';
-                        $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis.rin|json_encode|raw }};
                         $.handleSearch._g2._data = {{ stats.graphProducts.rin|json_encode|raw }};
-                        $.handleSearch._g2._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.1.label ~ ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
+                        $.handleSearch._g2._title = {{ (stats.products.1.label|trans)|json_encode|raw  }};
                         $.handleSearch._g2._mesure = '{{ stats.products.1.measure |raw }}';
+                        $.handleSearch._g2._mesure = '1000 HL';
                         $.handleSearch._g2._lang =  lang;
                         $.handleSearch._g2._init();
 
                         $.handleSearch._g3._container = 'container-g3';
-                        $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis.rtable|json_encode|raw }};
                         $.handleSearch._g3._data = {{ stats.graphProducts.rtable|json_encode|raw }};
-                        $.handleSearch._g3._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.2.label ~  ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
-                        $.handleSearch._g3._mesure = '{{ stats.products.2.measure |raw }}';
+                        $.handleSearch._g3._title = {{ (stats.products.2.label|trans)|json_encode|raw  }};
+                        {#$.handleSearch._g3._mesure = '{{ stats.products.2.measure |raw }}';#}
+                        $.handleSearch._g3._mesure = '1000 QX';
                         $.handleSearch._g3._lang =  lang;
                         $.handleSearch._g3._init();
 
                         $.handleSearch._g4._container = 'container-g4';
-                        $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis.rsec|json_encode|raw }};
                         $.handleSearch._g4._data = {{ stats.graphProducts.rsec|json_encode|raw }};
-                        $.handleSearch._g4._title = {{ (('Annual statistics of'|trans) ~ ' '~ stats.products.3.label ~  ' '~('in'|trans)~' '~ selectedCountry.countryNameFr)|json_encode|raw  }};
-                        $.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';
+                        $.handleSearch._g4._title = {{ (stats.products.3.label|trans)|json_encode|raw  }};
+                        {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
+                        $.handleSearch._g4._mesure = '1000 QX';
                         $.handleSearch._g4._lang =  lang;
                         $.handleSearch._g4._init();
-
+                        $('.highcharts-credits').remove();
                     });
                 });
             </script>

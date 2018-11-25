@@ -1,38 +1,38 @@
 countryCode: Pays
-formationTitle: Titre de formation
-university: Université
+formationTitle: Intitulé de la formation
+university: Établissement
 tutelle: Tutelle
-level: Niveau
-diploma: Diplome
-cooperation:  Copération
+level: Niveau et catégorie
+diploma: Diplôme(s) octroyé(s)
+cooperation: Coopérations universitaires éventuelles
 month: Mois
-hourCourses: Heure de cours
-credits: Crédit
-prior: Priorité
-deadline: Limite
+hourCourses: Heures de classe
+credits: Crédits
+prior: Pré-requis
+deadline: Deadline
 contact: Contact
-adress: Addresse
-lastDate: Derniere date
+adress: Adresse
+lastDate: dernière date de mise à jour
 internetAdress: Adresse internet
 #Appelation
-appellationCode: Code Appélation
-appellationName: Nom  Appélation
-parentCode: Code parent
-parentName: Nom parent
-typeNationalCode: Code national type
-typeInternationalCode: Code international type
-productCategoryName: Nom catégorie de produit
-productType: Type de produit
-referenceName: Nom de reference
-url: Lien
+appellationCode: Code IG
+appellationName: Appéllation
+parentCode: Code Appéllation parent
+parentName: Appéllation parent
+typeNationalCode: Type d'indication type 1
+typeInternationalCode: Type d'indication type 2
+productCategoryName: Catégories du produit
+productType: Type du produit
+referenceName: Base légale
+url: Lien sur base légale
 #Stat
 statType: Type de statisqtique
-measureType: Type de mesure
-metricCompType: Type Complémentaire metric
+measureType: Unité
+metricCompType: Type de données
 year: Année
 value: Valeur
-infoSource: Source
-grapesDestination: Destination
+infoSource: Source info
+grapesDestination: Vocation du raisin
 #Variety
 isMainVariety: Variété principale
 areaCultivated: Surface cultuvée
@@ -54,12 +54,12 @@ export: Export
 total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
 place: Lieu
-data type: Type de données
+Database: Base de données
 all world: Tout le monde
 Naming: Appéllations
 Variety: Cépages
 Education: Formations
-Statistic: Statisqtiques
+Statistic: Statistiques
 Choose: Sélectionner
 Annual statistics of: Statistiques annuelles de
 Download CSV: Télécharger CSV
@@ -69,3 +69,5 @@ Download PNG image: Télécharger PNG image
 Download SVG vector image: Télécharger
 Download XLS: Télécharger XLS
 in: en
+Simple search: Recherche simple
+Advanced search: Recherche avancée

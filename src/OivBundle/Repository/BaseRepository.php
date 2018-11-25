@@ -40,13 +40,27 @@ class BaseRepository extends EntityRepository
         $queryBuilder
             ->select('c.tradeBloc, c.countryNameFr, o')
             ->from($this->_entityName, 'o')
-            ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
-        if (isset($aCriteria['countryCode'])) {
+            ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode')
+            ->where('1=1')
+        ->setMaxResults(10);
+        if (!empty($aCriteria['countryCode'])) {
             $queryBuilder
-                ->where('o.countryCode = :countryCode')
+                ->andWhere('o.countryCode = :countryCode')
                 ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')
                 ->setParameter('countryCode', $aCriteria['countryCode']);
         }
+        unset($aCriteria['countryCode']);
+        unset($aCriteria['year']);
+        //var_dump($aCriteria);die;
+        array_walk($aCriteria, function($val, $field) use($queryBuilder){
+            if($val) {
+                //var_dump($field,$val);
+                //$cond = 'o.'.$field.' = :'+$field;
+                $queryBuilder
+                    ->andWhere(sprintf('o.%s = :%s',$field,$field))
+                    ->setParameter(sprintf('%s',$field),$val);
+            }
+        });
         $result = $queryBuilder->getQuery()->getArrayResult();
         return $this->reformatArray($result);
     }
@@ -90,4 +104,5 @@ class BaseRepository extends EntityRepository
         }
         return $result;
     }
+
 }

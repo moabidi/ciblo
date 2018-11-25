@@ -4,7 +4,7 @@
             {% if filter.values|length %}
                 <div class="col-md-4 form-group">
                     <label class="control-label">{{ filter.label }}</label>
-                    <select id="{{ 'VarietyData-' ~ fieldName }}" name="{{ fieldName }}" class="form-control">
+                    <select data-view="variety" id="{{ 'VarietyData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
                         <option value="">{{ 'Choose'|trans }}</option>
                         {% for value in filter.values %}
                             <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>

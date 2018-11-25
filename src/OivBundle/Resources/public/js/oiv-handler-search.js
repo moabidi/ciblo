@@ -12,16 +12,23 @@ $(function($){
 
         this._listType = ['prod', 'consumption','export','import'];
 
-        this._sendRequest = function(uri, method, data, view) {
+        this._sendRequest = function(uri, method, data, view, top) {
+            $('.card').loading({circles: 3, overlay: true, width:275, top: top});
             $.ajax({
                 'url':uri,
                 'method': method,
                 'data': data
             }).done(function(response){
                 $.handleSearch._handleSuccess(response, view);
+                setTimeout(function(){
+                    $('.card').loading({destroy: true});
+                }, 2000);
             }).fail(function(error){
+                setTimeout(function(){
+                    $('.card').loading({destroy: true});
+                }, 2000);
                 alert('error response');
-                console.log('error response');
+                console.log('error response', error);
             });
         };
 
@@ -58,44 +65,50 @@ $(function($){
         this._refreshTableResult = function (content, idTable) {
             var hearder = '';
             var body = '';
-            $.each(content.labelfields, function(key, val){
-                hearder += '<th>'+val+'</th>';
-            });
-            $.each(content.data, function(key, items){
-                body += '<tr>';
-                $.each(items, function(key, val){
-                    body += '<td>'+val+'</td>';
+            if (content.length) {
+                $.each(content.labelfields, function (key, val) {
+                    hearder += '<th>' + val + '</th>';
                 });
-                body += '</tr>';
-            });
+                $.each(content.data, function (key, items) {
+                    body += '<tr>';
+                    $.each(items, function (key, val) {
+                        body += '<td>' + val + '</td>';
+                    });
+                    body += '</tr>';
+                });
+            }else{
+                hearder = '<th class="text-center">Aucune résulat touvée pour votre recherche</th>';
+                body = '<tr><td></td></tr>';
+            }
             $('#'+idTable).html('<thead><tr>'+hearder+'</tr></thead><tbody>'+body+'</tbody>');
         };
 
         this._initSearchButton = function(btn, view) {
-            $(btn).on('click', function() {console.log(view);
+            $(btn).on('click', function() {
+                console.log(view);
                 var uri = '/fr/statistiques/'+view;
                 var data = $.handleSearch._getFiltersData($(this),view);
-                $.handleSearch._sendRequest(uri, 'POST', data,view);
+                var posLoader = $(this).offset().top;
+                $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
                 return false;
             });
         };
 
         this._getFiltersData = function (btn,view) {
-            var data = 'dbType='+$(btn).attr('data-dbType');
+            var db = $(btn).attr('data-dbType');
+            var data = 'dbType='+db+'&';
             if (view == 'global-country') {
-                data += '&year='+ $('#country-name').attr('data-statYear')+
+                data += 'year='+ $('#country-name').attr('data-statYear')+
                 '&countryCode='+$('#country-name').attr('data-statCountry')+'&view=tab2';
             } else if (view == 'global') {
-                var slectedFilters = '[data-view=' + view + ']';
-                if (view == 'global') {
-                    slectedFilters = '#' + $('#dbType').val() + ' ' + slectedFilters;
-                }
+                var slectedFilters = '#' + db + ' ' + '[data-view=' + db + ']';
                 $(slectedFilters).each(function () {
+                    //console.log($(this));
                     if ($(this).val()) {
                         data += $(this).attr('name') + '=' + $(this).val() + '&';
                     }
                 });
-            }
+            }console.log(data);
             return data;
         };
 
@@ -108,6 +121,10 @@ $(function($){
             });
         };
 
+        /**
+         * Change Graph stat
+         * @private
+         */
         this._initStatTypeButton = function() {
 
             $('a.stat-type').on('click', function(){
@@ -127,8 +144,12 @@ $(function($){
                 $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item.highcharts-legend-item-hidden').trigger('click');
                 return false;
             });
-        }
+        };
 
+        /**
+         * Change year table stat
+         * @private
+         */
         this._changeYearStat = function () {
             $('#nextYear,#prevYear').on('click', function () {
                if ( $(this).attr('data-year')) {
@@ -170,22 +191,84 @@ $(function($){
                        //console.log(data);
                        $('#'+product+' .stat-type').each(function () {
                            var statType = $(this).attr('data-statType');
-                            $(this).parent().find('.valStatType').parent().html('<span class="valStatType">'+data[statType]+'</span> ' );
+                            $(this).parent().find('.valStatType').parent().html('<span class="valStatType">'+ $.handleSearch._formatNumber(data[statType])+'</span> ' );
                        });
                    });
                }
                 return false;
             });
+        };
+
+        /**
+         * refrech filter switch selected database
+         * @private
+         */
+        this._initRefreshFilter = function() {
+            $('#typeSearch').on('change', function() {
+                $('#naming').removeClass('show').addClass('hide');
+                $('#education').removeClass('show').addClass('hide');
+                $('#variety').removeClass('show').addClass('hide');
+                $('#stat').removeClass('show').addClass('hide');
+                $('#protection').removeClass('show').addClass('hide');
+                $('#'+$(this).val()).removeClass('hide').addClass('show');
+                if ($(this).val() == 'stat') {
+                    $('#yearMax').parent().removeClass('hide').addClass('show');
+                    $('#yearMin').parent().removeClass('hide').addClass('show');
+                    $('#year').parent().removeClass('show').addClass('hide');
+                }else{
+                    $('#yearMax').parent().removeClass('show').addClass('hide');
+                    $('#yearMin').parent().removeClass('show').addClass('hide');
+                    $('#year').parent().removeClass('hide').addClass('show');
+                }
+                $('#simpleSearch').attr('data-dbType',$(this).val());
+                $('#advancedSearch').attr('data-dbType',$(this).val());
+            });
+        };
+
+        /**
+         * Search on keyup
+         */
+        this._initKeypSearch = function() {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#resultSearch tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        };
+
+        /**
+         * format long number by add space between thousands
+         * @param nStr
+         * @returns {string}
+         * @private
+         */
+        this._formatNumber = function (nStr) {
+            nStr += '';
+            nStr = (Math.round( nStr * 100 )/100 ).toString();
+            nStr = Number.parseFloat(nStr);
+            nStr = nStr.toFixed(1);
+            var x = nStr.split('.');
+            var x1 = x[0];
+            var x2 = x.length > 1 && x[1]!=0 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+            }
+            return x1 + x2;
         }
-    }
+    };
 
     $(document).ready(function(){
-        $.handleSearch._initSearchButton('#btn-global-search','global');
+        $.handleSearch._initSearchButton('#simpleSearch','global');
         $.handleSearch._initSearchButton('btn-country-search','country');
         $.handleSearch._initSearchButton('btn-product-search','country-statistic');
         $.handleSearch._initSearchButton('.btn-global-country-search','global-country');
         $.handleSearch._initStatButton();
         $.handleSearch._initStatTypeButton();
         $.handleSearch._changeYearStat();
+        $.handleSearch._initRefreshFilter();
+        $.handleSearch._initKeypSearch();
+        $('.selectpicker').selectpicker();
     });
-})
+});

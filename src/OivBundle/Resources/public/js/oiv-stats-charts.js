@@ -34,7 +34,7 @@ $(function ($) {
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'Mesures ('+this._mesure+')'
+                        text: this._mesure
                     }
                 },
                 tooltip: {

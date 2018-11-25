@@ -2,7 +2,7 @@
 <html lang="en">
 {% include 'OivBundle:blocks:head.html.twig' %}
 
-<body class="body-front  ">
+<body class="body-front  card card-inverse card-danger text-xs-center ">
 
 <div id="popup-cookie" class="shown">
     <div class="popup-cookie-content">
@@ -21,7 +21,7 @@
 <div id="page">
 
     {% include 'OivBundle:blocks:header.html.twig' %}
-    <div class="full-search card card-inverse card-danger text-xs-center ">
+    <div class="full-search ">
     {% include 'OivBundle:blocks:filter_search.html.twig' %}
     {% include 'OivBundle:blocks:result_search.html.twig' %}
     {% include 'OivBundle:blocks:fiche_country.html.twig' %}
@@ -64,7 +64,7 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
-<script src="{{ asset('/bundles/oiv/js/base-search.js') }}"></script>
+{#<script src="{{ asset('/bundles/oiv/js/base-search.js') }}"></script>#}
 <script src="{{ asset('/bundles/oiv/js/oiv-handler-search.js') }}"></script>
 <script src="{{ asset('/bundles/oiv/js/oiv-stats-charts.js') }}"></script>
 <script src="{{ asset('/bundles/oiv/js/jquery-loading.js') }}"></script>

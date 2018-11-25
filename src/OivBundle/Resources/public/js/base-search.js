@@ -1,5 +1,5 @@
 $(function(){
-    $('#typeSearch').on('click', function() {
+    $('#typeSearch').on('change', function() {
         $('#naming').removeClass('show').addClass('hide');
         $('#education').removeClass('show').addClass('hide');
         $('#variety').removeClass('show').addClass('hide');

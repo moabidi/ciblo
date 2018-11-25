@@ -6,12 +6,17 @@
     color: #FFFFFF;
 }
 #page .btn {
+    background: #FFFFFF;
+}
+#page a.stat-type.btn {
     color: #FFFFFF;
     background: #AE2B4A;
 }
 #page .btn:hover {
-    color: #FFFFFF;
     background: #2A6496;
+}
+#page .bg-wihte {
+    background: #FFFFFF;
 }
 .float-right{
     float: right;
@@ -37,6 +42,20 @@ body .filter-search {
     padding-top: 50px;
     font-size: 17px;
     border-bottom: 0;
+}
+
+#page .filter-search .btn:hover{
+    background: #FFFFFF;
+}
+#page .filter-search .bootstrap-select .dropdown-menu li{
+    background: #FFFFFF;
+}
+#page .filter-search .bootstrap-select .dropdown-menu li span{
+    font-size: 16px;
+}
+
+#page .filter-search .btn.btn-search {
+    background: #777783;
 }
 .filter-search .dropdown.dropdown-lg .dropdown-menu {
     margin-top: -1px;
@@ -131,7 +150,7 @@ body .filter-search {
 
 .table-fixed {
     overflow-y: auto;
-    height: 500px;
+    max-height: 500px;
 }
 
 .table-fixed table {
@@ -139,11 +158,16 @@ body .filter-search {
     width: 100%;
 }
 
-.table-fixed th,
-.table td {
+.table-fixed th, .table td {
     padding: 8px 16px;
 }
-
+.table-fixed .table > thead > tr > th,
+.table-fixed .table > tbody > tr > th,
+.table-fixed .table > thead > tr > td,
+.table-fixed .table > tbody > tr > td {
+    padding: 0px 8px 8px 8px;
+    vertical-align: top;
+}
 .table-fixed th {
     position: sticky;
     top: 0;
@@ -165,8 +189,12 @@ body .filter-search {
 }
 .fiche-country .pager {
     background: #c1c1c1;
+    margin-bottom: 0px;
 }
 .fiche-country .table-fixed {
     height: auto;
+}
+.fiche-country .table, .fiche-country .table-fixed {
+    margin-bottom: 7px;
 }
 /*** End fiche country  **/
