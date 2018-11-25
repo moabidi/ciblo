@@ -43,7 +43,7 @@ class BaseRepository extends EntityRepository
             ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode')
             ->where('1=1')
         ->setMaxResults(10);
-        if (!empty($aCriteria['countryCode'])) {
+        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
             $queryBuilder
                 ->andWhere('o.countryCode = :countryCode')
                 ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')

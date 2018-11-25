@@ -65,7 +65,8 @@ $(function($){
         this._refreshTableResult = function (content, idTable) {
             var hearder = '';
             var body = '';
-            if (content.length) {
+            //console.log(content, content.length);
+            if (typeof content.data != 'undefined') {
                 $.each(content.labelfields, function (key, val) {
                     hearder += '<th>' + val + '</th>';
                 });
@@ -96,11 +97,17 @@ $(function($){
 
         this._getFiltersData = function (btn,view) {
             var db = $(btn).attr('data-dbType');
-            var data = 'dbType='+db+'&';
+            var data = 'dbType='+db+'&countryCode='+$('#country').val();
+            if(db == 'stat') {
+                data += '&yearMin='+ $('#yearMin').val();
+                data += '&yearMax='+ $('#yearMax').val();
+            }else{
+                data += '&year='+ $('#year').val();
+            }
             if (view == 'global-country') {
-                data += 'year='+ $('#country-name').attr('data-statYear')+
-                '&countryCode='+$('#country-name').attr('data-statCountry')+'&view=tab2';
+                data += '&view=tab2';
             } else if (view == 'global') {
+                data +='&view=tab1';
                 var slectedFilters = '#' + db + ' ' + '[data-view=' + db + ']';
                 $(slectedFilters).each(function () {
                     //console.log($(this));
@@ -212,16 +219,25 @@ $(function($){
                 $('#protection').removeClass('show').addClass('hide');
                 $('#'+$(this).val()).removeClass('hide').addClass('show');
                 if ($(this).val() == 'stat') {
-                    $('#yearMax').parent().removeClass('hide').addClass('show');
-                    $('#yearMin').parent().removeClass('hide').addClass('show');
-                    $('#year').parent().removeClass('show').addClass('hide');
+                    $('#yearMax').parents().eq(1).removeClass('hide').addClass('show');
+                    $('#yearMin').parents().eq(1).removeClass('hide').addClass('show');
+                    $('#year').parents().eq(1).removeClass('show').addClass('hide');
                 }else{
-                    $('#yearMax').parent().removeClass('show').addClass('hide');
-                    $('#yearMin').parent().removeClass('show').addClass('hide');
-                    $('#year').parent().removeClass('hide').addClass('show');
+                    $('#yearMax').parents().eq(1).removeClass('show').addClass('hide');
+                    $('#yearMin').parents().eq(1).removeClass('show').addClass('hide');
+                    $('#year').parents().eq(1).removeClass('hide').addClass('show');
                 }
                 $('#simpleSearch').attr('data-dbType',$(this).val());
                 $('#advancedSearch').attr('data-dbType',$(this).val());
+            });
+        };
+
+        this._initChangeYear = function () {
+            $('#country').on('change', function () {
+                var countryCode = $(this).val();
+                var db = $('#typeSearch').val();
+                var href = window.location.href.split('?');
+                window.location.href = href[0] + '?db='+db+'&countryCode='+countryCode;
             });
         };
 
@@ -269,6 +285,7 @@ $(function($){
         $.handleSearch._changeYearStat();
         $.handleSearch._initRefreshFilter();
         $.handleSearch._initKeypSearch();
+        $.handleSearch._initChangeYear();
         $('.selectpicker').selectpicker();
     });
 });

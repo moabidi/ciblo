@@ -66,28 +66,13 @@ class StatDataRepository extends BaseRepository
             ->where('o.statType = :statType')
             ->setParameter('statType',$aCriteria['statType']);
 
-        if (!empty($aCriteria['countryCode'])) {
+        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
             $this->_queryBuilder
                 ->Andwhere('o.countryCode = :countryCode')
                 ->setParameter('countryCode',$aCriteria['countryCode']);
         }
 
-        if( !empty($aCriteria['minDate']) || !empty($aCriteria['maxDate'])){
-            if (!empty($aCriteria['minDate'])) {
-                $this->_queryBuilder
-                    ->Andwhere('o.year >= :minDate')
-                    ->setParameter('minDate', $aCriteria['minDate']);
-            }
-            if (!empty($aCriteria['maxDate'])) {
-                $this->_queryBuilder
-                    ->Andwhere('o.year <= :maxDate')
-                    ->setParameter('maxDate', $aCriteria['maxDate']);
-            }
-        }elseif (!empty($aCriteria['year'])) {
-            $this->_queryBuilder
-                ->Andwhere('o.year = :year')
-                ->setParameter('year',$aCriteria['year']);
-        }
+        $this->addYearCriteria($aCriteria);
         $this->_queryBuilder->groupBy('o.year, o.measureType');
     }
 
@@ -103,7 +88,8 @@ class StatDataRepository extends BaseRepository
         $this->_queryBuilder
             ->select('o')
             ->from($this->_entityName, 'o')
-            ->where('1=1');
+            ->where('1=1')
+            ->setMaxResults(10);
 
         if (!empty($aCriteria['statType'])) {
             $this->_queryBuilder
@@ -115,26 +101,45 @@ class StatDataRepository extends BaseRepository
                 ->Andwhere('o.countryCode = :countryCode')
                 ->setParameter('countryCode',$aCriteria['countryCode']);
         }
-        if (!empty($aCriteria['year'])) {
+
+        $this->addYearCriteria($aCriteria);
+        $result = $this->_queryBuilder->getQuery()->getArrayResult();
+        return $this->reformatArray($result);
+    }
+
+    private function addYearCriteria($aCriteria)
+    {
+        if(!empty($aCriteria['yearMin']) || !empty($aCriteria['yearMax'])){
+
+            if (!empty($aCriteria['yearMin'])) {
+                $this->_queryBuilder
+                    ->Andwhere('o.year >= :yearMin')
+                    ->setParameter('yearMin', $aCriteria['yearMin']);
+            }
+            if (!empty($aCriteria['yearMax'])) {
+                $this->_queryBuilder
+                    ->Andwhere('o.year <= :yearMax')
+                    ->setParameter('yearMax', $aCriteria['yearMax']);
+            }
+        }elseif (!empty($aCriteria['year'])) {
             $this->_queryBuilder
                 ->Andwhere('o.year = :year')
                 ->setParameter('year',$aCriteria['year']);
         }
-        $result = $this->_queryBuilder->getQuery()->getArrayResult();
-        return $this->reformatArray($result);
     }
 
     /**
      * @return array
      */
-    public static function getConfigFields() {
+    public static function getConfigFields()
+    {
         return [
             'versioning' => [],
             'countryCode' => ['tab1','tab2'],
             'statType' => ['filter','tab1','tab2'],
             'measureType' => ['tab1','tab2'],
             'metricCompType' => ['filter','tab1','tab2'],
-            'year' => ['filter','tab1','tab2'],
+            'year' => ['tab1','tab2'],
             'value' => ['filter','tab1','tab2'],
             'infoSource'=> [],
             'lastDate'=>['filter','tab1','tab2'],

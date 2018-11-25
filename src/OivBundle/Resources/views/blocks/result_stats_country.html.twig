@@ -9,25 +9,26 @@
             {#</div>#}
         {#</div>#}
     {#</div>#}
-    {% if globalStatResult|length %}
+
     <div class="search-list table-responsive table-wrapper-scroll-y table-fixed" >
         <table class="table" id="resultStats">
-            <thead>
-            {% for fieldName, value in globalStatResult.0 %}
-                <th>{{ fieldName|trans }}</th>
-            {% endfor %}
-            </thead>
-            <tbody>
-            {% for row in globalResult %}
-                <tr>
-                    {% for fieldName, value in row %}
-                        <td>{{ value|raw }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
+            {% if globalStatResult|length %}
+                <thead>
+                {% for fieldName, value in globalStatResult.0 %}
+                    <th>{{ fieldName|trans }}</th>
+                {% endfor %}
+                </thead>
+                <tbody>
+                {% for row in globalResult %}
+                    <tr>
+                        {% for fieldName, value in row %}
+                            <td>{{ value|raw }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% endif %}
         </table>
     </div>
-    {% endif %}
     <button id="btn-global-country-search" class="hide" name="searchDataCountry"></button>
 </div>

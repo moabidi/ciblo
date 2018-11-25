@@ -1,3 +1,18 @@
+{% if isAdvSearch|default(false) %}
+    {% for fieldName, filter in filters.StatData %}
+        {% if filter.values|length %}
+            <li>
+                <a class="text-center">{{ fieldName|trans }}</a>
+                <select data-view="education" id="{{ 'StatData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
+                    <option value="">{{ 'Choose'|trans }}</option>
+                    {% for value in filter.values %}
+                        <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% else %}
 <div id="stat" class="row hide">
     <div class="col-md-12">
         {% for fieldName, filter in filters.StatData %}
@@ -15,3 +30,4 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}

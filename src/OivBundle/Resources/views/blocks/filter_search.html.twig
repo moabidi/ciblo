@@ -11,24 +11,7 @@
                     <option value="stat">{{ 'Statistic'|trans }}</option>
                 </select>
             </div>
-            <div class="col-md-4 form-group">
-                <label class="control-label">{{ 'place'|trans }}</label>
-                <select class="form-control selectpicker" data-live-search="true" name="country">
-                    <optgroup label="Sélectionner Tout le monde">
-                        <option value="all" selected="">{{ 'all world'|trans }}</option>
-                    </optgroup>
-                    <optgroup label="Sélectionner un continent">
-                        {% for item in tradeBlocs %}
-                        <option value="{{ item.tradeBloc }}">{{ item.tradeBloc }}</option>
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Sélectionner un pays">
-                    {% for country in countries %}
-                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}">{{ country.getCountryNameFr() }}</option>
-                    {% endfor %}
-                    </optgroup>
-                </select>
-            </div>
+
             <div class="col-md-4 form-group" >
                 <label class="control-label">{{ 'year'|trans }}</label>
                 <select id="year" class="form-control selectpicker" data-live-search="true" name="year">
@@ -39,19 +22,19 @@
                 </select>
             </div>
             <div class="col-md-2 form-group hide">
-                <label class="control-label">Année min</label>
+                <label class="control-label">{{ 'Year min'|trans }}</label>
                 <select id="yearMin" class="form-control selectpicker" data-live-search="true" name="yearMin">
-                    {% for year in "now"|date('Y')..1900 %}
-                    <option value="year" name="yearMin">{{ year }}</option>
+                    {% for year in ("now"|date('Y'))-2..1995 %}
+                    <option value="{{ year }}" >{{ year }}</option>
                     {% endfor %}
 
                 </select>
             </div>
             <div class="col-md-2 form-group hide">
-                <label class="control-label">Année max</label>
+                <label class="control-label">{{ 'Year max'|trans }}</label>
                 <select id="yearMax" class="form-control selectpicker" data-live-search="true" name="yearMax">
-                    {% for year in "now"|date('Y')..1900 %}
-                    <option value="year" name="yearMax">{{ year }}</option>
+                    {% for year in ("now"|date('Y'))-2..1995 %}
+                    <option value="{{ year }}" >{{ year }}</option>
                     {% endfor %}
 
                 </select>

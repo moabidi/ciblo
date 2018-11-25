@@ -24,7 +24,7 @@ class EducationDataRepository extends BaseRepository
         $queryBuilder
             ->select('COUNT(o) as total')
             ->from($this->_entityName, 'o');
-        if (isset($aCriteria['countryCode'])) {
+        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
             $queryBuilder
                 ->where('o.countryCode = :countryCode')
                 ->where('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')

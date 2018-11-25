@@ -12,7 +12,7 @@
                     <li class="centred">
                         <img src="{% if selectedCountry.iso3|default() %}{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
                              alt="France"/>
-                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3|default('oiv') }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry.countryNameFr|default('All world') }}</span>
+                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3|default('oiv') }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry.countryNameFr|default('All the world'|trans) }}</span>
                         {% if isMemberShip %}
                         <span class="country">Membre Oiv</span>
                         {% endif %}
@@ -62,7 +62,7 @@
                             </thead>
                             <tbody>
                             {% for product in stats.products %}
-                                <tr id="{{ product.name }}" data-measure="{{ product.measure }}">
+                                <tr id="{{ product.name }}" data-measure="{{ product.measure|default() }}">
                                     <td>
                                         <a class="product" data-graph="container-g{{ loop.index }}" href="#">
                                             {{ product.label }} {% if product.name == 'rin' %}(1000 HL) {% else %}(1000 QX){% endif %} {% if loop.index0 == 0 %}<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Raisin frais ( toutes usages)"></span>{% endif %}

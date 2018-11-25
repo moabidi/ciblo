@@ -1,0 +1,27 @@
+{% if isAdvSearch|default(false) %}
+    <li class="sidebar-search-wrapper">
+        <a class="text-center">Pays</a>
+{% else %}
+    <div class="col-md-4 form-group">
+        <label class="control-label">{{ 'place'|trans }}</label>
+{% endif %}
+    <select id="country" class="form-control selectpicker" data-live-search="true" name="country">
+        <optgroup label="Sélectionner Tout le monde">
+            <option value="oiv" {% if countryCode == 'oiv' %}selected=""{% endif %}>{{ 'all world'|trans }}</option>
+        </optgroup>
+        <optgroup label="Sélectionner un continent">
+            {% for item in tradeBlocs %}
+                <option value="{{ item.tradeBloc }} {% if countryCode == 'item.tradeBloc' %}selected=""{% endif %}">{{ item.tradeBloc }}</option>
+            {% endfor %}
+        </optgroup>
+        <optgroup label="Sélectionner un pays">
+            {% for country in countries %}
+                <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
+            {% endfor %}
+        </optgroup>
+    </select>
+{% if isAdvSearch|default(false) %}
+    </li>
+{% else %}
+    </div>
+{% endif %}
