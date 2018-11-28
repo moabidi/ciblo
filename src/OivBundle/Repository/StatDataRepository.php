@@ -79,17 +79,19 @@ class StatDataRepository extends BaseRepository
     /**
      * SELECT * FROM oivdataw.stat_data where COUNTRY_CODE='FRA'  and  YEAR='2016'
      * @param array $aCriteria
+     * @param int $offset
+     * @param int $limit
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getGlobalResult($aCriteria = [])
+    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100)
     {
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $this->_queryBuilder
             ->select('o')
             ->from($this->_entityName, 'o')
             ->where('1=1')
-            ->setMaxResults(10);
+            ->setMaxResults(100);
 
         if (!empty($aCriteria['statType'])) {
             $this->_queryBuilder

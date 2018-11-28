@@ -28,7 +28,7 @@
                     Deutsch
                 </option>
 
-                <option value="/en/databases-and-statistics/statistics">
+                <option value="/en/statistiques/" {% if app.request.locale == 'en' %}selected="selected" {% endif %}>
                     English
                 </option>
 
@@ -36,7 +36,7 @@
                     Español
                 </option>
 
-                <option value="/fr/bases-de-donnees-et-statistiques/statistiques" selected="selected">
+                <option value="/fr/statistiques/" {% if app.request.locale == 'fr' %}selected="selected" {% endif %}>
                     Français
                 </option>
 
@@ -44,17 +44,6 @@
                     Italian
                 </option>
             </select>
-            <div class="chosen-container chosen-container-single chosen-container-single-nosearch" style="width: 128px;"
-                 title="" id="select_lang_chosen"><a class="chosen-single" tabindex="-1"><span>
-								Français
-							</span>
-                    <div><b></b></div>
-                </a>
-                <div class="chosen-drop">
-                    <div class="chosen-search"><input type="text" autocomplete="off" readonly=""></div>
-                    <ul class="chosen-results"></ul>
-                </div>
-            </div>
         </div>
     </div>
 </div>

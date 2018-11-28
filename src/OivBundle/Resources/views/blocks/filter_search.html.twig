@@ -5,13 +5,14 @@
                 <!-- input type="text" class="form-control" placeholder="Search for snippets" / -->
                 <label class="control-label">{{ 'Database'|trans }}</label>
                 <select id="typeSearch" class="form-control selectpicker" data-live-search="true" name="dbType" >
+                    <option value="" selected="">{{ 'Choose'|trans }}</option>
                     <option value="naming">{{ 'Naming'|trans }}</option>
                     <option value="variety">{{ 'Variety'|trans }}</option>
                     <option value="education">{{ 'Education'|trans }}</option>
                     <option value="stat">{{ 'Statistic'|trans }}</option>
                 </select>
             </div>
-
+            {% include 'OivBundle:filters:countries.html.twig' %}
             <div class="col-md-4 form-group" >
                 <label class="control-label">{{ 'year'|trans }}</label>
                 <select id="year" class="form-control selectpicker" data-live-search="true" name="year">
@@ -49,8 +50,8 @@
 
     <div class=container-fluid">
         <div class="col-md-12 text-center">
-            <button id="simpleSearch" class="btn btn-primary btn-search" data-dbtype="naming" title="{{ 'Simple search'|trans }}">{{ 'Simple search'|trans }}</button>
-            <button id="advancedSearch" class="btn btn-warning btn-search" data-dbtype="naming" title="{{ 'Advanced search'|trans }}">{{ 'Advanced search'|trans }}</button>
+            <button id="simpleSearch" class="btn btn-primary btn-search" data-dbtype="" title="{{ 'Simple search'|trans }}">{{ 'Simple search'|trans }}</button>
+            <button id="advancedSearch" class="btn btn-warning btn-search" data-dbtype="" title="{{ 'Advanced search'|trans }}">{{ 'Advanced search'|trans }}</button>
         </div>
     </div>
 

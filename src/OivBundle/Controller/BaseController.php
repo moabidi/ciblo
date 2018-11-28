@@ -17,17 +17,20 @@ class BaseController extends Controller
     /**
      * @param string $table
      * @param array $aCriteria
+     * @param int $offset
+     * @param int $limit
      * @return array
      */
-    protected function getResultGLobalSearch($table, $aCriteria = [], $view=false)
+    protected function getResultGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =100)
     {
-        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria);
+        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria,$offset, $limit);
         if (in_array($view, ['tab1','tab2'])) {
             $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
-            array_walk($result, function (&$v, $k) use ($selectedFields) {
+            $translator = $this->get('translator');
+            array_walk($result, function (&$v, $k) use ($selectedFields, $translator) {
                 $selectedData = [];
                 foreach ($selectedFields as $field) {
-                    $selectedData[$field] = $v[$field];
+                    $selectedData[$field] = $translator->trans($v[$field]);
                 }
                 $v = $selectedData;
             });
@@ -153,6 +156,7 @@ class BaseController extends Controller
      */
     protected function formatDataGraph($aData, $minDate, $maxDate)
     {
+        $translator = $this->get('translator');
         $formattedData = ['xAxis'=>[]];
         for($y = $minDate; $y<=$maxDate; $y++) {
             $formattedData['xAxis'][]= $y;
@@ -162,8 +166,8 @@ class BaseController extends Controller
             $productName = $product['name'];
             $formattedData[$productName] = [];
             $formattedData['xAxis'][$productName] = [];
-            array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $minDate, $maxDate) {
-                $typeStat = ['name' => $key, 'data' => []];
+            array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $minDate, $maxDate, $translator) {
+                $typeStat = ['name' => $translator->trans($key), 'data' => []];
 //                for($y = $minDate; $y<=$maxDate; $y++) {
 //                    $typeStat['data'][$y] = 0;
 //                }

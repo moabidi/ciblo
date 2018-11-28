@@ -32,17 +32,51 @@ class BaseRepository extends EntityRepository
      * SELECT COUNTRY_CODE AS pays,oivdataw.variety_data.*
     FROM oivdataw.variety_data where COUNTRY_CODE='FRA' AND  LAST_DATE  = (SELECT MAX(LAST_DATE) FROM oivdataw.variety_data where COUNTRY_CODE='FRA')
      * @param array $aCriteria
+     * @param int $offset
+     * @param int $limit
      * @return array
      */
-    public function getGlobalResult($aCriteria = [])
+    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100)
+    {
+        $queryBuilder = $this->getQueryResult($aCriteria);
+        $queryBuilder
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+        $result = $queryBuilder->getQuery()->getArrayResult();
+        return $this->reformatArray($result);
+    }
+
+    /**
+     * @param array $aCriteria
+     * @return int
+     */
+    public function getTotalResult($aCriteria = [])
+    {
+        $queryBuilder = $this->getQueryResult($aCriteria, true);
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        if (isset($result['total'])) {
+            return (int)$result['total'];
+        }
+        return null;
+    }
+
+    /**
+     * @param array $aCriteria
+     * @param bool $count
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getQueryResult($aCriteria = [], $count = false)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        if ($count) {
+            $queryBuilder = $queryBuilder->select('count(o) as total');
+        } else {
+            $queryBuilder = $queryBuilder->select('c.tradeBloc, c.countryNameFr, o');
+        }
         $queryBuilder
-            ->select('c.tradeBloc, c.countryNameFr, o')
             ->from($this->_entityName, 'o')
-            ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode')
-            ->where('1=1')
-        ->setMaxResults(10);
+            ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
+
         if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
             $queryBuilder
                 ->andWhere('o.countryCode = :countryCode')
@@ -61,8 +95,7 @@ class BaseRepository extends EntityRepository
                     ->setParameter(sprintf('%s',$field),$val);
             }
         });
-        $result = $queryBuilder->getQuery()->getArrayResult();
-        return $this->reformatArray($result);
+        return $queryBuilder;
     }
 
     public static function getTaggedFields($tag)

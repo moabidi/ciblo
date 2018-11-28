@@ -32,8 +32,10 @@ class OivController extends BaseController
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
-        $aParams['globalResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab1');
-        $aParams['globalStatResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab2');
+//        $aParams['globalResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab1');
+        $aParams['globalResult'] = [];
+//        $aParams['globalStatResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab2');
+        $aParams['globalStatResult'] = [];
         $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => $selectedCountryCode]);
         $aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
         $aParams['countryCode'] = $selectedCountryCode;
@@ -65,6 +67,9 @@ class OivController extends BaseController
         $result = [];
         $table = ucfirst($request->request->get('dbType')).'Data';
         if (class_exists('OivBundle\\Entity\\'.$table)) {
+            $offset =  $request->request->get('offset',0);
+            $limit  =  $request->request->get('limit',20);
+
             if ($request->request->has('countryCode')) {
                 $aCriteria['countryCode'] = $request->request->get('countryCode');
             }
@@ -83,8 +88,18 @@ class OivController extends BaseController
                     $aCriteria[$field] = $val;
                 }
             }
-            $result = $this->getResultGLobalSearch($table, $aCriteria, 'tab1');
-            $result = $this->formatDataTable($result);
+            $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
+            //var_dump($offset,$limit,$count);die();
+            if ($count  && ($count>$offset)) {
+                //$result['last'] = floor($count/$limit)*$limit;
+                $result = $this->getResultGLobalSearch($table, $aCriteria, 'tab1', $offset, $limit);
+                $result = $this->formatDataTable($result);
+                $result['total'] = $count%$limit == 0 ? floor($count/$limit): floor($count/$limit)+1;
+                $result['next'] = $count>=($offset+$limit) ? ($offset+$limit):$offset;
+                $result['current'] = floor($offset/$limit)+1;
+                $result['prev'] = $offset > 0 ? $offset-$limit:0;
+                $result['last'] = floor($count/$limit)*$limit == $count ? (floor($count/$limit)-1)*$limit:floor($count/$limit)*$limit;
+            }
         }
         //var_dump($result);
         return new JsonResponse($result);

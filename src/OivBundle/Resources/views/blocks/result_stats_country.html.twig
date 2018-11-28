@@ -1,4 +1,4 @@
-<div class="result-search container search-table">
+<div class="result-search container search-table hide">
     {#<div class="search-box">#}
         {#<div class="row">#}
             {#<div class="col-md-3">#}
@@ -30,5 +30,6 @@
             {% endif %}
         </table>
     </div>
+    {% include 'OivBundle:blocks:pagination.html.twig' with {'numTab':'resultStats'} %}
     <button id="btn-global-country-search" class="hide" name="searchDataCountry"></button>
 </div>

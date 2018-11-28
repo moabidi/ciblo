@@ -42,12 +42,12 @@
                     {#</ul>#}
                     <table class="table ">
                         <thead>
-                        <th class="text-center">{{ 'area'|trans }}</th>
+                        <th class="text-center">{{ 'area'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></th>
                         </thead>
                         <tbody class="bg-wihte">
                         <tr>
                             {#<td class="text-center"><a>{% if stats.globalArea.val %}{{ (stats.globalArea.val * 1000 )|number_format(0, '.',' ') }} HA {% else %} 0 HA{% endif %}</a></td>#}
-                            <td class="text-center"><a>{% if stats.globalArea.val %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} (1000 HA) {% else %} 0 HA{% endif %}</a></td>
+                            <td class="text-center"><a>{% if stats.globalArea.val|default(0) %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} (1000 HA) {% else %} 0 HA{% endif %}</a></td>
                         </tr>
                         </tbody>
                     </table>
@@ -65,7 +65,7 @@
                                 <tr id="{{ product.name }}" data-measure="{{ product.measure|default() }}">
                                     <td>
                                         <a class="product" data-graph="container-g{{ loop.index }}" href="#">
-                                            {{ product.label }} {% if product.name == 'rin' %}(1000 HL) {% else %}(1000 QX){% endif %} {% if loop.index0 == 0 %}<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="Raisin frais ( toutes usages)"></span>{% endif %}
+                                            {{ product.label|trans }} {% if product.name == 'rin' %}(1000 HL) {% else %}(1000 QX){% endif %} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ product.label|trans }}"></span>
                                         </a>
                                     </td>
                                     <td>
@@ -125,7 +125,7 @@
                     <table class="table ">
                         <thead>
                             <th class="text-center">
-                                {{ 'count education'|trans }}
+                                {{ 'Education'|trans }}
                                 <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count education'|trans }}"></span>
                             </th>
                         </thead>
@@ -186,7 +186,14 @@
             </div>
         </div>
         <div class="info col-sm-12 col-md-6">
-            <div id="container-g1" class="show graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <h2 class="text-center">
+                GRAPHIQUE
+                <a data-graph="container-g1" data-stattype="import" class="stat-type btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip"></span>
+                </a>
+            </h2>
+            <p class="text-center">Cliquer sur une catégorie ou une série pour avoir le détail des données</p>
+            <div id="container-g1" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g2" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g3" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g4" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>

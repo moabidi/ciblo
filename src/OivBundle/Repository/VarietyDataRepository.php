@@ -54,7 +54,7 @@ class VarietyDataRepository extends BaseRepository
             'nationalVarietyId'=>['filter','tab1','tab2'],
             'grapeColor'=>[],
             'lastDate'=>['filter','tab1','tab2'],
-            'internetAdress'=>['filter','tab1']
+            'internetAdress'=>['tab1']
         ];
     }
 }

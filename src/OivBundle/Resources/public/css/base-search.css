@@ -18,6 +18,13 @@
 #page .bg-wihte {
     background: #FFFFFF;
 }
+#page .pagination a{
+    background: #777783;
+    color: #FFFFFF;
+}
+#page .pagination .active a{
+    background: #AE2B4A;
+}
 .float-right{
     float: right;
 }

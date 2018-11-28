@@ -10,6 +10,7 @@ $(function($){
         this._g3;
         this._g4;
 
+        this._dataFilter;
         this._listType = ['prod', 'consumption','export','import'];
 
         this._sendRequest = function(uri, method, data, view, top) {
@@ -71,17 +72,46 @@ $(function($){
                     hearder += '<th>' + val + '</th>';
                 });
                 $.each(content.data, function (key, items) {
-                    body += '<tr>';
+                    body += '<tr data-country="'+items.countryCode+'">';
                     $.each(items, function (key, val) {
                         body += '<td>' + val + '</td>';
                     });
                     body += '</tr>';
                 });
+
+                if (content.total < '2') {
+                    $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
+                } else {
+                    $('#'+idTable).parents().eq(1).find('.pagination').removeClass('hide');
+                    $('#first-pg-'+idTable).removeClass('hide');
+                    $('#prev-pg-'+idTable).removeClass('hide');
+                    $('#next-pg-'+idTable).removeClass('hide');
+                    $('#last-pg-'+idTable).removeClass('hide');
+                    if (content.current == '1') {
+                        $('#first-pg-'+idTable).addClass('hide');
+                        $('#prev-pg-'+idTable).addClass('hide');
+                    } else if (content.current == '2') {
+                        $('#prev-pg-'+idTable).addClass('hide');
+                    }
+                    if (content.total == content.current) {
+                        $('#next-pg-'+idTable).addClass('hide');
+                        $('#last-pg-'+idTable).addClass('hide');
+                    } else if (content.total == (content.current + 1)) {
+                        $('#next-pg-'+idTable).addClass('hide');
+                    }
+
+                    $('#prev-pg-'+idTable).attr('data-offset', content.prev);
+                    $('#current-pg-'+idTable).text(content.current);
+                    $('#next-pg-'+idTable).attr('data-offset', content.next);
+                    $('#last-pg-'+idTable).attr('data-offset', content.last);
+                }
             }else{
                 hearder = '<th class="text-center">Aucune résulat touvée pour votre recherche</th>';
                 body = '<tr><td></td></tr>';
+                $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
             }
             $('#'+idTable).html('<thead><tr>'+hearder+'</tr></thead><tbody>'+body+'</tbody>');
+            $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');
         };
 
         this._initSearchButton = function(btn, view) {
@@ -89,6 +119,7 @@ $(function($){
                 console.log(view);
                 var uri = '/fr/statistiques/'+view;
                 var data = $.handleSearch._getFiltersData($(this),view);
+                if (!data) return false;
                 var posLoader = $(this).offset().top;
                 $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
                 return false;
@@ -97,6 +128,10 @@ $(function($){
 
         this._getFiltersData = function (btn,view) {
             var db = $(btn).attr('data-dbType');
+            if (db == '') {
+                alert('Veuillez sélectionner une base de données');
+                return false;
+            }
             var data = 'dbType='+db+'&countryCode='+$('#country').val();
             if(db == 'stat') {
                 data += '&yearMin='+ $('#yearMin').val();
@@ -112,10 +147,11 @@ $(function($){
                 $(slectedFilters).each(function () {
                     //console.log($(this));
                     if ($(this).val()) {
-                        data += $(this).attr('name') + '=' + $(this).val() + '&';
+                        data += '&'+$(this).attr('name') + '=' + $(this).val();
                     }
                 });
             }console.log(data);
+            $.handleSearch._dataFilter = data;
             return data;
         };
 
@@ -232,14 +268,28 @@ $(function($){
             });
         };
 
-        this._initChangeYear = function () {
-            $('#country').on('change', function () {
-                var countryCode = $(this).val();
-                var db = $('#typeSearch').val();
-                var href = window.location.href.split('?');
-                window.location.href = href[0] + '?db='+db+'&countryCode='+countryCode;
+        this._initChangeCountry = function () {
+            $('body').on('click','#resultSearch tr' ,function () {
+                var countryCode = $(this).attr('data-country');
+                if (countryCode != $('#country-name').attr('data-statcountry')) {
+                    var db = $('#typeSearch').val();
+                    var href = window.location.href.split('?');
+                    window.location.href = href[0] + '?db=' + db + '&countryCode=' + countryCode;
+                }
             });
         };
+
+        this._initHandlePagination = function() {
+            $('.pagination a').on('click', function () {
+                var view = 'global';
+                var uri = '/fr/statistiques/'+view;
+                var data = $.handleSearch._dataFilter;
+                var posLoader = $(this).offset().top;
+                var offset = $(this).attr('data-offset');
+                data += data + '&offset='+offset;
+                $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
+            });
+        }
 
         /**
          * Search on keyup
@@ -285,7 +335,9 @@ $(function($){
         $.handleSearch._changeYearStat();
         $.handleSearch._initRefreshFilter();
         $.handleSearch._initKeypSearch();
-        $.handleSearch._initChangeYear();
+        $.handleSearch._initChangeCountry();
+        $.handleSearch._initHandlePagination();
         $('.selectpicker').selectpicker();
+        $('.selectpicker').trigger('change');
     });
 });
