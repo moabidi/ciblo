@@ -119,7 +119,6 @@ $(function($){
 
         this._initSearchButton = function(btn, view) {
             $(btn).on('click', function() {
-                console.log(view);
                 var uri = '/fr/statistiques/'+view;
                 var data = $.handleSearch._getFiltersData($(this),view);
                 if (!data) return false;
@@ -153,7 +152,7 @@ $(function($){
                         data += '&'+$(this).attr('name') + '=' + $(this).val();
                     }
                 });
-            }console.log(data);
+            }
             $.handleSearch._dataFilter = data;
             return data;
         };
@@ -162,7 +161,6 @@ $(function($){
             $('a.product').on('click', function(){
                 $('.graph').removeClass('show').addClass('hide');
                 $('#'+$(this).attr('data-graph')).addClass('show');
-                console.log($(this).attr('data-graph'));
                 return false;
             });
         };
@@ -272,7 +270,7 @@ $(function($){
         };
 
         this._initChangeCountry = function () {
-            $('body').on('click','#resultSearch tr' ,function () {
+            $('body').on('click','#resultSearch tbody tr' ,function () {
                 var countryCode = $(this).attr('data-country');
                 if (countryCode != $('#country-name').attr('data-statcountry')) {
                     var db = $('#typeSearch').val();
@@ -312,10 +310,12 @@ $(function($){
          * Search on keyup
          */
         this._initKeypSearch = function() {
-            $("#myInput").on("keyup", function () {
+            $(document).on("keyup", ".filter-col", function () {
                 var value = $(this).val().toLowerCase();
-                $("#resultSearch tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                var index = $(this).parent().index() + 1;
+                var table = $(this).parents().eq(3);
+                $(table).find("tbody tr").filter(function () {
+                    $(this).toggle($(this).find('td:nth-child('+index+')').text().toLowerCase().indexOf(value) > -1)
                 });
             });
         };

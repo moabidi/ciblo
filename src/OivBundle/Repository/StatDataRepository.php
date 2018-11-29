@@ -98,7 +98,7 @@ class StatDataRepository extends BaseRepository
      * @param array $aCriteria
      * @return int
      */
-    public function getTotalStatResult($aCriteria = [])
+    public function getTotalResult($aCriteria = [])
     {
         $queryBuilder = $this->getQueryResult($aCriteria, true);
         $result = $queryBuilder->getQuery()->getOneOrNullResult();

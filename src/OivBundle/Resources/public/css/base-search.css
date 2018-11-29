@@ -5,6 +5,10 @@
     background: #AE2B4A;
     color: #FFFFFF;
 }
+#page .search-list table tr:nth-child(2)>th{
+    background: #c1c1c1;
+    color: #000000;
+}
 #page .btn {
     background: #FFFFFF;
 }
@@ -157,9 +161,7 @@ body .filter-search {
 .result-search table td, .result-search table th,.fiche-country table td, .fiche-country table th {
     border-right: 1px solid #ddd;
 }
-.result-search table tr:nth-child(2) th{
-    background: #c1c1c1;
-}
+
 .table-fixed {
     overflow-y: auto;
     max-height: 500px;
@@ -180,9 +182,11 @@ body .filter-search {
     padding: 0px 8px 8px 8px;
     vertical-align: top;
 }
-.table-fixed th {
+.table-fixed thead {
     position: sticky;
     top: 0;
+}
+.table-fixed th {
     background: #eee;
 }
 
