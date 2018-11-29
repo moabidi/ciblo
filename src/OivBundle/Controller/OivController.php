@@ -94,11 +94,7 @@ class OivController extends BaseController
                 //$result['last'] = floor($count/$limit)*$limit;
                 $result = $this->getResultGLobalSearch($table, $aCriteria, 'tab1', $offset, $limit);
                 $result = $this->formatDataTable($result);
-                $result['total'] = $count%$limit == 0 ? floor($count/$limit): floor($count/$limit)+1;
-                $result['next'] = $count>=($offset+$limit) ? ($offset+$limit):$offset;
-                $result['current'] = floor($offset/$limit)+1;
-                $result['prev'] = $offset > 0 ? $offset-$limit:0;
-                $result['last'] = floor($count/$limit)*$limit == $count ? (floor($count/$limit)-1)*$limit:floor($count/$limit)*$limit;
+                $result = $this->getParamsPagination($result, $count, $offset, $limit);
             }
         }
         //var_dump($result);
@@ -113,15 +109,42 @@ class OivController extends BaseController
     public function globalStatSearchAction(Request $request)
     {
         $aCriteria = [];
+        $result = [];
         $aCriteria['countryCode'] = $request->request->get('countryCode','oiv');
         if ($request->request->has('year')) {
             $aCriteria['year'] = $request->request->get('year');
         }
-        $table = $request->request->get('dbType');
-        $view = $request->request->get('view');
-        $result = $this->getResultGLobalSearch($table, $aCriteria, $view);
-        $result = $this->formatDataTable($result);
+        $table = ucfirst($request->request->get('dbType')).'Data';
+        if (class_exists('OivBundle\\Entity\\'.$table)) {
+            $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
+            if ($count) {
+                $view = $request->request->get('view');
+                $offset =  $request->request->get('offset',0);
+                $limit  =  $request->request->get('limit',20);
+                $result = $this->getResultGLobalSearch($table, $aCriteria, $view, $offset, $limit);
+                $result = $this->formatDataTable($result);
+                $result = $this->getParamsPagination($result, $count, $offset, $limit);
+            }
+        }
         return new JsonResponse($result);
+    }
+
+    /**
+     * @param $result
+     * @param $count
+     * @param $offset
+     * @param $limit
+     * @return mixed
+     */
+    private function getParamsPagination($result, $count, $offset, $limit)
+    {
+        $result['total'] = $count%$limit == 0 ? floor($count/$limit): floor($count/$limit)+1;
+        $result['next'] = $count>=($offset+$limit) ? ($offset+$limit):$offset;
+        $result['current'] = floor($offset/$limit)+1;
+        $result['prev'] = $offset > 0 ? $offset-$limit:0;
+        $result['last'] = floor($count/$limit)*$limit == $count ? (floor($count/$limit)-1)*$limit:floor($count/$limit)*$limit;
+        $result['count'] = $count;
+        return $result;
     }
 
 }

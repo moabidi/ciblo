@@ -23,11 +23,11 @@ $(function($){
                 $.handleSearch._handleSuccess(response, view);
                 setTimeout(function(){
                     $('.card').loading({destroy: true});
-                }, 2000);
+                }, 1000);
             }).fail(function(error){
                 setTimeout(function(){
                     $('.card').loading({destroy: true});
-                }, 2000);
+                }, 1000);
                 alert('error response');
                 console.log('error response', error);
             });
@@ -65,12 +65,15 @@ $(function($){
 
         this._refreshTableResult = function (content, idTable) {
             var hearder = '';
+            var hearderFilter = '';
             var body = '';
             //console.log(content, content.length);
             if (typeof content.data != 'undefined') {
                 $.each(content.labelfields, function (key, val) {
                     hearder += '<th>' + val + '</th>';
+                    hearderFilter += '<th><input class="filter-col" type="text"></th>';
                 });
+                hearder = '<tr>'+hearder+'</tr><tr>'+hearderFilter+'</tr>';
                 $.each(content.data, function (key, items) {
                     body += '<tr data-country="'+items.countryCode+'">';
                     $.each(items, function (key, val) {
@@ -101,16 +104,16 @@ $(function($){
                     }
 
                     $('#prev-pg-'+idTable).attr('data-offset', content.prev);
-                    $('#current-pg-'+idTable).text(content.current);
+                    $('#current-pg-'+idTable).text(content.current+'/'+content.total);
                     $('#next-pg-'+idTable).attr('data-offset', content.next);
                     $('#last-pg-'+idTable).attr('data-offset', content.last);
                 }
             }else{
-                hearder = '<th class="text-center">Aucune résulat touvée pour votre recherche</th>';
+                hearder = '<tr><th class="text-center">Aucune résulat touvée pour votre recherche</th></tr>';
                 body = '<tr><td></td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
             }
-            $('#'+idTable).html('<thead><tr>'+hearder+'</tr></thead><tbody>'+body+'</tbody>');
+            $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');
         };
 
@@ -281,12 +284,26 @@ $(function($){
 
         this._initHandlePagination = function() {
             $('.pagination a').on('click', function () {
-                var view = 'global';
+                var view = $(this).attr('data-view');
                 var uri = '/fr/statistiques/'+view;
                 var data = $.handleSearch._dataFilter;
                 var posLoader = $(this).offset().top;
                 var offset = $(this).attr('data-offset');
-                data += data + '&offset='+offset;
+                var limit = $(this).parents().eq(3).find('.offset-pg').val();
+                data += '&offset='+offset+'&limit='+limit;
+                $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
+            });
+        }
+
+        this._initHandlePagePagination = function() {
+            $('select.offset-pg ').on('change', function () {
+                var view = $(this).attr('data-view');
+                var uri = '/fr/statistiques/'+view;
+                var data = $.handleSearch._dataFilter;
+                var posLoader = $(this).offset().top;
+                var offset = '0';
+                var limit = $(this).val();
+                data += '&offset='+offset+'&limit='+limit;
                 $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
             });
         }
@@ -337,6 +354,7 @@ $(function($){
         $.handleSearch._initKeypSearch();
         $.handleSearch._initChangeCountry();
         $.handleSearch._initHandlePagination();
+        $.handleSearch._initHandlePagePagination();
         $('.selectpicker').selectpicker();
         $('.selectpicker').trigger('change');
     });

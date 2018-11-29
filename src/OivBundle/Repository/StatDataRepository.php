@@ -86,12 +86,41 @@ class StatDataRepository extends BaseRepository
      */
     public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100)
     {
-        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $this->_queryBuilder = $this->getQueryResult($aCriteria);
         $this->_queryBuilder
-            ->select('o')
-            ->from($this->_entityName, 'o')
-            ->where('1=1')
-            ->setMaxResults(100);
+                            ->setFirstResult($offset)
+                            ->setMaxResults($limit);
+        $result = $this->_queryBuilder->getQuery()->getArrayResult();
+        return $this->reformatArray($result);
+    }
+
+    /**
+     * @param array $aCriteria
+     * @return int
+     */
+    public function getTotalStatResult($aCriteria = [])
+    {
+        $queryBuilder = $this->getQueryResult($aCriteria, true);
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        if (isset($result['total'])) {
+            return (int)$result['total'];
+        }
+        return null;
+    }
+
+    public function getQueryResult($aCriteria = [], $count = false)
+    {
+        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
+
+        if ($count) {
+            $this->_queryBuilder->select(' count(o) as total');
+        } else {
+            $this->_queryBuilder->select('o');
+        }
+
+        $this->_queryBuilder
+                ->from($this->_entityName, 'o')
+                ->where('1=1');
 
         if (!empty($aCriteria['statType'])) {
             $this->_queryBuilder
@@ -105,8 +134,7 @@ class StatDataRepository extends BaseRepository
         }
 
         $this->addYearCriteria($aCriteria);
-        $result = $this->_queryBuilder->getQuery()->getArrayResult();
-        return $this->reformatArray($result);
+        return $this->_queryBuilder;
     }
 
     private function addYearCriteria($aCriteria)

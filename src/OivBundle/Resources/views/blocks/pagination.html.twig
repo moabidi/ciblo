@@ -1,10 +1,21 @@
 
-<div class="col-md-12 text-center">
-    <ul class="pagination {{ show|default(false) ? '':'hide' }}">
-        <li><a id="first-pg-{{ numTab|default('resultSearch') }}" data-offset="0" href="javascript:;">{{ 'first'|trans }}</a></li>
-        <li><a id="prev-pg-{{ numTab|default('resultSearch') }}" data-offset="0" href="javascript:;">{{ 'prev'|trans }}</a></li>
-        <li class="active"><a id="current-pg-{{ numTab|default('resultSearch') }}" href="javascript:;">3</a></li>
-        <li><a id="next-pg-{{ numTab|default('resultSearch') }}" data-offset="100" href="javascript:;">{{ 'next'|trans }}</a></li>
-        <li><a id="last-pg-{{ numTab|default('resultSearch') }}" data-offset="100" href="javascript:;">{{ 'last'|trans }}</a></li>
-    </ul>
+<div class="col-md-12 text-center form-inline">
+    <div class="form-group">
+        <label class="control-label">{{ 'View'|trans }}</label>
+        <select name="{{ numTab|default('resultSearch') }}OffsetPager" class="offset-pg form-control" data-view="{{ view|default('global') }}">
+            <option value="20" selected="">20/page</option>
+            <option value="50">50/page</option>
+            <option value="100">100/page</option>
+            <option value="200">200/page</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <ul class="pagination {{ show|default(false) ? '':'hide' }}">
+            <li><a id="first-pg-{{ numTab|default('resultSearch') }}" data-view="{{ view|default('global') }}" data-offset="0" href="javascript:;">{{ 'first'|trans }}</a></li>
+            <li><a id="prev-pg-{{ numTab|default('resultSearch') }}" data-view="{{ view|default('global') }}" data-offset="0" href="javascript:;">{{ 'prev'|trans }}</a></li>
+            <li class="active"><a id="current-pg-{{ numTab|default('resultSearch') }}" data-view="{{ view|default('global') }}" href="javascript:;">3</a></li>
+            <li><a id="next-pg-{{ numTab|default('resultSearch') }}" data-view="{{ view|default('global') }}" data-offset="100" href="javascript:;">{{ 'next'|trans }}</a></li>
+            <li><a id="last-pg-{{ numTab|default('resultSearch') }}" data-view="{{ view|default('global') }}" data-offset="100" href="javascript:;">{{ 'last'|trans }}</a></li>
+        </ul>
+    </div>
 </div>
