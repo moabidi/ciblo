@@ -38,7 +38,7 @@
                 </select>
             </li>
             {#<li class="active open">#}
-            <li class="active open">
+            <li>
                 <a href="javascript:;">
                     <i class="icon-magnifier"></i>
                     <span class="title">{{ 'Naming'|trans }}</span>
@@ -59,6 +59,7 @@
                 </a>
                 <ul class="sub-menu">
                     {% include 'OivBundle:filters:cepage.html.twig' with {'isAdvSearch':true} %}
+                    {% include 'OivBundle:advancedSearch/blocs:btn-search-reset.html.twig' %}
                 </ul>
             </li>
             <li>
@@ -70,19 +71,10 @@
                 </a>
                 <ul class="sub-menu">
                     {% include 'OivBundle:filters:formation.html.twig' with {'isAdvSearch':true} %}
-                    <li>
-                        <div class="margin-bottom-5">
-                            <button class="btn btn-sm yellow filter-submit margin-bottom">
-                                <i class="fa fa-search"></i> Search
-                            </button>
-                        </div>
-                        <button class="btn btn-sm red filter-cancel">
-                            <i class="fa fa-times"></i> Reset
-                        </button>
-                    </li>
+                    {% include 'OivBundle:advancedSearch/blocs:btn-search-reset.html.twig' %}
                 </ul>
             </li>
-            <li>
+            <li class="active open">
                 <a href="javascript:;">
                     <i class="icon-magnifier"></i>
                     <span class="title">{{ 'Statistic'|trans }}</span>
@@ -91,6 +83,7 @@
                 </a>
                 <ul class="sub-menu">
                     {% include 'OivBundle:filters:statistique.html.twig' with {'isAdvSearch':true} %}
+                    {% include 'OivBundle:advancedSearch/blocs:btn-search-reset.html.twig' %}
                 </ul>
             </li>
 

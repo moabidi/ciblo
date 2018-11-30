@@ -1,343 +1,96 @@
-<!DOCTYPE html>
+{% extends 'OivBundle:advancedSearch:layout.html.twig' %}
+{% block menu_user %}
+    <li class="dropdown dropdown-user">
+    <a href="/fr/statistiques/backoffice/login">
+        Connexion
+    </a>
+{% endblock %}
 
-<!--[if IE 8]>
-<html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]>
-<html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<!--<![endif]-->
-<!-- BEGIN HEAD -->
-<head>
-    <meta charset="utf-8"/>
-    <title>global | eCommerce - Orders</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta content="" name="description"/>
-    <meta content="" name="author"/>
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
-          type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"
-          type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/plugins/simple-line-icons/simple-line-icons.min.css') }}" rel="stylesheet"
-          type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
-          type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/plugins/uniform/css/uniform.default.css') }}" rel="stylesheet"
-          type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/plugins/bootstrap-switch/css/bootstrap-switch.min.css') }}" rel="stylesheet"
-          type="text/css"/>
-    <!-- END GLOBAL MANDATORY STYLES -->
-    <!-- BEGIN PAGE LEVEL STYLES -->
-    <link rel="stylesheet" type="text/css" href=" {{ asset('/bundles/oiv/css/plugins/select2/select2.css') }}"/>
-    <link rel="stylesheet" type="text/css"
-          href=" {{ asset('/bundles/oiv/css/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css') }}"/>
-    <link rel="stylesheet" type="text/css"
-          href=" {{ asset('/bundles/oiv/css/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}"/>
-    <!-- END PAGE LEVEL STYLES -->
-    <!-- BEGIN THEME STYLES -->
-    <link href=" {{ asset('/bundles/oiv/css/layout/components.css') }}" id="style_components" rel="stylesheet"
-          type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/layout/plugins.css') }}" rel="stylesheet" type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/layout/layout.css') }}" rel="stylesheet" type="text/css"/>
-    <link id="style_color" href=" {{ asset('/bundles/oiv/css/layout/darkblue.css') }}" rel="stylesheet"
-          type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/layout/custom.css') }}" rel="stylesheet" type="text/css"/>
-    <link href=" {{ asset('/bundles/oiv/css/advanced-search.css') }}" rel="stylesheet" type="text/css"/>
-    <!-- END THEME STYLES -->
+{% block selectedFilter %}
+    {#<div class="note note-danger">#}
+    {#<p>#}
+    {#No data Found !!!#}
+    {#</p>#}
+    {#</div>#}
+    <style>
+        #selectedFilter button:hover {
+            background: #c23f44;
+        }
+        #selectedFilter button:hover i.fa-check{
+           display: none;
+       }
+        #selectedFilter button:hover i.fa-times{
+           display: inline-block;
+       }
+        #selectedFilter button i.fa-times{
+            display: none;
+        }
+    </style>
+    <div id="selectedFilter" class="note">
+        <p>
+            <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">PAYS</span>
+            <button class="btn btn-sm yellow table-group-action-submit">
+                <i class="fa fa-check"></i><i class="fa fa-times"></i> FRANCE
+            </button>
+            <button class="btn btn-sm yellow table-group-action-submit">
+                <i class="fa fa-check"></i><i class="fa fa-times"></i> ESPAGNE
+            </button>
+            <button class="btn btn-sm yellow table-group-action-submit">
+                <i class="fa fa-check"></i><i class="fa fa-times"></i> RUSIE
+            </button>
+        </p>
+        <p>
+            <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">Année</span>
+            <span class="label label-md label-warning" style="font-size: 14px;">2013</span> à <span style="font-size: 14px;" class="label label-md label-warning">2015</span>
+        </p>
+        <p>
+            <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">Série</span>
+            <button class="btn btn-sm yellow table-group-action-submit">
+                <i class="fa fa-check"></i> PRODUCTION
+            </button>
+            <button class="btn btn-sm yellow table-group-action-submit">
+                <i class="fa fa-check"></i> CONSOMMATION
+            </button>
+        </p>
 
-</head>
-<!-- END HEAD -->
-<!-- BEGIN BODY -->
-<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
-<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
-<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
-<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
-<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
-<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
-<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
-<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
-<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
-<body class="page-header-fixed page-quick-sidebar-over-content ">
-<!-- BEGIN HEADER -->
-<div class="page-header navbar navbar-fixed-top">
-    <!-- BEGIN HEADER INNER -->
-    <div class="page-header-inner">
-        <!-- BEGIN LOGO -->
-        <div class="page-logo">
-            <a href="index.html">
-                <img src="{{ asset('/bundles/oiv/img/frontend/logo-small.png') }}" alt="logo" class="logo-default"/>
+    </div>
+{% endblock %}
+
+{% block actions %}
+    <div class="actions">
+        {#<a href="javascript:;" class="btn default yellow-stripe">#}
+        {#<i class="fa fa-plus"></i>#}
+        {#<span class="hidden-480">#}
+        {#Add </span>#}
+        {#</a>#}
+        <div class="btn-group">
+            <a class="btn default yellow-stripe dropdown-toggle" href="javascript:;" data-toggle="dropdown">
+                <i class="fa fa-share"></i>
+                <span class="hidden-480"> Export </span>
+                <i class="fa fa-angle-down"></i>
             </a>
-            <div class="menu-toggler sidebar-toggler hide">
-                <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-            </div>
-        </div>
-        <!-- END LOGO -->
-        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
-           data-target=".navbar-collapse">
-        </a>
-        <!-- END RESPONSIVE MENU TOGGLER -->
-        <!-- BEGIN TOP NAVIGATION MENU -->
-        <div class="top-menu">
-            <ul class="nav navbar-nav pull-right">
-                <!-- BEGIN USER LOGIN DROPDOWN -->
-                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                <li class="dropdown dropdown-user">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                       data-close-others="true">
-                        <img alt="" class="img-circle" src=" {{ asset('/bundles/oiv/img/backoffice/avatar1.jpg') }}"/>
-					<span class="username username-hide-on-mobile">
-					UserName </span>
-                        <i class="fa fa-angle-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-default">
-                        <li>
-                            <a href="extra_profile.html">
-                                <i class="icon-user"></i> My Profile </a>
-                        </li>
-                        <li>
-                            <a href="/fr/statistiques/backoffice/login">
-                                <i class="icon-key"></i> Log Out </a>
-                        </li>
-                    </ul>
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="javascript:;"> Export to CSV </a>
                 </li>
-                <!-- END USER LOGIN DROPDOWN -->
+                <li>
+                    <a href="javascript:;"> Export to PDF </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:;"> Export to power point </a>
+                </li>
             </ul>
         </div>
-        <!-- END TOP NAVIGATION MENU -->
     </div>
-    <!-- END HEADER INNER -->
-</div>
-<!-- END HEADER -->
-<div class="clearfix">
-</div>
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-    {% include 'OivBundle:advancedSearch/blocs:side-bar.html.twig' %}
-    <!-- BEGIN CONTENT -->
-    <div class="page-content-wrapper">
-        <div class="page-content">
-            <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-            <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                            <h4 class="modal-title">Modal title</h4>
-                        </div>
-                        <div class="modal-body">
-                            Widget settings form goes here
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn blue">Save changes</button>
-                            <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!-- /.modal -->
-            <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+{% endblock %}
 
-            <!-- BEGIN PAGE HEADER-->
-            <h3 class="page-title">
-                {{ 'Variety'|trans }}
-                <small>Résultat de recherche</small>
-            </h3>
-            <div class="page-bar">
-                <ul class="page-breadcrumb">
-                    <li>
-                        <i class="fa fa-home"></i>
-                        <a href="index.html">Home</a>
-                        <i class="fa fa-angle-right"></i>
-                    </li>
-                    <li>
-                        <a href="#">{{ 'Variety'|trans }}</a>
-                        <i class="fa fa-angle-right"></i>
-                    </li>
-                    <li>
-                        <a href="#">{{ 'Search'|trans }}</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- END PAGE HEADER-->
-            <!-- BEGIN PAGE CONTENT-->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="note note-danger">
-                        <p>
-                            No data Found !!!
-                        </p>
-                    </div>
-                    <!-- Begin: life time stats -->
-                    <div class="portlet">
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="fa fa-shopping-cart"></i>Result
-                            </div>
-                            <div class="actions">
-                                <a href="javascript:;" class="btn default yellow-stripe">
-                                    <i class="fa fa-plus"></i>
-								<span class="hidden-480">
-								Add </span>
-                                </a>
-                                <div class="btn-group">
-                                    <a class="btn default yellow-stripe dropdown-toggle" href="javascript:;"
-                                       data-toggle="dropdown">
-                                        <i class="fa fa-share"></i>
-									<span class="hidden-480">
-									Tools </span>
-                                        <i class="fa fa-angle-down"></i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-
-                                        <li>
-                                            <a href="javascript:;">
-                                                Export to CSV </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                Export to PDF </a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                Export to power point </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="portlet-body">
-                            <div class="table-container">
-                                <div id="datatable_orders_wrapper"
-                                     class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-                                    <div class="row">
-                                        <div class="col-md-8 col-sm-12">
-                                            <div class="dataTables_paginate paging_bootstrap_extended"
-                                                 id="datatable_orders_paginate">
-                                                <div class="pagination-panel"> Page <a href="#"
-                                                                                       class="btn btn-sm default prev disabled"
-                                                                                       title="Prev"><i
-                                                                class="fa fa-angle-left"></i></a><input type="text"
-                                                                                                        class="pagination-panel-input form-control input-mini input-inline input-sm"
-                                                                                                        maxlenght="5"
-                                                                                                        style="text-align:center; margin: 0 5px;"><a
-                                                            href="#" class="btn btn-sm default next" title="Next"><i
-                                                                class="fa fa-angle-right"></i></a> of <span
-                                                            class="pagination-panel-total">18</span></div>
-                                            </div>
-                                            <div class="dataTables_length" id="datatable_orders_length"><label><span
-                                                            class="seperator">|</span>View <select
-                                                            name="datatable_orders_length"
-                                                            aria-controls="datatable_orders"
-                                                            class="form-control input-xsmall input-sm input-inline">
-                                                        <option value="10">10</option>
-                                                        <option value="20">20</option>
-                                                        <option value="50">50</option>
-                                                        <option value="100">100</option>
-                                                        <option value="150">150</option>
-                                                        <option value="-1">All</option>
-                                                    </select> records</label></div>
-                                            <div class="dataTables_info" id="datatable_orders_info" role="status"
-                                                 aria-live="polite"><span class="seperator">|</span>Found total 178
-                                                records
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12">
-                                            <div class="table-group-actions pull-right">
-                                                <span>1 records selected:  </span>
-                                                <select class="table-group-action-input form-control input-inline input-small input-sm">
-                                                    <option value="">Select...</option>
-                                                    <option value="Cancel">Cancel</option>
-                                                    <option value="Cancel">Hold</option>
-                                                    <option value="Cancel">On Hold</option>
-                                                    <option value="Close">Close</option>
-                                                </select>
-                                                <button class="btn btn-sm yellow table-group-action-submit"><i
-                                                            class="fa fa-check"></i> Submit
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% include 'OivBundle:advancedSearch/blocs:table-adv-search.html.twig' %}
-                                    {% include 'OivBundle:advancedSearch/blocs:pagination.html.twig' %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End: life time stats -->
-                </div>
-            </div>
-            <!-- END PAGE CONTENT-->
+{% block dataTable %}
+    <div class="table-container">
+        <div id="datatable_orders_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+            {% include 'OivBundle:advancedSearch/blocs:pagination.html.twig' %}
+            {% include 'OivBundle:advancedSearch/blocs:table-adv-search.html.twig' %}
+            {% include 'OivBundle:advancedSearch/blocs:pagination.html.twig' %}
         </div>
     </div>
-    <!-- END CONTENT -->
-</div>
-<!-- END CONTAINER -->
-<!-- BEGIN FOOTER -->
-<div class="page-footer">
-    <div class="page-footer-inner">
-
-    </div>
-    <div class="scroll-to-top">
-        <i class="icon-arrow-up"></i>
-    </div>
-</div>
-<!-- END FOOTER -->
-<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-<!-- BEGIN CORE PLUGINS -->
-<!--[if lt IE 9]>
-<script src=" {{ asset('/bundles/oiv/js/login/respond.min.js') }}"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/excanvas.min.js') }}"></script>
-<![endif]-->
-<script src=" {{ asset('/bundles/oiv/js/login/jquery.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/jquery-migrate.min.js') }}" type="text/javascript"></script>
-<!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
-<script src=" {{ asset('/bundles/oiv/js/plugins/jquery-ui/jquery-ui.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js') }}"
-        type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/plugins/jquery-slimscroll/jquery.slimscroll.min.js') }}"
-        type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/jquery.blockui.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/jquery.cokie.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/jquery.uniform.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"
-        type="text/javascript"></script>
-<!-- END CORE PLUGINS -->
-<!-- BEGIN PAGE LEVEL PLUGINS -->
-<script type="text/javascript" src=" {{ asset('/bundles/oiv/js/plugins/select2/select2.min.js') }}"></script>
-<script type="text/javascript"
-        src=" {{ asset('/bundles/oiv/js/plugins/datatables/media/js/jquery.dataTables.min.js') }}"></script>
-<script type="text/javascript"
-        src=" {{ asset('/bundles/oiv/js/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js') }}"></script>
-<script type="text/javascript"
-        src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
-<!-- END PAGE LEVEL PLUGINS -->
-<!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src=" {{ asset('/bundles/oiv/js/login/global.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/layout.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/search/quick-sidebar.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/demo.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/search/datatable.js') }}"></script>
-<script src=" {{ asset('/bundles/oiv/js/search/advenced-search.js') }}"></script>
-<!-- END PAGE LEVEL SCRIPTS -->
-<script>
-    jQuery(document).ready(function () {
-        global.init(); // init global core components
-        Layout.init(); // init current layout
-        QuickSidebar.init(); // init quick sidebar
-        Demo.init(); // init demo features
-        AdvencedSearch.init();
-    });
-</script>
-<!-- END JAVASCRIPTS -->
-</body>
-<!-- END BODY -->
-</html>
+{% endblock %}

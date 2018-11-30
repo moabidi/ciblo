@@ -127,7 +127,7 @@ class StatDataRepository extends BaseRepository
                 ->where('o.statType = :statType')
                 ->setParameter('statType', $aCriteria['statType']);
         }
-        if (!empty($aCriteria['countryCode'])) {
+        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
             $this->_queryBuilder
                 ->Andwhere('o.countryCode = :countryCode')
                 ->setParameter('countryCode',$aCriteria['countryCode']);

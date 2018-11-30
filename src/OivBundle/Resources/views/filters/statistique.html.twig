@@ -3,7 +3,7 @@
         {% if filter.values|length %}
             <li>
                 <a class="text-center">{{ fieldName|trans }}</a>
-                <select data-view="education" id="{{ 'StatData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
+                <select {% if fieldName == 'statType' %} multiple{% endif %} data-view="education" id="{{ 'StatData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
                     <option value="">{{ 'Choose'|trans }}</option>
                     {% for value in filter.values %}
                         <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
