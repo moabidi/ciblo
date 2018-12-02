@@ -1,0 +1,3 @@
+[submodule "vendor/bundles/Spraed/PDFGeneratorBundle"]
+	path = vendor/bundles/Spraed/PDFGeneratorBundle
+	url = https://github.com/stedekay/SpraedPDFGeneratorBundle.git

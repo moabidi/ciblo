@@ -10,13 +10,13 @@
                         </a>
                     </li>
                     <li class="centred">
-                        <img src="{% if selectedCountry.iso3|default() %}{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
+                        <img src="{% if selectedCountry.iso3|default() %}{{ asset('/bundles/oiv/css/flags-32/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
                              alt="France"/>
-                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3|default('oiv') }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry.countryNameFr|default('All the world'|trans) }}</span>
-                        {% if isMemberShip %}
-                        <span class="country">Membre Oiv</span>
-                        {% endif %}
-                        <img src="{% if selectedCountry.iso3|default() %}{{ asset('/bundles/oiv/css/flags-64/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
+                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3|default('oiv') }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry.countryNameFr|default('World'|trans) }}</span>
+                        {#{% if isMemberShip %}#}
+                        <span id="currentYear" class="country">{{ selectedYear }}</span>
+                        {#{% endif %}#}
+                        <img src="{% if selectedCountry.iso3|default() %}{{ asset('/bundles/oiv/css/flags-32/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
                              alt="France"/>
                     </li>
                     <li data-year="{{ selectedYear-1 }}" id="prevYear" class="previous">
@@ -30,16 +30,6 @@
             <div class="thumbnail">
                 <!--<img src="..." alt="...">-->
                 <div class="caption">
-                    <!--<h3>Thumbnail label</h3>-->
-                    {#<ul>#}
-                        {#<li>#}
-                            {#<a href="#">#}
-                                {#<strong>{{ 'area'|trans }} </strong>:#}
-                                {#<span class="badge">{{ stats.usedArea.val ~ '(1000  QX) / ' ~ stats.globalArea.val }} (1000 HA) #}{##}{# stats.globalArea.measure #}{##}{#</span>#}
-                                {#<span class="badge">{{ stats.globalArea.val }} (1000 HA) #}{# stats.globalArea.measure #}{#</span>#}
-                            {#</a>#}
-                        {#</li>#}
-                    {#</ul>#}
                     <table class="table ">
                         <thead>
                         <th class="text-center">{{ 'area'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></th>
@@ -155,33 +145,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    {#<div class="row">#}
-                        {#<div class="col-md-6">#}
-                            {#<ul>#}
-                                {#<li>#}
-                                    {#<a class="btn-global-country-search" data-dbType="VarietyData" href="#">#}
-                                        {#<strong>{{ 'count variety'|trans }} </strong>#}
-                                        {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count variety'|trans }}"></span>:#}
-                                        {#<span class="badge float-right">{{ stats.nbVariety }}</span>#}
-                                    {#</a>#}
-                                {#</li>#}
-                                {#<li>#}
-                                    {#<a class="btn-global-country-search" data-dbType="EducationData" href="#">#}
-                                        {#<strong>{{ 'count education'|trans }} </strong>#}
-                                        {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count education'|trans }}"></span>:#}
-                                        {#<span class="badge float-right">{{ stats.nbEducation }}</span>#}
-                                    {#</a>#}
-                                {#</li>#}
-                                {#<li>#}
-                                    {#<a class="btn-global-country-search" data-dbType="NamingData" href="#">#}
-                                        {#<strong>IG/AO </strong>#}
-                                        {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="Nombre d'appelation géographique"></span>:#}
-                                        {#<span class="badge float-right">{{ stats.nbNaming }}</span>#}
-                                    {#</a>#}
-                                {#</li>#}
-                            {#</ul>#}
-                        {#</div>#}
-                    {#</div>#}
                 </div>
             </div>
         </div>

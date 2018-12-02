@@ -63,31 +63,13 @@ class OivController extends BaseController
      */
     public function globalSearchAction(Request $request)
     {
-        $aCriteria = [];
         $result = [];
         $table = ucfirst($request->request->get('dbType')).'Data';
         if (class_exists('OivBundle\\Entity\\'.$table)) {
             $offset =  $request->request->get('offset',0);
             $limit  =  $request->request->get('limit',20);
 
-            if ($request->request->has('countryCode')) {
-                $aCriteria['countryCode'] = $request->request->get('countryCode');
-            }
-            if ($request->request->has('year')) {
-                $aCriteria['year'] = $request->request->get('year');
-            }else{
-                if($request->request->get('yearMax')) {
-                    $aCriteria['yearMax'] = $request->request->get('yearMax');
-                }
-                if($request->request->get('yearMin')) {
-                    $aCriteria['yearMin'] = $request->request->get('yearMin');
-                }
-            }
-            foreach($request->request->all() as $field => $val) {
-                if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
-                    $aCriteria[$field] = $val;
-                }
-            }
+            $aCriteria = $this->getCriteriaRequest($request);
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
             //var_dump($offset,$limit,$count);die();
             if ($count  && ($count>$offset)) {

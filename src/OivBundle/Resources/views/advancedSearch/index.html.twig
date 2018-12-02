@@ -12,48 +12,8 @@
     {#No data Found !!!#}
     {#</p>#}
     {#</div>#}
-    <style>
-        #selectedFilter button:hover {
-            background: #c23f44;
-        }
-        #selectedFilter button:hover i.fa-check{
-           display: none;
-       }
-        #selectedFilter button:hover i.fa-times{
-           display: inline-block;
-       }
-        #selectedFilter button i.fa-times{
-            display: none;
-        }
-    </style>
-    <div id="selectedFilter" class="note">
-        <p>
-            <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">PAYS</span>
-            <button class="btn btn-sm yellow table-group-action-submit">
-                <i class="fa fa-check"></i><i class="fa fa-times"></i> FRANCE
-            </button>
-            <button class="btn btn-sm yellow table-group-action-submit">
-                <i class="fa fa-check"></i><i class="fa fa-times"></i> ESPAGNE
-            </button>
-            <button class="btn btn-sm yellow table-group-action-submit">
-                <i class="fa fa-check"></i><i class="fa fa-times"></i> RUSIE
-            </button>
-        </p>
-        <p>
-            <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">Année</span>
-            <span class="label label-md label-warning" style="font-size: 14px;">2013</span> à <span style="font-size: 14px;" class="label label-md label-warning">2015</span>
-        </p>
-        <p>
-            <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">Série</span>
-            <button class="btn btn-sm yellow table-group-action-submit">
-                <i class="fa fa-check"></i> PRODUCTION
-            </button>
-            <button class="btn btn-sm yellow table-group-action-submit">
-                <i class="fa fa-check"></i> CONSOMMATION
-            </button>
-        </p>
+    {% include 'OivBundle:advancedSearch/blocks:selected-filters.html.twig' %}
 
-    </div>
 {% endblock %}
 
 {% block actions %}
@@ -64,33 +24,54 @@
         {#Add </span>#}
         {#</a>#}
         <div class="btn-group">
-            <a class="btn default yellow-stripe dropdown-toggle" href="javascript:;" data-toggle="dropdown">
+            <a  class="btn default yellow-stripe dropdown-toggle" href="javascript:;" data-toggle="dropdown">
                 <i class="fa fa-share"></i>
                 <span class="hidden-480"> Export </span>
                 <i class="fa fa-angle-down"></i>
             </a>
             <ul class="dropdown-menu pull-right">
                 <li>
-                    <a href="javascript:;"> Export to CSV </a>
+                    <a class="export-btn" data-export="csv" href="javascript:;"> {{ 'Export to'|trans }} CSV</a>
                 </li>
                 <li>
-                    <a href="javascript:;"> Export to PDF </a>
+                    <a class="export-btn" data-export="pdf" href="javascript:;"> {{ 'Export to'|trans }} PDF</a>
                 </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="javascript:;"> Export to power point </a>
-                </li>
+                {#<li>#}
+                    {#<a id="export-point" href="javascript:;"> {{ 'Export to power point'|trans }} </a>#}
+                {#</li>#}
             </ul>
         </div>
     </div>
 {% endblock %}
 
 {% block dataTable %}
-    <div class="table-container">
-        <div id="datatable_orders_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
-            {% include 'OivBundle:advancedSearch/blocs:pagination.html.twig' %}
-            {% include 'OivBundle:advancedSearch/blocs:table-adv-search.html.twig' %}
-            {% include 'OivBundle:advancedSearch/blocs:pagination.html.twig' %}
+<div class="tabbable">
+    <ul class="nav nav-tabs nav-tabs-lg">
+        <li class="active">
+            <a href="#tab_table" data-toggle="tab" aria-expanded="true">
+                {{ 'Details'|trans }}
+            </a>
+        </li>
+        <li>
+            <a href="#tab_graph" data-toggle="tab" aria-expanded="true">
+                {{ 'Graphic'|trans }}
+            </a>
+        </li>
+    </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_table">
+                <div class="table-container">
+                    <div id="datatable_orders_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
+                        {#{% include 'OivBundle:advancedSearch/blocks:pagination.html.twig' %}#}
+                        {% include 'OivBundle:advancedSearch/blocks:table-adv-search.html.twig' %}
+                        {% include 'OivBundle:advancedSearch/blocks:pagination.html.twig' %}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_graph">
+                {% include 'OivBundle:advancedSearch/blocks:graphic.html.twig' %}
+            </div>
         </div>
-    </div>
+</div>
 {% endblock %}

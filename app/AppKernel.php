@@ -17,7 +17,8 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
             new CibloBundle\CibloBundle(),
-            new OivBundle\OivBundle()
+            new OivBundle\OivBundle(),
+            new Spraed\PDFGeneratorBundle\SpraedPDFGeneratorBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

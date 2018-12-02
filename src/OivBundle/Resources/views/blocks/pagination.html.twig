@@ -2,7 +2,7 @@
 <div class="col-md-12 text-center form-inline">
     <div class="form-group">
         <label class="control-label">{{ 'View'|trans }}</label>
-        <select name="{{ numTab|default('resultSearch') }}OffsetPager" class="offset-pg form-control" data-view="{{ view|default('global') }}">
+        <select id="limit-pg-{{ numTab|default('resultSearch') }}" name="{{ numTab|default('resultSearch') }}OffsetPager" class="offset-pg form-control" data-view="{{ view|default('global') }}">
             <option value="20" selected="">20/page</option>
             <option value="50">50/page</option>
             <option value="100">100/page</option>

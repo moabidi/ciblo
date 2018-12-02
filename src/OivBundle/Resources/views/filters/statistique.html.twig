@@ -1,15 +1,27 @@
 {% if isAdvSearch|default(false) %}
     {% for fieldName, filter in filters.StatData %}
         {% if filter.values|length %}
+            {% if fieldName == 'value' %}
+                <li>
+                    <a class="text-center">{{ 'Value Min'|trans }}</a>
+                    <input data-view="stat" type="text" name="valueMin" id="value-min-stat" class="form-control value-min"/>
+                </li>
+                <li>
+                    <a class="text-center">{{ 'Value Max'|trans }}</a>
+                    <input data-view="stat" type="text" name="valueMax" id="value-max-stat" class="form-control value-max"/>
+                </li>
+
+            {% else %}
             <li>
                 <a class="text-center">{{ fieldName|trans }}</a>
-                <select {% if fieldName == 'statType' %} multiple{% endif %} data-view="education" id="{{ 'StatData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
+                <select data-view="stat"{% if fieldName == 'statType' %} multiple{% endif %} data-view="education" id="{{ 'StatData-' ~ fieldName }}" class="form-control select2me" data-live-search="true" name="{{ fieldName }}">
                     <option value="">{{ 'Choose'|trans }}</option>
                     {% for value in filter.values %}
                         <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
                     {% endfor %}
                 </select>
             </li>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% else %}

@@ -5,16 +5,16 @@
     <div class="col-md-4 form-group">
         <label class="control-label">{{ 'place'|trans }}</label>
 {% endif %}
-    <select {% if isAdvSearch|default(false) %}multiple{% endif %} id="country" class="form-control selectpicker" data-live-search="true" name="country">
-        <optgroup label="Sélectionner Tout le monde">
-            <option value="oiv" {% if countryCode == 'oiv' %}selected=""{% endif %}>{{ 'all world'|trans }}</option>
+    <select {% if isAdvSearch|default(false) %}multiple{% endif %} id="country" class="{% if isAdvSearch|default(false) %}multi-select{% else %}form-control selectpicker{% endif %}" data-live-search="true" name="country">
+        <optgroup label="{{ 'Choose'|trans }} {{ 'World'|trans }}">
+            <option value="oiv" {% if countryCode == 'oiv' %}selected=""{% endif %}>{{ 'World'|trans }}</option>
         </optgroup>
-        <optgroup label="Sélectionner un continent">
+        <optgroup label="{{ 'Choose'|trans }} {{ 'a continent'|trans }}">
             {% for item in tradeBlocs %}
                 <option value="{{ item.tradeBloc }} {% if countryCode == 'item.tradeBloc' %}selected=""{% endif %}">{{ item.tradeBloc }}</option>
             {% endfor %}
         </optgroup>
-        <optgroup label="Sélectionner un pays">
+        <optgroup label="{{ 'Choose'|trans }} {{ 'a country'|trans }}">
             {% for country in countries %}
                 <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
             {% endfor %}

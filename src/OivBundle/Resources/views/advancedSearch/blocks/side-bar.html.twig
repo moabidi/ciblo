@@ -13,15 +13,12 @@
         <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
             <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
             <li class="sidebar-toggler-wrapper">
-                <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-                <div class="sidebar-toggler">
-                </div>
-                <!-- END SIDEBAR TOGGLER BUTTON -->
+                <a class="text-center">Affiner votre recherche</a>
             </li>
             {% include 'OivBundle:filters:countries.html.twig' with {'isAdvSearch':true} %}
             <li class="sidebar-search-wrapper">
                 <a class="text-center">{{ 'Year min'|trans }}</a>
-                <select id="yearMax" class="form-control selectpicker" data-live-search="true" name="yearMax">
+                <select id="yearMin" class="form-control select2me" data-live-search="true" name="yearMin">
                     {% for year in ("now"|date('Y'))-2..1995 %}
                         <option value="{{ year }}" >{{ year }}</option>
                     {% endfor %}
@@ -30,7 +27,7 @@
             </li>
             <li class="sidebar-search-wrapper">
                 <a class="text-center">{{ 'Year max'|trans }}</a>
-                <select id="yearMax" class="form-control selectpicker" data-live-search="true" name="yearMax">
+                <select id="yearMax" class="form-control select2me" data-live-search="true" name="yearMax">
                     {% for year in ("now"|date('Y'))-2..1995 %}
                         <option value="{{ year }}" >{{ year }}</option>
                     {% endfor %}
@@ -45,9 +42,9 @@
                     <span class="selected"></span>
                     <span class="arrow open"></span>
                 </a>
-                <ul class="sub-menu">
+                <ul id="naming" class="sub-menu">
                     {% include 'OivBundle:filters:appellations.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocs:btn-search-reset.html.twig' %}
+                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'naming'} %}
                 </ul>
             </li>
             <li>
@@ -57,9 +54,9 @@
                     <span class="selected"></span>
                     <span class="arrow open"></span>
                 </a>
-                <ul class="sub-menu">
+                <ul id=variety"" class="sub-menu">
                     {% include 'OivBundle:filters:cepage.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocs:btn-search-reset.html.twig' %}
+                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'variety'} %}
                 </ul>
             </li>
             <li>
@@ -69,9 +66,9 @@
                     <span class="selected"></span>
                     <span class="arrow open"></span>
                 </a>
-                <ul class="sub-menu">
+                <ul id="education" class="sub-menu">
                     {% include 'OivBundle:filters:formation.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocs:btn-search-reset.html.twig' %}
+                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'education'} %}
                 </ul>
             </li>
             <li class="active open">
@@ -81,9 +78,9 @@
                     <span class="selected"></span>
                     <span class="arrow open"></span>
                 </a>
-                <ul class="sub-menu">
+                <ul id="stat" class="sub-menu">
                     {% include 'OivBundle:filters:statistique.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocs:btn-search-reset.html.twig' %}
+                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'stat'} %}
                 </ul>
             </li>
 

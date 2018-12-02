@@ -160,7 +160,7 @@ Page Header
   background: #3f4f62;
 }
 .page-header.navbar .menu-toggler {
-  background-image: url(img/backoffice/sidebar_toggler_icon_darkblue.png);
+  background-image: url(/bundles/oiv/img/backoffice/sidebar_toggler_icon_darkblue.png);
 }
 
 /* Default Horizontal Menu */

@@ -9,7 +9,9 @@
 namespace OivBundle\Controller;
 
 
+use OivBundle\Repository\StatDataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class BaseController extends Controller
 {
@@ -63,8 +65,8 @@ class BaseController extends Controller
     protected function getStatsCountry($aCriteria = [], $minDate = false, $maxDate = false)
     {
         $repository = $this->get('oiv.stat_repository');
-        $minData = '1990';
-        $maxDate = '2018';
+        $minData = $minDate ? $minDate:'1990';
+        $maxDate = $maxDate ? $maxDate:date('Y')-2;
         $allStats = $this->getStatProducts(array_merge($aCriteria, ['yearMin' => $minData, 'yearMax' => $maxDate]));
         return [
             'products' => $this->getStatProducts($aCriteria,true),
@@ -129,6 +131,7 @@ class BaseController extends Controller
 
             ]
         ];
+        /**@var StatDataRepository $repository */
         $repository = $this->get('oiv.stat_repository');
         foreach ($aProducts as &$product) {
             foreach ($product['stat'] as $key => &$statType) {
@@ -205,6 +208,35 @@ class BaseController extends Controller
             $aResult['data'] = $data;
         }
         return $aResult;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getCriteriaRequest(Request $request)
+    {
+        $aCriteria = [];
+        $table = ucfirst($request->request->get('dbType')).'Data';
+        if ($request->request->has('countryCode')) {
+            $aCriteria['countryCode'] = $request->request->get('countryCode');
+        }
+        if ($request->request->has('year')) {
+            $aCriteria['year'] = $request->request->get('year');
+        }else{
+            if($request->request->get('yearMax')) {
+                $aCriteria['yearMax'] = $request->request->get('yearMax');
+            }
+            if($request->request->get('yearMin')) {
+                $aCriteria['yearMin'] = $request->request->get('yearMin');
+            }
+        }
+        foreach($request->request->all() as $field => $val) {
+            if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
+                $aCriteria[$field] = $val;
+            }
+        }
+        return $aCriteria;
     }
 
 }

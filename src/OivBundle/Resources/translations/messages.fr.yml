@@ -1,3 +1,10 @@
+#########################
+# SIMPLE SEARCH
+#########################
+Choose: Sélectionner
+a country: un pays
+a continent: un continent
+#Education
 countryCode: Pays
 formationTitle: Intitulé de la formation
 university: Établissement
@@ -44,6 +51,7 @@ synonym: Synonyme
 nationalVarietyId: Id variété nationale
 grapeColor: Couleur
 internetAdress: Lien cépage
+#Fiche OIV
 area: Superficie
 Education: Formation
 count variety: Nombre de cépage
@@ -57,12 +65,11 @@ total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
 place: Lieu
 Database: Base de données
-all world: Le Monde
+World: Monde
 Naming: Appellations
 Variety: Cépages
 Education: Formations
 Statistic: Statistiques
-Choose: Sélectionner
 Annual statistics of: Statistiques annuelles de
 Download CSV: Télécharger CSV
 Download JPEG image: Télécharger JPEG image
@@ -73,7 +80,6 @@ Download XLS: Télécharger XLS
 in: en
 Simple search: Recherche simple
 Advanced search: Recherche avancée
-All the world: Tout le monde
 Year min: Année min
 Year max: Année max
 Search: Recherche
@@ -160,3 +166,10 @@ MILLE_HL: (1000 HL)
 MILLE_QX: (1000 QX)
 MILLE_HA: (1000 HA)
 KG_CAPITA: (1000 KG)
+#########################
+# ADV SEARCH
+#########################
+Result: Résultat
+Home: Accueil
+Export to: Export en
+Graphic: Graphique

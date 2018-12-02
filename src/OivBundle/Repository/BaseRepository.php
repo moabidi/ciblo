@@ -73,15 +73,23 @@ class BaseRepository extends EntityRepository
         } else {
             $queryBuilder = $queryBuilder->select('c.tradeBloc, c.countryNameFr, o');
         }
-        $queryBuilder
-            ->from($this->_entityName, 'o')
-            ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
+        $queryBuilder->from($this->_entityName, 'o');
 
         if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
-            $queryBuilder
-                ->andWhere('o.countryCode = :countryCode')
-                ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')
-                ->setParameter('countryCode', $aCriteria['countryCode']);
+            $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
+            if ( in_array($aCriteria['countryCode'], ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE'])) {
+                $queryBuilder
+                    ->innerJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
+                    ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)')
+                    ->setParameter('tradeBloc', $aCriteria['countryCode']);
+            } else {
+                $queryBuilder
+                    ->andWhere('o.countryCode = :countryCode')
+                    ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = :countryCode)')
+                    ->setParameter('countryCode', $aCriteria['countryCode']);
+            }
+        } else {
+            $queryBuilder->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
         }
         unset($aCriteria['countryCode']);
         unset($aCriteria['year']);

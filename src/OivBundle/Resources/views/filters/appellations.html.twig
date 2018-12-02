@@ -1,15 +1,28 @@
 {% if isAdvSearch|default(false) %}
     {% for fieldName, filter in filters.NamingData %}
             {% if filter.values|length %}
+                {% if fieldName == 'value' %}
+                    <li>
+                        <a class="text-center">{{ 'Value Min'|trans }}</a>
+                        <input type="text" name="valueMin" id="value-min-naming" class="value-min"/>
+                    </li>
+                    <li>
+                        <a class="text-center">{{ 'Value Max'|trans }}</a>
+                        <input type="text" name="valueMax" id="value-max-naming" class="value-max"/>
+                    </li>
+
+                {% else %}
                 <li>
                     <a class="text-center">{{ fieldName|trans }}</a>
-                    <select data-view="naming" id="{{ 'NamingData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
+
+                    <select data-view="naming" id="{{ 'NamingData-' ~ fieldName }}" class="form-control select2me" data-live-search="true" name="{{ fieldName }}">
                         <option value="">{{ 'Choose'|trans }}</option>
                         {% for value in filter.values %}
                             <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
                         {% endfor %}
                     </select>
                 </li>
+                {% endif %}
             {% endif %}
     {% endfor %}
 {% else %}

@@ -9,7 +9,7 @@
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
-    {% include 'OivBundle:advancedSearch/blocs:head.html.twig' %}
+    {% include 'OivBundle:advancedSearch/blocks:head.html.twig' %}
 </head>
 
 <body class="page-header-fixed page-quick-sidebar-over-content ">
@@ -46,8 +46,8 @@
 <div class="clearfix">
 </div>
 <!-- BEGIN CONTAINER -->
-<div class="page-container">
-    {% include 'OivBundle:advancedSearch/blocs:side-bar.html.twig' %}
+<div id="advSearch" class="page-container">
+    {% include 'OivBundle:advancedSearch/blocks:side-bar.html.twig' %}
     <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
         <div class="page-content">
@@ -61,7 +61,7 @@
                 <ul class="page-breadcrumb">
                     <li>
                         <i class="fa fa-home"></i>
-                        <a href="/fr/statistiques">Home</a>
+                        <a href="/fr/statistiques">{{ 'Home'|trans }}</a>
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
@@ -76,13 +76,15 @@
             <!-- END PAGE HEADER-->
             <!-- BEGIN PAGE CONTENT-->
             <div class="row">
-                <div class="col-md-12">
+                <div id="selectedFilter" class="col-md-12">
                     {% block selectedFilter %}{% endblock %}
+                </div>
+                <div class="col-md-12">
                     <!-- Begin: life time stats -->
                     <div class="portlet">
                         <div class="portlet-title">
                             <div class="caption">
-                                <i class="fa fa-shopping-cart"></i>Result
+                                <i class="fa fa-shopping-cart"></i>{{ 'Result'|trans }}
                             </div>
                             {% block actions %}{% endblock %}
                         </div>
@@ -109,7 +111,7 @@
     </div>
 </div>
 <!-- END FOOTER -->
-{% include 'OivBundle:advancedSearch/blocs:load_js.html.twig' %}
+{% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
 </body>
 <!-- END BODY -->
 </html>

@@ -66,12 +66,7 @@ class StatDataRepository extends BaseRepository
             ->where('o.statType = :statType')
             ->setParameter('statType',$aCriteria['statType']);
 
-        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
-            $this->_queryBuilder
-                ->Andwhere('o.countryCode = :countryCode')
-                ->setParameter('countryCode',$aCriteria['countryCode']);
-        }
-
+        $this->addCountryCriteria($aCriteria);
         $this->addYearCriteria($aCriteria);
         $this->_queryBuilder->groupBy('o.year, o.measureType');
     }
@@ -127,16 +122,34 @@ class StatDataRepository extends BaseRepository
                 ->where('o.statType = :statType')
                 ->setParameter('statType', $aCriteria['statType']);
         }
-        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
-            $this->_queryBuilder
-                ->Andwhere('o.countryCode = :countryCode')
-                ->setParameter('countryCode',$aCriteria['countryCode']);
-        }
 
+        $this->addCountryCriteria($aCriteria);
         $this->addYearCriteria($aCriteria);
         return $this->_queryBuilder;
     }
 
+    /**
+     * @param $aCriteria
+     */
+    public function addCountryCriteria($aCriteria)
+    {
+        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
+            $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
+            if ( in_array($aCriteria['countryCode'], ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE'])) {
+                $this->_queryBuilder
+                    ->innerJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
+                    ->setParameter('tradeBloc', $aCriteria['countryCode']);
+            } else {
+                $this->_queryBuilder
+                    ->Andwhere('o.countryCode = :countryCode')
+                    ->setParameter('countryCode', $aCriteria['countryCode']);
+            }
+        }
+    }
+
+    /**
+     * @param $aCriteria
+     */
     private function addYearCriteria($aCriteria)
     {
         if(!empty($aCriteria['yearMin']) || !empty($aCriteria['yearMax'])){

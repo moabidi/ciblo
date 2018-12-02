@@ -1,6 +1,3 @@
-/**
- * Created by abidi on 16/11/18.
- */
 $(function($){
 
     $.handleSearch = new function() {
@@ -13,8 +10,21 @@ $(function($){
         this._dataFilter;
         this._listType = ['prod', 'consumption','export','import'];
 
+        /**
+         * Ajax request with loader
+         * @param uri
+         * @param method
+         * @param data
+         * @param view
+         * @param top
+         * @private
+         */
         this._sendRequest = function(uri, method, data, view, top) {
-            $('.card').loading({circles: 3, overlay: true, width:275, top: top});
+            global.blockUI({
+                target: '',
+                animate: true,
+                overlayColor: '#000'
+            });
             $.ajax({
                 'url':uri,
                 'method': method,
@@ -22,36 +32,52 @@ $(function($){
             }).done(function(response){
                 $.handleSearch._handleSuccess(response, view);
                 setTimeout(function(){
-                    $('.card').loading({destroy: true});
-                }, 1000);
+                    global.unblockUI('');
+                }, 500);
             }).fail(function(error){
                 setTimeout(function(){
-                    $('.card').loading({destroy: true});
-                }, 1000);
+                    global.unblockUI('');
+                }, 500);
                 alert('error response');
                 console.log('error response', error);
             });
         };
 
+        /**
+         * Handle sucess response
+         * @param response
+         * @param view
+         * @private
+         */
         this._handleSuccess = function(response, view) {
             switch (view) {
-                case 'global': $.handleSearch._refreshGlobalView(response);break;
-                case 'stat': $.handleSearch._refreshStatView(response);break;
+                case 'global': $.handleSearch._refreshTableResult(response, 'datatable_orders');break;
+                case 'generate-export': $.handleSearch._refreshExport(response);break;
                 case 'graph': $.handleSearch._refreshGraphView(response);break;
-                case 'global-country': $.handleSearch._refreshDataCountryView(response);break;
             }
         };
 
+        /**
+         * Handle error response
+         * @param error
+         * @private
+         */
         this._handleFailure = function(error) {
             alert('error response');
             console.log('error response');
         };
 
-        this._refreshGlobalView = function(response) {
-            $.handleSearch._refreshTableResult(response,'resultSearch');
-        };
-
-        this._refreshStatView = function(response) {
+        /**
+         * Handle export response
+         * @param response
+         * @private
+         */
+        this._refreshExport = function(response) {
+            if (typeof response.href != 'undefined') {
+                window.open(response.href);
+            } else {
+                alert('Pas de données à exporter');
+            }
 
         };
 
@@ -59,10 +85,12 @@ $(function($){
 
         };
 
-        this._refreshDataCountryView = function(response) {
-            $.handleSearch._refreshTableResult(response,'resultStats');
-        };
-
+        /**
+         * Refresh Result table
+         * @param content
+         * @param idTable
+         * @private
+         */
         this._refreshTableResult = function (content, idTable) {
             var hearder = '';
             var hearderFilter = '';
@@ -71,42 +99,35 @@ $(function($){
             if (typeof content.data != 'undefined') {
                 $.each(content.labelfields, function (key, val) {
                     hearder += '<th>' + val + '</th>';
-                    hearderFilter += '<th><input class="filter-col" type="text"></th>';
+                    hearderFilter += '<td rowspan="1" colspan="1"><input class="form-control form-filter input-sm filter-col" type="text"></td>';
                 });
-                hearder = '<tr>'+hearder+'</tr><tr>'+hearderFilter+'</tr>';
+                hearder = '<tr role="row" class="heading">'+hearder+'</tr><tr role="row" class="filter">'+hearderFilter+'</tr>';
                 $.each(content.data, function (key, items) {
-                    body += '<tr data-country="'+items.countryCode+'">';
+                    classCSS = key%2 ? 'odd':'even';
+                    body += '<tr role="row '+classCSS+'">';
                     $.each(items, function (key, val) {
                         body += '<td>' + val + '</td>';
                     });
                     body += '</tr>';
                 });
-
+                $('#count-result').text(content.count);
+                $('#count-page').text(content.total);
                 if (content.total < '2') {
-                    $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
+                    $('#pagination-result .pagination').removeClass('show').addClass('hide');
                 } else {
-                    $('#'+idTable).parents().eq(1).find('.pagination').removeClass('hide');
-                    $('#first-pg-'+idTable).removeClass('hide');
-                    $('#prev-pg-'+idTable).removeClass('hide');
-                    $('#next-pg-'+idTable).removeClass('hide');
-                    $('#last-pg-'+idTable).removeClass('hide');
+                    $('#pagination-result .pagination').removeClass('hide');
+                    $('#prev-pg').removeClass('hide');
+                    $('#next-pg').removeClass('hide');
                     if (content.current == '1') {
-                        $('#first-pg-'+idTable).addClass('hide');
-                        $('#prev-pg-'+idTable).addClass('hide');
-                    } else if (content.current == '2') {
-                        $('#prev-pg-'+idTable).addClass('hide');
+                        $('#prev-pg').addClass('hide');
                     }
                     if (content.total == content.current) {
-                        $('#next-pg-'+idTable).addClass('hide');
-                        $('#last-pg-'+idTable).addClass('hide');
-                    } else if (content.total == (content.current + 1)) {
-                        $('#next-pg-'+idTable).addClass('hide');
+                        $('#next-pg').addClass('hide');
                     }
 
-                    $('#prev-pg-'+idTable).attr('data-offset', content.prev);
-                    $('#current-pg-'+idTable).text(content.current+'/'+content.total);
-                    $('#next-pg-'+idTable).attr('data-offset', content.next);
-                    $('#last-pg-'+idTable).attr('data-offset', content.last);
+                    $('#prev-pg').attr('data-offset', content.prev);
+                    $('#current-pg').val(content.current);
+                    $('#next-pg').attr('data-offset', content.next);
                 }
             }else{
                 hearder = '<tr><th class="text-center">Aucune résulat touvée pour votre recherche</th></tr>';
@@ -117,6 +138,12 @@ $(function($){
             $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');
         };
 
+        /**
+         *
+         * @param btn
+         * @param view
+         * @private
+         */
         this._initSearchButton = function(btn, view) {
             $(btn).on('click', function() {
                 var uri = '/fr/statistiques/'+view;
@@ -128,13 +155,20 @@ $(function($){
             });
         };
 
+        /**
+         *
+         * @param btn
+         * @param view
+         * @returns {*}
+         * @private
+         */
         this._getFiltersData = function (btn,view) {
             var db = $(btn).attr('data-dbType');
             if (db == '') {
                 alert('Veuillez sélectionner une base de données');
                 return false;
             }
-            var data = 'dbType='+db+'&countryCode='+$('#country').val();
+            var data = 'dbType='+db+'&countryCode='+$('#country').val()+'&limit='+$('#limit-pg').val();
             if(db == 'stat') {
                 data += '&yearMin='+ $('#yearMin').val();
                 data += '&yearMax='+ $('#yearMax').val();
@@ -142,9 +176,9 @@ $(function($){
                 data += '&year='+ $('#year').val();
             }
             if (view == 'global-country') {
-                data += '&view=tab2&limit='+$('#limit-pg-resultStat').val();
+                data += '&view=tab2';
             } else if (view == 'global') {
-                data +='&view=tab1&limit='+$('#limit-pg-resultSearch').val();
+                data +='&view=tab1';
                 var slectedFilters = '#' + db + ' ' + '[data-view=' + db + ']';
                 $(slectedFilters).each(function () {
                     //console.log($(this));
@@ -196,50 +230,49 @@ $(function($){
          */
         this._changeYearStat = function () {
             $('#nextYear,#prevYear').on('click', function () {
-               if ( $(this).attr('data-year')) {
-                   var year = parseInt($(this).attr('data-year'));
+                if ( $(this).attr('data-year')) {
+                    var year = parseInt($(this).attr('data-year'));
 
-                   $('#nextYear .year').html(year+1);
-                   $('#currentYear').html(year);
-                   $('#prevYear .year').html(year-1);
+                    $('#nextYear .year').html(year+1);
+                    $('#prevYear .year').html(year-1);
 
-                   $('#country-name').attr('data-statYear',year);
-                   $('#nextYear').attr('data-year',year+1);
-                   $('#prevYear').attr('data-year',year-1);
-                   $('#products tbody tr').each(function(){
-                       var product = $(this).attr('id');
-                       //console.log(product);console.log( $('#'+product+' .stat-type'));
-                       var measure = $(this).attr('data-measure');
-                       var data = {'prod':'','consumption':'','export':'','import':''};
-                       var indexYear = -1;
-                       var dataProduct;
+                    $('#country-name').attr('data-statYear',year);
+                    $('#nextYear').attr('data-year',year+1);
+                    $('#prevYear').attr('data-year',year-1);
+                    $('#products tbody tr').each(function(){
+                        var product = $(this).attr('id');
+                        //console.log(product);console.log( $('#'+product+' .stat-type'));
+                        var measure = $(this).attr('data-measure');
+                        var data = {'prod':'','consumption':'','export':'','import':''};
+                        var indexYear = -1;
+                        var dataProduct;
 
-                       switch (product) {
-                           case 'rfresh':
-                               indexYear = $.handleSearch._g1._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g1._data;break;
-                           case 'rin':
-                               indexYear = $.handleSearch._g2._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g2._data;break;
-                           case 'rtable':
-                               indexYear = $.handleSearch._g3._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g3._data;break;
-                           case 'rsec':
-                               indexYear = $.handleSearch._g4._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g4._data;break;
-                       }
-                       //console.log(product,indexYear,dataProduct);
-                       data.prod = typeof dataProduct[0].data[indexYear] != 'undefined'? dataProduct[0].data[indexYear]:'0';
-                       data.consumption = typeof dataProduct[1].data[indexYear] != 'undefined'? dataProduct[1].data[indexYear]:'0';
-                       data.export = typeof dataProduct[2].data[indexYear] != 'undefined'? dataProduct[2].data[indexYear]:'0';
-                       data.import = typeof dataProduct[3].data[indexYear] != 'undefined'? dataProduct[3].data[indexYear]:'0';
-                       //console.log(data);
-                       $('#'+product+' .stat-type').each(function () {
-                           var statType = $(this).attr('data-statType');
+                        switch (product) {
+                            case 'rfresh':
+                                indexYear = $.handleSearch._g1._xAxis.indexOf(year);
+                                dataProduct = $.handleSearch._g1._data;break;
+                            case 'rin':
+                                indexYear = $.handleSearch._g2._xAxis.indexOf(year);
+                                dataProduct = $.handleSearch._g2._data;break;
+                            case 'rtable':
+                                indexYear = $.handleSearch._g3._xAxis.indexOf(year);
+                                dataProduct = $.handleSearch._g3._data;break;
+                            case 'rsec':
+                                indexYear = $.handleSearch._g4._xAxis.indexOf(year);
+                                dataProduct = $.handleSearch._g4._data;break;
+                        }
+                        //console.log(product,indexYear,dataProduct);
+                        data.prod = typeof dataProduct[0].data[indexYear] != 'undefined'? dataProduct[0].data[indexYear]:'0';
+                        data.consumption = typeof dataProduct[1].data[indexYear] != 'undefined'? dataProduct[1].data[indexYear]:'0';
+                        data.export = typeof dataProduct[2].data[indexYear] != 'undefined'? dataProduct[2].data[indexYear]:'0';
+                        data.import = typeof dataProduct[3].data[indexYear] != 'undefined'? dataProduct[3].data[indexYear]:'0';
+                        //console.log(data);
+                        $('#'+product+' .stat-type').each(function () {
+                            var statType = $(this).attr('data-statType');
                             $(this).parent().find('.valStatType').parent().html('<span class="valStatType">'+ $.handleSearch._formatNumber(data[statType])+'</span> ' );
-                       });
-                   });
-               }
+                        });
+                    });
+                }
                 return false;
             });
         };
@@ -281,21 +314,29 @@ $(function($){
             });
         };
 
+        /**
+         * Change result pagination whene number page is changed
+         * @private
+         */
         this._initHandlePagination = function() {
-            $('.pagination a').on('click', function () {
+            $('#pagination-result a').on('click', function () {
                 var view = $(this).attr('data-view');
                 var uri = '/fr/statistiques/'+view;
                 var data = $.handleSearch._dataFilter;
                 var posLoader = $(this).offset().top;
                 var offset = $(this).attr('data-offset');
-                var limit = $(this).parents().eq(3).find('.offset-pg').val();
+                var limit = $('#limit-pg').val();
                 data += '&offset='+offset+'&limit='+limit;
                 $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
             });
-        }
+        };
 
+        /**
+         * Change result pagination whene limit page is changed
+         * @private
+         */
         this._initHandlePagePagination = function() {
-            $('select.offset-pg ').on('change', function () {
+            $('select#limit-pg').on('change', function () {
                 var view = $(this).attr('data-view');
                 var uri = '/fr/statistiques/'+view;
                 var data = $.handleSearch._dataFilter;
@@ -305,7 +346,32 @@ $(function($){
                 data += '&offset='+offset+'&limit='+limit;
                 $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
             });
-        }
+        };
+
+        /**
+         * Export data into pdf or csv file via ajax request
+         * @private
+         */
+        this._initExportButton = function() {
+            $('.export-btn').on('click', function () {
+                var exportType = $(this).attr('data-export');
+                if ( exportType == 'csv' || exportType =='pdf' ) {
+                    var view = 'generate-export';
+                    var uri = '/fr/statistiques/'+view;
+                    var data = $.handleSearch._dataFilter + '&exportType='+exportType;
+                    var posLoader = $(this).offset().top;
+                    $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
+                } else {
+                    alert('Export type not available')
+                }
+            });
+        };
+
+        this._initHandleResetFilters = function() {
+          $('.reset-filter').on('click', function(){
+
+          });
+        };
 
         /**
          * Search on keyup
@@ -344,10 +410,8 @@ $(function($){
     };
 
     $(document).ready(function(){
-        $.handleSearch._initSearchButton('#simpleSearch','global');
-        $.handleSearch._initSearchButton('btn-country-search','country');
-        $.handleSearch._initSearchButton('btn-product-search','country-statistic');
-        $.handleSearch._initSearchButton('.btn-global-country-search','global-country');
+        $.handleSearch._initSearchButton('.filter-submit','global');
+        $.handleSearch._initExportButton();
         $.handleSearch._initStatButton();
         $.handleSearch._initStatTypeButton();
         $.handleSearch._changeYearStat();
@@ -356,7 +420,11 @@ $(function($){
         $.handleSearch._initChangeCountry();
         $.handleSearch._initHandlePagination();
         $.handleSearch._initHandlePagePagination();
-        $('.selectpicker').selectpicker();
-        $('.selectpicker').trigger('change');
+        $.handleSearch._initHandleResetFilters();
+        $('.multi-select').multiSelect();
+        $('.select2me').select2({
+            placeholder: "Select",
+            allowClear: true
+        });
     });
 });

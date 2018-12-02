@@ -23,21 +23,21 @@ var QuickSidebar = function () {
             chatUsersHeight = wrapper.height() - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
 
             // chat user list 
-            Metronic.destroySlimScroll(chatUsers);
+            global.destroySlimScroll(chatUsers);
             chatUsers.attr("data-height", chatUsersHeight);
-            Metronic.initSlimScroll(chatUsers);
+            global.initSlimScroll(chatUsers);
 
             var chatMessages = wrapperChat.find('.page-quick-sidebar-chat-user-messages');
             var chatMessagesHeight = chatUsersHeight - wrapperChat.find('.page-quick-sidebar-chat-user-form').outerHeight() - wrapperChat.find('.page-quick-sidebar-nav').outerHeight();
 
-            // user chat messages 
-            Metronic.destroySlimScroll(chatMessages);
+            // user chat messages
+            global.destroySlimScroll(chatMessages);
             chatMessages.attr("data-height", chatMessagesHeight);
-            Metronic.initSlimScroll(chatMessages);
+            global.initSlimScroll(chatMessages);
         };
 
         initChatSlimScroll();
-        Metronic.addResizeHandler(initChatSlimScroll); // reinitialize on window resize
+        global.addResizeHandler(initChatSlimScroll); // reinitialize on window resize
 
         wrapper.find('.page-quick-sidebar-chat-users .media-list > .media').click(function () {
             wrapperChat.addClass("page-quick-sidebar-content-item-shown");
@@ -88,7 +88,7 @@ var QuickSidebar = function () {
                 });
 
                 return height;
-            };           
+            };
 
             chatContainer.slimScroll({
                 scrollTo: getLastPostPos()
@@ -129,14 +129,14 @@ var QuickSidebar = function () {
 
             alertListHeight = wrapper.height() - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
 
-            // alerts list 
-            Metronic.destroySlimScroll(alertList);
+            // alerts list
+            global.destroySlimScroll(alertList);
             alertList.attr("data-height", alertListHeight);
-            Metronic.initSlimScroll(alertList);
+            global.initSlimScroll(alertList);
         };
 
         initAlertsSlimScroll();
-        Metronic.addResizeHandler(initAlertsSlimScroll); // reinitialize on window resize
+        global.addResizeHandler(initAlertsSlimScroll); // reinitialize on window resize
     };
 
     // Handles quick sidebar settings
@@ -150,14 +150,14 @@ var QuickSidebar = function () {
 
             settingsListHeight = wrapper.height() - wrapper.find('.nav-justified > .nav-tabs').outerHeight();
 
-            // alerts list 
-            Metronic.destroySlimScroll(settingsList);
+            // alerts list
+            global.destroySlimScroll(settingsList);
             settingsList.attr("data-height", settingsListHeight);
-            Metronic.initSlimScroll(settingsList);
+            global.initSlimScroll(settingsList);
         };
 
         initSettingsSlimScroll();
-        Metronic.addResizeHandler(initSettingsSlimScroll); // reinitialize on window resize
+        global.addResizeHandler(initSettingsSlimScroll); // reinitialize on window resize
     };
 
     return {
