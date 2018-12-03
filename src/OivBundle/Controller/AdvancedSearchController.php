@@ -29,7 +29,7 @@ class AdvancedSearchController extends BaseController
         $aParams['filters'] = $this->getFiltredFiled();
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['globalResult'] = $this->getResultGLobalSearch('StatData', $aCriteria,'tab1');
-        $aParams['stats'] = $this->getStatsCountry($aCriteria);
+        //$aParams['stats'] = $this->getStatProductCountries($aCriteria);
         //var_dump($aParams['globalResult']);die;
         return $this->render('OivBundle:advancedSearch:index.html.twig',$aParams);
     }
@@ -112,5 +112,45 @@ class AdvancedSearchController extends BaseController
             );
         }
         return;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @Route("/stattype-countries",name="stattype-adv-search")
+     */
+    public function getStatProductCountriesAction(Request $request)
+    {
+        /**@var StatDataRepository $repository */
+        $aCountries = explode(',', $request->request->get('countryCode'));
+       // $aCountries = ['FRA','ESP','ZAF'];
+        $statType = $request->request->get('statType','P_PRODUCTION_WINE');
+        $statType = 'P_PRODUCTION_WINE';
+        if (count($aCountries) && $aCountries[0] && $statType) {
+            $aCriteria = [];
+            $aResults = [];
+            $aCriteria['yearMin'] = $request->request->get('yearMin','1995');
+            $aCriteria['yearMax'] = $request->request->get('yearMax',date('Y')-2);
+            $repository = $this->get('oiv.stat_repository');
+            $mesure = 'xxx';
+            foreach ($aCountries as $countryCode) {
+                $result = $repository->getMultiValueStatType($statType, array_merge($aCriteria, ['countryCode'=>$countryCode]));
+                $aResults[$countryCode] = $result;
+            }
+
+            $translator = $this->get('translator');
+            $formattedData = ['xAxis'=>[],'yAxis'=>[],'label'=> $translator->trans($statType)];
+            for($y = $aCriteria['yearMin']; $y<=$aCriteria['yearMax']; $y++) {
+                $formattedData['xAxis'][]= $y;
+            }
+            array_walk($aResults, function ($value, $countryCode) use (&$formattedData, $statType, $translator) {
+                $formattedData['yAxis'][$statType][] = $this->getDataProductGraph($countryCode,$value, $formattedData['xAxis'],$translator);
+
+            });
+//            var_dump($formattedData );die;
+            return new JsonResponse($formattedData);
+        }
+        //var_dump($aProducts);die;
+        return new JsonResponse([]);
     }
 }

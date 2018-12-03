@@ -160,34 +160,38 @@ class BaseController extends Controller
     protected function formatDataGraph($aData, $minDate, $maxDate)
     {
         $translator = $this->get('translator');
-        $formattedData = ['xAxis'=>[]];
+        $formattedData = ['xAxis'=>[],'yAxis'=>[]];
         for($y = $minDate; $y<=$maxDate; $y++) {
             $formattedData['xAxis'][]= $y;
         }
 
         foreach ($aData as $product) {
             $productName = $product['name'];
-            $formattedData[$productName] = [];
-            $formattedData['xAxis'][$productName] = [];
-            array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $minDate, $maxDate, $translator) {
-                $typeStat = ['name' => $translator->trans($key), 'data' => []];
-//                for($y = $minDate; $y<=$maxDate; $y++) {
-//                    $typeStat['data'][$y] = 0;
-//                }
-                if ($value) {
-                    foreach ($value as $stat) {
-                        if ($stat['value']) {
-                            $typeStat['data'][$stat['year']] = floatval($stat['value']);
-                            $formattedData['xAxis'][$productName][] = $stat['year'];
-                        }
-                    }
-                }
-                $typeStat['data'] = array_values($typeStat['data']);
-                //var_dump($typeStat);die;
-                $formattedData[$productName][] = $typeStat;
+            $formattedData['yAxis'][$productName] = [];
+            array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $translator) {
+                $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($productName,$value, $formattedData['xAxis'],$translator);
+
             });
             //var_dump($formattedData );die;
         }
+        return $formattedData;
+    }
+
+    protected function getDataProductGraph($productName,$aListData, $aListYears,$translator)
+    {
+        $formattedData['name'] = $translator->trans($productName);
+        $formattedData['data'] = [];
+        foreach ($aListYears as $year) {
+            $formattedData['data'][$year] = '';
+        }
+        if ($aListData) {
+            foreach ($aListData as $stat) {
+                if ($stat['value']) {
+                    $formattedData['data'][$stat['year']] = floatval($stat['value']);
+                }
+            }
+        }
+        $formattedData['data'] = array_values($formattedData['data']);
         return $formattedData;
     }
 

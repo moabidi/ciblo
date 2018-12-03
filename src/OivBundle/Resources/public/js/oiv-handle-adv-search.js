@@ -53,7 +53,7 @@ $(function($){
             switch (view) {
                 case 'global': $.handleSearch._refreshTableResult(response, 'datatable_orders');break;
                 case 'generate-export': $.handleSearch._refreshExport(response);break;
-                case 'graph': $.handleSearch._refreshGraphView(response);break;
+                case 'stattype-countries': $.handleSearch._refreshGraphView(response);break;
             }
         };
 
@@ -82,7 +82,11 @@ $(function($){
         };
 
         this._refreshGraphView = function(response) {
-
+            $.handleSearch._g1._xAxis = response.xAxis;
+            $.handleSearch._g1._data = response.yAxis[response.label];
+            $.handleSearch._g1._title = response.label;
+            $.handleSearch._g1._mesure = '1000 QX';
+            $.handleSearch._g1._init();
         };
 
         /**
@@ -146,11 +150,14 @@ $(function($){
          */
         this._initSearchButton = function(btn, view) {
             $(btn).on('click', function() {
-                var uri = '/fr/statistiques/'+view;
+                var uri = '/fr/statistiques/';
                 var data = $.handleSearch._getFiltersData($(this),view);
                 if (!data) return false;
                 var posLoader = $(this).offset().top;
-                $.handleSearch._sendRequest(uri, 'POST', data,view, posLoader);
+                $.handleSearch._sendRequest(uri+view, 'POST', data,view, posLoader);
+                if ($(this).attr('data-dbType') == 'stat') {
+                    $.handleSearch._sendRequest(uri + 'stattype-countries', 'POST', data, 'stattype-countries', posLoader);
+                }
                 return false;
             });
         };
@@ -278,43 +285,6 @@ $(function($){
         };
 
         /**
-         * refrech filter switch selected database
-         * @private
-         */
-        this._initRefreshFilter = function() {
-            $('#typeSearch').on('change', function() {
-                $('#naming').removeClass('show').addClass('hide');
-                $('#education').removeClass('show').addClass('hide');
-                $('#variety').removeClass('show').addClass('hide');
-                $('#stat').removeClass('show').addClass('hide');
-                $('#protection').removeClass('show').addClass('hide');
-                $('#'+$(this).val()).removeClass('hide').addClass('show');
-                if ($(this).val() == 'stat') {
-                    $('#yearMax').parents().eq(1).removeClass('hide').addClass('show');
-                    $('#yearMin').parents().eq(1).removeClass('hide').addClass('show');
-                    $('#year').parents().eq(1).removeClass('show').addClass('hide');
-                }else{
-                    $('#yearMax').parents().eq(1).removeClass('show').addClass('hide');
-                    $('#yearMin').parents().eq(1).removeClass('show').addClass('hide');
-                    $('#year').parents().eq(1).removeClass('hide').addClass('show');
-                }
-                $('#simpleSearch').attr('data-dbType',$(this).val());
-                $('#advancedSearch').attr('data-dbType',$(this).val());
-            });
-        };
-
-        this._initChangeCountry = function () {
-            $('body').on('click','#resultSearch tbody tr' ,function () {
-                var countryCode = $(this).attr('data-country');
-                if (countryCode != $('#country-name').attr('data-statcountry')) {
-                    var db = $('#typeSearch').val();
-                    var href = window.location.href.split('?');
-                    window.location.href = href[0] + '?db=' + db + '&countryCode=' + countryCode;
-                }
-            });
-        };
-
-        /**
          * Change result pagination whene number page is changed
          * @private
          */
@@ -415,9 +385,7 @@ $(function($){
         $.handleSearch._initStatButton();
         $.handleSearch._initStatTypeButton();
         $.handleSearch._changeYearStat();
-        $.handleSearch._initRefreshFilter();
         $.handleSearch._initKeypSearch();
-        $.handleSearch._initChangeCountry();
         $.handleSearch._initHandlePagination();
         $.handleSearch._initHandlePagePagination();
         $.handleSearch._initHandleResetFilters();

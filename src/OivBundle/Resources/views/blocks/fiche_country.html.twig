@@ -178,8 +178,8 @@
                         $.handleSearch._g4 = jQuery.extend(true, {}, $.statCharts);
 
                         $.handleSearch._g1._container = 'container-g1';
-                        $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis.rfresh|json_encode|raw }};
-                        $.handleSearch._g1._data = {{ stats.graphProducts.rfresh|json_encode|raw }};
+                        $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g1._data = {{ stats.graphProducts.yAxis.rfresh|json_encode|raw }};
                         $.handleSearch._g1._title = {{ (stats.products.0.label|trans)|json_encode|raw  }};
                         {#$.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';#}
                         $.handleSearch._g1._mesure = '1000 QX';
@@ -187,8 +187,8 @@
                         $.handleSearch._g1._init();
 
                         $.handleSearch._g2._container = 'container-g2';
-                        $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis.rin|json_encode|raw }};
-                        $.handleSearch._g2._data = {{ stats.graphProducts.rin|json_encode|raw }};
+                        $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g2._data = {{ stats.graphProducts.yAxis.rin|json_encode|raw }};
                         $.handleSearch._g2._title = {{ (stats.products.1.label|trans)|json_encode|raw  }};
                         $.handleSearch._g2._mesure = '{{ stats.products.1.measure |raw }}';
                         $.handleSearch._g2._mesure = '1000 HL';
@@ -196,8 +196,8 @@
                         $.handleSearch._g2._init();
 
                         $.handleSearch._g3._container = 'container-g3';
-                        $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis.rtable|json_encode|raw }};
-                        $.handleSearch._g3._data = {{ stats.graphProducts.rtable|json_encode|raw }};
+                        $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g3._data = {{ stats.graphProducts.yAxis.rtable|json_encode|raw }};
                         $.handleSearch._g3._title = {{ (stats.products.2.label|trans)|json_encode|raw  }};
                         {#$.handleSearch._g3._mesure = '{{ stats.products.2.measure |raw }}';#}
                         $.handleSearch._g3._mesure = '1000 QX';
@@ -205,8 +205,8 @@
                         $.handleSearch._g3._init();
 
                         $.handleSearch._g4._container = 'container-g4';
-                        $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis.rsec|json_encode|raw }};
-                        $.handleSearch._g4._data = {{ stats.graphProducts.rsec|json_encode|raw }};
+                        $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g4._data = {{ stats.graphProducts.yAxis.rsec|json_encode|raw }};
                         $.handleSearch._g4._title = {{ (stats.products.3.label|trans)|json_encode|raw  }};
                         {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
                         $.handleSearch._g4._mesure = '1000 QX';

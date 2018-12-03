@@ -140,9 +140,16 @@ class StatDataRepository extends BaseRepository
                     ->innerJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
                     ->setParameter('tradeBloc', $aCriteria['countryCode']);
             } else {
-                $this->_queryBuilder
-                    ->Andwhere('o.countryCode = :countryCode')
-                    ->setParameter('countryCode', $aCriteria['countryCode']);
+                $aCountryCode = explode(',',$aCriteria['countryCode']);
+                if (count($aCountryCode) ==1) {
+                    $this->_queryBuilder
+                        ->Andwhere('o.countryCode = :countryCode')
+                        ->setParameter('countryCode', $aCountryCode[0]);
+                } else {
+                    $this->_queryBuilder
+                        ->Andwhere('o.countryCode IN (\''. implode('\',\'',$aCountryCode) .'\')');
+                        //->setParameter('countryCode', implode('\',\'',$aCountryCode));
+                }
             }
         }
     }
