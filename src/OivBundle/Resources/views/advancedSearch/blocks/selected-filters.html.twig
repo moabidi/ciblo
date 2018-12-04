@@ -1,27 +1,20 @@
 <div class="col-md-3">
-    <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">{{ 'Selected Countries'|trans }}</span>
+    <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">{{ 'Countries'|trans }}</span>
     <div class="ms-selection"></div>
 </div>
-<div class="note col-md-2">
+<div id="selected-year" class="note col-md-2">
     <p>
     <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">Année</span>
     </p>
     <p>
-        <span id="fl-year-min" class="label label-md label-warning" style="font-size: 14px;">2016</span>
-        à
-        <span id="fl-year-min" class="label label-md label-warning" style="font-size: 14px;">2015</span>
+        <span class="label label-md label-warning" style="font-size: 14px;">2016</span>
     </p>
 </div>
-<div class="note col-md-5">
+<div id="selected-statType" class="note col-md-7">
     <p>
         <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">Série</span>
+        <a data-action="selectAll" href="javascript:;">{{ 'select all'|trans }}</a>
+        <a data-action="deselectAll" href="javascript:;">{{ 'remove all'|trans }}</a>
     </p>
-    <p>
-        <button class="btn btn-sm yellow table-group-action-submit">
-            <i class="fa fa-check"></i> <i class="fa fa-times"></i> PRODUCTION
-        </button>
-        <button class="btn btn-sm yellow table-group-action-submit">
-            <i class="fa fa-check"></i> <i class="fa fa-times"></i> CONSOMMATION
-        </button>
-    </p>
+    <p></p>
 </div>

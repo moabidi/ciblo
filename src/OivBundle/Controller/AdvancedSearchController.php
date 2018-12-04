@@ -124,8 +124,7 @@ class AdvancedSearchController extends BaseController
         /**@var StatDataRepository $repository */
         $aCountries = explode(',', $request->request->get('countryCode'));
        // $aCountries = ['FRA','ESP','ZAF'];
-        $statType = $request->request->get('statType','P_PRODUCTION_WINE');
-        $statType = 'P_PRODUCTION_WINE';
+        $statType = $request->request->get('statType','');
         if (count($aCountries) && $aCountries[0] && $statType) {
             $aCriteria = [];
             $aResults = [];

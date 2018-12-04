@@ -14,8 +14,8 @@
             {% else %}
             <li>
                 <a class="text-center">{{ fieldName|trans }}</a>
-                <select data-view="stat"{% if fieldName == 'statType' %} multiple{% endif %} data-view="education" id="{{ 'StatData-' ~ fieldName }}" class="form-control select2me" data-live-search="true" name="{{ fieldName }}">
-                    <option value="">{{ 'Choose'|trans }}</option>
+                <select {% if fieldName == 'statType' %}title="{{ 'Choose'|trans }}" class="form-control bs-select" multiple{% else %}class="form-control select2me"{% endif %} data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">
+                {% if fieldName != 'statType' %}<option value="">{{ 'Choose'|trans }}</option>{% endif %}
                     {% for value in filter.values %}
                         <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
                     {% endfor %}

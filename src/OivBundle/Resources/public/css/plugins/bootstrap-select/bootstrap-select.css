@@ -92,7 +92,7 @@
   width: 100%;
 }
 .bootstrap-select.btn-group .dropdown-menu {
-  min-width: 100%;
+  width: 100%;
   z-index: 1035;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -121,6 +121,10 @@
 }
 .bootstrap-select.btn-group .dropdown-menu li a {
   cursor: pointer;
+  padding: 6px 6px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 100;
 }
 .bootstrap-select.btn-group .dropdown-menu li a.opt {
   position: relative;

@@ -93,6 +93,9 @@ li.sidebar-search-wrapper a {
     color: #aaa;
     cursor: text;
 }
+#selected-statType a {
+    padding: 5px;
+}
 #advSearch .ms-container {
     width: 222%;
 }

@@ -20,7 +20,7 @@
                 <a class="text-center">{{ 'Year min'|trans }}</a>
                 <select id="yearMin" class="form-control select2me" data-live-search="true" name="yearMin">
                     {% for year in ("now"|date('Y'))-2..1995 %}
-                        <option value="{{ year }}" >{{ year }}</option>
+                        <option value="{{ year }}"  {% if year == ("now"|date('Y'))-2 %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
 
                 </select>
@@ -29,7 +29,7 @@
                 <a class="text-center">{{ 'Year max'|trans }}</a>
                 <select id="yearMax" class="form-control select2me" data-live-search="true" name="yearMax">
                     {% for year in ("now"|date('Y'))-2..1995 %}
-                        <option value="{{ year }}" >{{ year }}</option>
+                        <option value="{{ year }}" {% if year == ("now"|date('Y'))-2 %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
 
                 </select>

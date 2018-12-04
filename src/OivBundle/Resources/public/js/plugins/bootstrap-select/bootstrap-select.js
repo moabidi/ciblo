@@ -884,12 +884,12 @@
 
     selectAll: function () {
       this.findLis();
-      this.$lis.not('.divider').not('.disabled').not('.selected').filter(':visible').find('a').click();
+      this.$lis.not('.divider').not('.disabled').not('.selected').find('a').click();
     },
 
     deselectAll: function () {
       this.findLis();
-      this.$lis.not('.divider').not('.disabled').filter('.selected').filter(':visible').find('a').click();
+      this.$lis.not('.divider').not('.disabled').filter('.selected').find('a').click();
     },
 
     keydown: function (e) {

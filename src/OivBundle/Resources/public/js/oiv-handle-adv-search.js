@@ -149,15 +149,12 @@ $(function($){
          * @private
          */
         this._initSearchButton = function(btn, view) {
-            $(btn).on('click', function() {
+            $(document).on('click',btn, function() {
                 var uri = '/fr/statistiques/';
                 var data = $.handleSearch._getFiltersData($(this),view);
                 if (!data) return false;
                 var posLoader = $(this).offset().top;
                 $.handleSearch._sendRequest(uri+view, 'POST', data,view, posLoader);
-                if ($(this).attr('data-dbType') == 'stat') {
-                    $.handleSearch._sendRequest(uri + 'stattype-countries', 'POST', data, 'stattype-countries', posLoader);
-                }
                 return false;
             });
         };
@@ -182,8 +179,8 @@ $(function($){
             }else{
                 data += '&year='+ $('#year').val();
             }
-            if (view == 'global-country') {
-                data += '&view=tab2';
+            if (view == 'stattype-countries') {
+                data += '&statType='+$(btn).val()+'&view=tab2';
             } else if (view == 'global') {
                 data +='&view=tab1';
                 var slectedFilters = '#' + db + ' ' + '[data-view=' + db + ']';
@@ -232,56 +229,28 @@ $(function($){
         };
 
         /**
-         * Change year table stat
+         * Change year filter
          * @private
          */
         this._changeYearStat = function () {
-            $('#nextYear,#prevYear').on('click', function () {
-                if ( $(this).attr('data-year')) {
-                    var year = parseInt($(this).attr('data-year'));
-
-                    $('#nextYear .year').html(year+1);
-                    $('#prevYear .year').html(year-1);
-
-                    $('#country-name').attr('data-statYear',year);
-                    $('#nextYear').attr('data-year',year+1);
-                    $('#prevYear').attr('data-year',year-1);
-                    $('#products tbody tr').each(function(){
-                        var product = $(this).attr('id');
-                        //console.log(product);console.log( $('#'+product+' .stat-type'));
-                        var measure = $(this).attr('data-measure');
-                        var data = {'prod':'','consumption':'','export':'','import':''};
-                        var indexYear = -1;
-                        var dataProduct;
-
-                        switch (product) {
-                            case 'rfresh':
-                                indexYear = $.handleSearch._g1._xAxis.indexOf(year);
-                                dataProduct = $.handleSearch._g1._data;break;
-                            case 'rin':
-                                indexYear = $.handleSearch._g2._xAxis.indexOf(year);
-                                dataProduct = $.handleSearch._g2._data;break;
-                            case 'rtable':
-                                indexYear = $.handleSearch._g3._xAxis.indexOf(year);
-                                dataProduct = $.handleSearch._g3._data;break;
-                            case 'rsec':
-                                indexYear = $.handleSearch._g4._xAxis.indexOf(year);
-                                dataProduct = $.handleSearch._g4._data;break;
-                        }
-                        //console.log(product,indexYear,dataProduct);
-                        data.prod = typeof dataProduct[0].data[indexYear] != 'undefined'? dataProduct[0].data[indexYear]:'0';
-                        data.consumption = typeof dataProduct[1].data[indexYear] != 'undefined'? dataProduct[1].data[indexYear]:'0';
-                        data.export = typeof dataProduct[2].data[indexYear] != 'undefined'? dataProduct[2].data[indexYear]:'0';
-                        data.import = typeof dataProduct[3].data[indexYear] != 'undefined'? dataProduct[3].data[indexYear]:'0';
-                        //console.log(data);
-                        $('#'+product+' .stat-type').each(function () {
-                            var statType = $(this).attr('data-statType');
-                            $(this).parent().find('.valStatType').parent().html('<span class="valStatType">'+ $.handleSearch._formatNumber(data[statType])+'</span> ' );
-                        });
-                    });
+            $('#yearMin,#yearMax').on('change', function () {
+                var html = '';
+                if ($('#yearMin').val() == $('#yearMax').val()) {
+                    html = '<span id="fl-year-min" class="label label-md label-warning" style="font-size: 14px;">'+$(this).val()+'</span>';
+                } else{
+                    html = '<span class="label label-md label-warning" style="font-size: 14px;">'+$("#yearMin").val()+'</span>';
+                    html += ' à <span class="label label-md label-warning" style="font-size: 14px;">'+$("#yearMax").val()+'</span>';
                 }
-                return false;
+                $('#selected-year p:nth-child(2)').html(html);
             });
+            var html = '';
+            if ($('#yearMin').val() == $('#yearMax').val()) {
+                html = '<span id="fl-year-min" class="label label-md label-warning" style="font-size: 14px;">'+$('#yearMin').val()+'</span>';
+            } else{
+                html = '<span class="label label-md label-warning" style="font-size: 14px;">'+$("#yearMin").val()+'</span>';
+                html += ' à <span class="label label-md label-warning" style="font-size: 14px;">'+$("#yearMax").val()+'</span>';
+            }
+            $('#selected-year p:nth-child(2)').html(html);
         };
 
         /**
@@ -339,8 +308,28 @@ $(function($){
 
         this._initHandleResetFilters = function() {
           $('.reset-filter').on('click', function(){
-
+            $(this).parents().eq(1).find('select, input').val('');
+            $(this).parents().eq(1).find('select').trigger('change');
           });
+        };
+
+        this._initShowSelectedStatType = function() {
+            $('#StatData-statType').on('change', function(){
+                $('#selected-statType p:nth-child(2)').html('');
+                if ($(this).val()) {
+                    $.each($(this).val(), function (k, v) {
+                        $('#selected-statType p:nth-child(2)').append(
+                            '<button data-dbType="stat" value="' + v + '" class="btn btn-sm yellow table-group-action-submit">' +
+                            '<i class="fa fa-check"></i> <i class="fa fa-times"></i> ' + v +
+                            '</button>'
+                        );
+                    });
+                }
+            });
+            $('#selected-statType a').on('click', function () {
+                $('#StatData-statType').selectpicker($(this).attr('data-action'));
+                $('#StatData-statType').trigger('change');
+            })
         };
 
         /**
@@ -380,7 +369,12 @@ $(function($){
     };
 
     $(document).ready(function(){
+        global.init(); // init global core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
         $.handleSearch._initSearchButton('.filter-submit','global');
+        $.handleSearch._initSearchButton('#selected-statType p:nth-child(2) button','stattype-countries');
         $.handleSearch._initExportButton();
         $.handleSearch._initStatButton();
         $.handleSearch._initStatTypeButton();
@@ -389,7 +383,12 @@ $(function($){
         $.handleSearch._initHandlePagination();
         $.handleSearch._initHandlePagePagination();
         $.handleSearch._initHandleResetFilters();
+        $.handleSearch._initShowSelectedStatType();
         $('.multi-select').multiSelect();
+        $('.bs-select').selectpicker({
+            iconBase: 'fa',
+            tickIcon: 'fa-check'
+        });
         $('.select2me').select2({
             placeholder: "Select",
             allowClear: true
