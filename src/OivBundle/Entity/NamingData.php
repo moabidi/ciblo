@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * NamingData
  *
- * @ORM\Table(name="naming_data")
+ * @ORM\Table(name="NAMING_DATA")
  * @ORM\Entity(repositoryClass="OivBundle\Repository\NamingDataRepository")
  */
 class NamingData
@@ -111,6 +111,214 @@ class NamingData
      * @ORM\Column(name="URL", type="string", length=4000, nullable=true)
      */
     private $url;
+
+    /**
+     * @return int
+     */
+    public function getVersioning()
+    {
+        return $this->versioning;
+    }
+
+    /**
+     * @param int $versioning
+     */
+    public function setVersioning($versioning)
+    {
+        $this->versioning = $versioning;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
+    }
+
+    /**
+     * @param string $countryCode
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppellationCode()
+    {
+        return $this->appellationCode;
+    }
+
+    /**
+     * @param string $appellationCode
+     */
+    public function setAppellationCode($appellationCode)
+    {
+        $this->appellationCode = $appellationCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppellationName()
+    {
+        return $this->appellationName;
+    }
+
+    /**
+     * @param string $appellationName
+     */
+    public function setAppellationName($appellationName)
+    {
+        $this->appellationName = $appellationName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentCode()
+    {
+        return $this->parentCode;
+    }
+
+    /**
+     * @param string $parentCode
+     */
+    public function setParentCode($parentCode)
+    {
+        $this->parentCode = $parentCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentName()
+    {
+        return $this->parentName;
+    }
+
+    /**
+     * @param string $parentName
+     */
+    public function setParentName($parentName)
+    {
+        $this->parentName = $parentName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeNationalCode()
+    {
+        return $this->typeNationalCode;
+    }
+
+    /**
+     * @param string $typeNationalCode
+     */
+    public function setTypeNationalCode($typeNationalCode)
+    {
+        $this->typeNationalCode = $typeNationalCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeInternationalCode()
+    {
+        return $this->typeInternationalCode;
+    }
+
+    /**
+     * @param string $typeInternationalCode
+     */
+    public function setTypeInternationalCode($typeInternationalCode)
+    {
+        $this->typeInternationalCode = $typeInternationalCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductCategoryName()
+    {
+        return $this->productCategoryName;
+    }
+
+    /**
+     * @param string $productCategoryName
+     */
+    public function setProductCategoryName($productCategoryName)
+    {
+        $this->productCategoryName = $productCategoryName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductType()
+    {
+        return $this->productType;
+    }
+
+    /**
+     * @param string $productType
+     */
+    public function setProductType($productType)
+    {
+        $this->productType = $productType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReferenceName()
+    {
+        return $this->referenceName;
+    }
+
+    /**
+     * @param string $referenceName
+     */
+    public function setReferenceName($referenceName)
+    {
+        $this->referenceName = $referenceName;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastDate()
+    {
+        return $this->lastDate;
+    }
+
+    /**
+     * @param \DateTime $lastDate
+     */
+    public function setLastDate($lastDate)
+    {
+        $this->lastDate = $lastDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
 
 
 }

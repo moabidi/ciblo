@@ -34,44 +34,43 @@
 
                 </select>
             </li>
-            {#<li class="active open">#}
-            <li>
+            <li class="db">
                 <a href="javascript:;">
                     <i class="icon-magnifier"></i>
                     <span class="title">{{ 'Naming'|trans }}</span>
                     <span class="selected"></span>
-                    <span class="arrow open"></span>
+                    <span class="arrow"></span>
                 </a>
                 <ul id="naming" class="sub-menu">
                     {% include 'OivBundle:filters:appellations.html.twig' with {'isAdvSearch':true} %}
                     {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'naming'} %}
                 </ul>
             </li>
-            <li>
+            <li class="db">
                 <a href="javascript:;">
                     <i class="icon-magnifier"></i>
                     <span class="title">{{ 'Variety'|trans }}</span>
                     <span class="selected"></span>
-                    <span class="arrow open"></span>
+                    <span class="arrow"></span>
                 </a>
                 <ul id=variety"" class="sub-menu">
                     {% include 'OivBundle:filters:cepage.html.twig' with {'isAdvSearch':true} %}
                     {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'variety'} %}
                 </ul>
             </li>
-            <li>
+            <li class="db">
                 <a href="javascript:;">
                     <i class="icon-magnifier"></i>
                     <span class="title">{{ 'Education'|trans }}</span>
                     <span class="selected"></span>
-                    <span class="arrow open"></span>
+                    <span class="arrow"></span>
                 </a>
                 <ul id="education" class="sub-menu">
                     {% include 'OivBundle:filters:formation.html.twig' with {'isAdvSearch':true} %}
                     {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'education'} %}
                 </ul>
             </li>
-            <li class="active open">
+            <li class="db active open">
                 <a href="javascript:;">
                     <i class="icon-magnifier"></i>
                     <span class="title">{{ 'Statistic'|trans }}</span>
@@ -83,8 +82,6 @@
                     {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'stat'} %}
                 </ul>
             </li>
-
-            <!-- END ANGULARJS LINK -->
         </ul>
         <!-- END SIDEBAR MENU -->
     </div>

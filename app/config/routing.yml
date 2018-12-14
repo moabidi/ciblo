@@ -4,11 +4,3 @@ oiv:
     prefix:   /{_locale}/statistiques
     requirements:
             _locale: 'fr|en'
-ciblo:
-    resource: "@CibloBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation

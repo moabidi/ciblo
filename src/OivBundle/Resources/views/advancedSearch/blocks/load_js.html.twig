@@ -9,24 +9,18 @@
 <!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 <script src=" {{ asset('/bundles/oiv/js/plugins/jquery-ui/jquery-ui.min.js') }}" type="text/javascript"></script>
 <script src=" {{ asset('/bundles/oiv/js/login/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js') }}"
-        type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/plugins/jquery-slimscroll/jquery.slimscroll.min.js') }}"
-        type="text/javascript"></script>
+{#<script src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js') }}" type="text/javascript"></script>#}
+{#<script src=" {{ asset('/bundles/oiv/js/plugins/jquery-slimscroll/jquery.slimscroll.min.js') }}" type="text/javascript"></script>#}
 <script src=" {{ asset('/bundles/oiv/js/login/jquery.blockui.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/jquery.cokie.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/login/jquery.uniform.min.js') }}" type="text/javascript"></script>
-<script src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"
-        type="text/javascript"></script>
+{#<script src=" {{ asset('/bundles/oiv/js/login/jquery.cokie.min.js') }}" type="text/javascript"></script>#}
+{#<script src=" {{ asset('/bundles/oiv/js/login/jquery.uniform.min.js') }}" type="text/javascript"></script>#}
+{#<script src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}" type="text/javascript"></script>#}
 <!-- END CORE PLUGINS -->
 <!-- BEGIN PAGE LEVEL PLUGINS -->
 <script type="text/javascript" src=" {{ asset('/bundles/oiv/js/plugins/select2/select2.min.js') }}"></script>
-<script type="text/javascript"
-        src=" {{ asset('/bundles/oiv/js/plugins/datatables/media/js/jquery.dataTables.min.js') }}"></script>
-<script type="text/javascript"
-        src=" {{ asset('/bundles/oiv/js/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js') }}"></script>
-<script type="text/javascript"
-        src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+<script type="text/javascript" src=" {{ asset('/bundles/oiv/js/plugins/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+<script type="text/javascript" src=" {{ asset('/bundles/oiv/js/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js') }}"></script>
+{#<script type="text/javascript" src=" {{ asset('/bundles/oiv/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>#}
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src=" {{ asset('/bundles/oiv/js/login/global.js') }}" type="text/javascript"></script>
@@ -44,4 +38,6 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src=" {{ asset('/bundles/oiv/js/oiv-line-charts.js') }}"></script>
 <!-- END CHARTS SCRIPTS -->
+<script src="{{ asset('/bundles/oiv/js/jquery.modal.min.js') }}"></script>
+<script src="{{ asset('/bundles/oiv/js/jquery.quicksearch.js') }}"></script>
 <script src=" {{ asset('/bundles/oiv/js/oiv-handle-adv-search.js') }}"></script>

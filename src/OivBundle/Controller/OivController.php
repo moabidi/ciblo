@@ -21,23 +21,28 @@ class OivController extends BaseController
      */
     public function resultSearchAction(Request $request)
     {
-        $repo = $this->get('oiv.variety_repository');
-        //var_dump($repo->getCountVariety(['countryCode'=>'FRA']));die;
-
-        //var_dump($this->getStatsCountry(['countryCode'=>'FRA','year'=>'2016']));die;
         $selectedYear = date('Y')-2;
         $selectedCountryCode = $request->query->get('countryCode','oiv');
         $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear];
         $aParams['stats'] = $this->getStatsCountry($aCriteria);
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
-        $aParams['filters'] = $this->getFiltredFiled();
+//        $aParams['filters'] = $this->getFiltredFiled();
 //        $aParams['globalResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab1');
-        $aParams['globalResult'] = [];
+//        $aParams['globalResult'] = [];
 //        $aParams['globalStatResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab2');
-        $aParams['globalStatResult'] = [];
+//        $aParams['globalStatResult'] = [];
         $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => $selectedCountryCode]);
-        $aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
+        //var_dump($aParams['selectedCountry'],$aParams['tradeBlocs']);die;
+        if (!$aParams['selectedCountry'] ) {
+            foreach ($aParams['tradeBlocs'] as $trade) {
+                if ($selectedCountryCode == $trade['tradeBloc'] ) {
+                    $aParams['selectedCountry'] = ['iso3' => $selectedCountryCode, 'countryNameFr' => $selectedCountryCode];
+                    break;
+                }
+            }
+        }
+        //$aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['selectedYear'] = $selectedYear;
         //var_dump($aParams['globalResult']);die;
@@ -77,6 +82,9 @@ class OivController extends BaseController
                 $result = $this->getResultGLobalSearch($table, $aCriteria, 'tab1', $offset, $limit);
                 $result = $this->formatDataTable($result);
                 $result = $this->getParamsPagination($result, $count, $offset, $limit);
+                $result['dbType'] = $request->request->get('dbType');
+                $result['textViewMore'] = $this->get('translator')->trans('View more');
+                $result['textView'] = $this->get('translator')->trans('View');
             }
         }
         //var_dump($result);
@@ -106,10 +114,32 @@ class OivController extends BaseController
                 $result = $this->getResultGLobalSearch($table, $aCriteria, $view, $offset, $limit);
                 $result = $this->formatDataTable($result);
                 $result = $this->getParamsPagination($result, $count, $offset, $limit);
+                $result['dbType'] = $request->request->get('dbType');
+                $result['textViewMore'] = $this->get('translator')->trans('View more');
+                $result['textView'] = $this->get('translator')->trans('View');
             }
         }
         return new JsonResponse($result);
     }
+
+    /**
+     * @Route("/info-naming", name="info-naming-search")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function infoNamingSearchAction(Request $request)
+    {
+        $result = [];
+        if ($appellationName = $request->request->get('appellationName')) {
+            $isCtg = $request->request->get('isCtg', true);
+            $result['data'] =  $this->getDoctrine()->getRepository('OivBundle:NamingData')->getInfoNaming($appellationName, $isCtg);
+            $result['isCtg'] = $isCtg;
+            $result['appellationName'] = $appellationName;
+        }
+        //var_dump($result);die;
+        return new JsonResponse($result);
+    }
+
 
     /**
      * @param $result

@@ -1,13 +1,19 @@
 {% if isAdvSearch|default(false) %}
     {% for fieldName, filter in filters.VarietyData %}
         {% if filter.values|length %}
-            <li>
-                <a class="text-center">{{ fieldName|trans }}</a>
+            <li class="filter">
+                <a class="text-center filter-name">{{ fieldName|trans }}</a>
                 <select data-view="variety" id="{{ 'NamingData-' ~ fieldName }}" class="form-control select2me" data-live-search="true" name="{{ fieldName }}">
                     <option value="">{{ 'Choose'|trans }}</option>
-                    {% for value in filter.values %}
-                        <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
-                    {% endfor %}
+                    {% if filter.values|length < 20 %}
+                        {% for value in filter.values %}
+                            <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
+                        {% endfor %}
+                    {% else %}
+                        {% for value in filter.values %}
+                            <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                        {% endfor %}
+                    {% endif %}
                 </select>
             </li>
         {% endif %}
@@ -21,9 +27,15 @@
                     <label class="control-label">{{ fieldName|trans }}</label>
                     <select data-view="variety" id="{{ 'VarietyData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
                         <option value="">{{ 'Choose'|trans }}</option>
-                        {% for value in filter.values %}
-                            <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
-                        {% endfor %}
+                        {% if filter.values|length < 20 %}
+                            {% for value in filter.values %}
+                                <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
+                            {% endfor %}
+                        {% else %}
+                            {% for value in filter.values %}
+                                <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                            {% endfor %}
+                        {% endif %}
                     </select>
                 </div>
             {% endif %}

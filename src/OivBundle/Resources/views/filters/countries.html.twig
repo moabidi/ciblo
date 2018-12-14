@@ -1,9 +1,9 @@
 {% if isAdvSearch|default(false) %}
     <li class="sidebar-search-wrapper">
-        <a class="text-center">Pays</a>
+        <a class="text-center">{{ 'Country'|trans }}</a>
 {% else %}
-    <div class="col-md-4 form-group">
-        <label class="control-label">{{ 'place'|trans }}</label>
+    <div class="col-md-4 col-sm-4 form-group">
+        <label class="control-label">{{ 'Country'|trans }}</label>
 {% endif %}
     <select {% if isAdvSearch|default(false) %}multiple{% endif %} id="country" class="{% if isAdvSearch|default(false) %}multi-select{% else %}form-control selectpicker{% endif %}" data-live-search="true" name="country">
         <optgroup label="{{ 'Choose'|trans }} {{ 'World'|trans }}">
@@ -11,7 +11,7 @@
         </optgroup>
         <optgroup label="{{ 'Choose'|trans }} {{ 'a continent'|trans }}">
             {% for item in tradeBlocs %}
-                <option value="{{ item.tradeBloc }} {% if countryCode == 'item.tradeBloc' %}selected=""{% endif %}">{{ item.tradeBloc }}</option>
+                <option value="{{ item.tradeBloc }}" {% if countryCode == item.tradeBloc %}selected=""{% endif %}">{{ item.tradeBloc }}</option>
             {% endfor %}
         </optgroup>
         <optgroup label="{{ 'Choose'|trans }} {{ 'a country'|trans }}">

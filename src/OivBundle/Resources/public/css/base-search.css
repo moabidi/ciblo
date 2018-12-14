@@ -14,6 +14,7 @@
 #page .full-search table th {
     background: #AE2B4A;
     color: #FFFFFF;
+    text-align: center;
 }
 #page .search-list table tr:nth-child(2)>th{
     background: #c1c1c1;
@@ -24,7 +25,7 @@
 }
 #page a.stat-type.btn {
     color: #FFFFFF;
-    background: #AE2B4A;
+    background: #c1c1c1;
 }
 #page .btn:hover {
     background: #2A6496;
@@ -41,6 +42,19 @@
 }
 #page .pagination .active a{
     background: #AE2B4A;
+}
+#page .mesure {
+    font-size: 11px;
+    color: #ecdfd1;
+    font-style: italic;
+}
+#page .filter-search {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.bg-oiv {
+    background: #AE2B4A;
+    color: #FFFFFF;
 }
 .float-right{
     float: right;
@@ -60,7 +74,24 @@
     top: 0;
     left: 0;
 }
-
+#popup {
+    overflow: visible;
+    font-size: 16px;
+}
+#popup .btn {
+    font-size: 12px;
+    margin: 5px;
+}
+#popup h3 {
+    font-size: 15px;
+    padding: 5px;
+}
+#popup h4 {
+     font-size: 16px;
+}
+#popup .list-group-item {
+    padding: 5px 10px;
+}
 /** Start Filter Search **/
 body .filter-search {
     padding-top: 50px;
@@ -129,9 +160,32 @@ body .filter-search {
         display: table-cell;
     }
 }
+@media screen and (min-width: 769px) {
+    .display-md-flex {
+        display: flex;
+    }
+    .btn-search {
+        position: relative;
+        top: 50%
+    }
+
+}
 @media screen and (max-width: 480px) {
     .search-list thead {
         display: block;
+    }
+    .fiche-country .block-table thead{
+        display: block;
+    }
+    .fiche-country .block-table tr, .fiche-country .block-table th{
+        width: 100%;
+        display: block;
+    }
+    .fiche-country .block-table td{
+        display: block;
+    }
+    .fiche-country .search-list table th, .fiche-country .search-list table td{
+        display: table-cell;
     }
 }
 .result-search {
@@ -191,6 +245,7 @@ body .filter-search {
 .table-fixed .table > tbody > tr > td {
     padding: 0px 8px 8px 8px;
     vertical-align: top;
+    white-space: normal;
 }
 .table-fixed thead {
     position: sticky;
@@ -216,6 +271,7 @@ body .filter-search {
 }
 .fiche-country .info .thumbnail, .fiche-country .info .caption {
     background: #C1C1C1;
+    padding: 0px;
 }
 .fiche-country .pager {
     background: #c1c1c1;
@@ -226,5 +282,26 @@ body .filter-search {
 }
 .fiche-country .table, .fiche-country .table-fixed {
     margin-bottom: 7px;
+}
+.fiche-country .valStatType {
+    color: #428bca;
+    font-size: 13px;
+}
+#page .fiche-country table.products{
+    /*width: 720px;*/
+    /*max-width: 720px;*/
+}
+#page .fiche-country table th {
+   width: 120px;
+   max-width: 120px;
+}
+#page .fiche-country table th span {
+    text-align: center;
+    white-space: nowrap;
+    display: block;
+}
+.fiche-country .pager li.centred>span, .fiche-country .pager li.centred>img {
+    padding-top: 5px;
+    margin: 10px;
 }
 /*** End fiche country  **/

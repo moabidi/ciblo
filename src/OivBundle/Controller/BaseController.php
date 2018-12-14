@@ -72,10 +72,13 @@ class BaseController extends Controller
             'products' => $this->getStatProducts($aCriteria,true),
             'graphProducts' => $this->formatDataGraph($allStats,$minData,$maxDate),
             'globalArea' => $repository->getSingleValueStatType('A_SURFACE', $aCriteria),
+            'rfreshIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
+            'rtableIndivCons' => $repository->getSingleValueStatType('L_COMSUMPTION_TABLE_GRP', $aCriteria),
+            'rsecIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
             'usedArea' => $repository->getSingleValueStatType('C_PROD_GRP', $aCriteria),
+            'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria),
             'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria),
             'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
-            'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria)
         ];
     }
 
@@ -87,13 +90,14 @@ class BaseController extends Controller
     {
         $aProducts = [
             [
-                'label' => 'Raisins totales',
+                'label' => 'Raisins frais',
                 'name' => 'rfresh',
                 'stat' => [
                     'prod' => 'C_PROD_GRP',
-                    'consumption' => '',
                     'export' => 'I_EXPORT_GRP',
-                    'import' => 'H_IMPORT_GRP'
+                    'import' => 'H_IMPORT_GRP',
+                    'consumption' => '',
+                    'indovcons' => '',
                 ]
 
             ],
@@ -102,9 +106,10 @@ class BaseController extends Controller
                 'name' => 'rin',
                 'stat' => [
                     'prod' => 'P_PRODUCTION_WINE',
-                    'consumption' => 'S_CONSUMPTION_WINE',
                     'export' => 'R_EXPORT_WINE',
-                    'import' => 'Q_IMPORT_WINE'
+                    'import' => 'Q_IMPORT_WINE',
+                    'consumption' => 'S_CONSUMPTION_WINE',
+                    'indovcons' => '',
                 ]
 
             ],
@@ -113,9 +118,10 @@ class BaseController extends Controller
                 'name' => 'rtable',
                 'stat' => [
                     'prod' => 'F_PROD_TABLE_GRP',
-                    'consumption' => 'L_COMSUMPTION_TABLE_GRP',
                     'export' => '',
-                    'import' => ''
+                    'import' => '',
+                    'consumption' => 'L_COMSUMPTION_TABLE_GRP',
+                    'indovcons' => '',
                 ]
 
             ],
@@ -124,12 +130,22 @@ class BaseController extends Controller
                 'name' => 'rsec',
                 'stat' => [
                     'prod' => 'G_PROD_DRIED_GRP',
-                    'consumption' => 'N_CONSUMPTION_DRIED_GRP',
                     'export' => 'K_EXPORT_DRIED_GRP',
                     'import' => 'J_IMPORT_DRIED_GRP',
+                    'consumption' => 'N_CONSUMPTION_DRIED_GRP',
+                    'indovcons' => 'M_COMSUMPTION_CAPITA_GRP',
                 ]
 
-            ]
+            ],
+            [
+                'label' => 'Surface',
+                'name' => 'area',
+                'stat' => [
+                    'prod' => 'C_PROD_GRP',
+                ]
+
+            ],
+
         ];
         /**@var StatDataRepository $repository */
         $repository = $this->get('oiv.stat_repository');
@@ -226,7 +242,8 @@ class BaseController extends Controller
             $aCriteria['countryCode'] = $request->request->get('countryCode');
         }
         if ($request->request->has('year')) {
-            $aCriteria['year'] = $request->request->get('year');
+            $aCriteria['yearMax'] = $request->request->get('year');
+            $aCriteria['yearMin'] = $request->request->get('year');
         }else{
             if($request->request->get('yearMax')) {
                 $aCriteria['yearMax'] = $request->request->get('yearMax');

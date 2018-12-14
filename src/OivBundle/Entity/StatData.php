@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * StatData
  *
- * @ORM\Table(name="stat_data")
+ * @ORM\Table(name="STAT_DATA")
  * @ORM\Entity(repositoryClass="OivBundle\Repository\StatDataRepository")
  */
 class StatData
@@ -90,6 +90,13 @@ class StatData
      * @ORM\Column(name="GRAPES_DESTINATION", type="string", length=255, nullable=true)
      */
     private $grapesDestination;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="USABLE_DATA", type="string", length=1, nullable=false)
+     */
+    private $usableData;
 
 
 }

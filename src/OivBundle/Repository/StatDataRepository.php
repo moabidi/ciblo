@@ -12,8 +12,6 @@ use Doctrine\ORM\QueryBuilder;
 
 class StatDataRepository extends BaseRepository
 {
-    /**@var QueryBuilder $_queryBuilder */
-    private $_queryBuilder;
 
     /**
      * SELECT VALUE FROM oivdataw.stat_data where COUNTRY_CODE='FRA'  and  YEAR='2016' and  stat_type='C_PROD_GRP'
@@ -63,9 +61,9 @@ class StatDataRepository extends BaseRepository
         $this->_queryBuilder
             ->select('o.year, SUM(o.value) as value, o.measureType')
             ->from($this->_entityName, 'o')
-            ->where('o.statType = :statType')
-            ->setParameter('statType',$aCriteria['statType']);
+            ->where('1 = 1');
 
+        $this->addStatTypeCriteria($aCriteria);
         $this->addCountryCriteria($aCriteria);
         $this->addYearCriteria($aCriteria);
         $this->_queryBuilder->groupBy('o.year, o.measureType');
@@ -117,30 +115,45 @@ class StatDataRepository extends BaseRepository
                 ->from($this->_entityName, 'o')
                 ->where('1=1');
 
-        if (!empty($aCriteria['statType'])) {
-            $this->_queryBuilder
-                ->where('o.statType = :statType')
-                ->setParameter('statType', $aCriteria['statType']);
-        }
-
+        $this->addStatTypeCriteria($aCriteria);
         $this->addCountryCriteria($aCriteria);
         $this->addYearCriteria($aCriteria);
         return $this->_queryBuilder;
     }
 
+    private function addStatTypeCriteria($aCriteria)
+    {
+        if (!empty($aCriteria['statType'])) {
+            $aStatType = explode(',',$aCriteria['statType']);
+            if (count($aStatType) == 1) {
+                $this->_queryBuilder
+                    ->where('o.statType = :statType')
+                    ->setParameter('statType', $aStatType[0]);
+            } else {
+                $this->_queryBuilder
+                    ->where('o.statType IN (\''. implode('\',\'',$aStatType) .'\')');
+            }
+        }
+    }
+
     /**
      * @param $aCriteria
      */
-    public function addCountryCriteria($aCriteria)
+    protected function addCountryCriteria($aCriteria = [])
     {
         if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
             $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
-            if ( in_array($aCriteria['countryCode'], ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE'])) {
-                $this->_queryBuilder
-                    ->innerJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
-                    ->setParameter('tradeBloc', $aCriteria['countryCode']);
+            $aCountryCode = explode(',',$aCriteria['countryCode']);
+            if ( count(array_intersect($aCountryCode, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']))) {
+                if (count($aCountryCode) ==1) {
+                    $this->_queryBuilder
+                        ->innerJoin('OivBundle:Country', 'c', 'WITH', 'c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
+                        ->setParameter('tradeBloc', $aCountryCode[0]);
+                } else {
+                    $this->_queryBuilder
+                        ->innerJoin('OivBundle:Country', 'c', 'WITH', 'c.iso3 = o.countryCode AND c.tradeBloc  IN (\''. implode('\',\'',$aCountryCode) .'\')');
+                }
             } else {
-                $aCountryCode = explode(',',$aCriteria['countryCode']);
                 if (count($aCountryCode) ==1) {
                     $this->_queryBuilder
                         ->Andwhere('o.countryCode = :countryCode')
@@ -151,30 +164,6 @@ class StatDataRepository extends BaseRepository
                         //->setParameter('countryCode', implode('\',\'',$aCountryCode));
                 }
             }
-        }
-    }
-
-    /**
-     * @param $aCriteria
-     */
-    private function addYearCriteria($aCriteria)
-    {
-        if(!empty($aCriteria['yearMin']) || !empty($aCriteria['yearMax'])){
-
-            if (!empty($aCriteria['yearMin'])) {
-                $this->_queryBuilder
-                    ->Andwhere('o.year >= :yearMin')
-                    ->setParameter('yearMin', $aCriteria['yearMin']);
-            }
-            if (!empty($aCriteria['yearMax'])) {
-                $this->_queryBuilder
-                    ->Andwhere('o.year <= :yearMax')
-                    ->setParameter('yearMax', $aCriteria['yearMax']);
-            }
-        }elseif (!empty($aCriteria['year'])) {
-            $this->_queryBuilder
-                ->Andwhere('o.year = :year')
-                ->setParameter('year',$aCriteria['year']);
         }
     }
 

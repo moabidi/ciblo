@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * VarietyData
  *
- * @ORM\Table(name="variety_data")
+ * @ORM\Table(name="VARIETY_DATA")
  * @ORM\Entity(repositoryClass="OivBundle\Repository\VarietyDataRepository")
  */
 class VarietyData

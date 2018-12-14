@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EducationData
  *
- * @ORM\Table(name="education_data")
+ * @ORM\Table(name="EDUCATION_DATA")
  * @ORM\Entity(repositoryClass="OivBundle\Repository\EducationDataRepository")
  */
 class EducationData

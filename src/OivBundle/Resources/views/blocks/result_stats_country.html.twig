@@ -1,23 +1,6 @@
 <div class="result-search container search-table hide">
     <div class="search-list table-responsive table-wrapper-scroll-y table-fixed" >
-        <table class="table" id="resultStats">
-            {% if globalStatResult|length %}
-                <thead>
-                {% for fieldName, value in globalStatResult.0 %}
-                    <th>{{ fieldName|trans }}</th>
-                {% endfor %}
-                </thead>
-                <tbody>
-                {% for row in globalResult %}
-                    <tr>
-                        {% for fieldName, value in row %}
-                            <td>{{ value|raw }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            {% endif %}
-        </table>
+        <table class="table" id="resultStats"></table>
     </div>
     {% include 'OivBundle:blocks:pagination.html.twig' with {'numTab':'resultStats','view':'global-country'} %}
     <button id="btn-global-country-search" class="hide" name="searchDataCountry"></button>

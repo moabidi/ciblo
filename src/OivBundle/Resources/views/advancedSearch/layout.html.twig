@@ -54,8 +54,8 @@
 
             <!-- BEGIN PAGE HEADER-->
             <h3 class="page-title">
-                {{ 'Statistic'|trans }}
-                <small>Résultat de recherche</small>
+                <span class="current-db-search">{{ 'Statistic'|trans }}</span>
+                <small>{{ 'Result of search'|trans }}</small>
             </h3>
             <div class="page-bar">
                 <ul class="page-breadcrumb">
@@ -65,11 +65,7 @@
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
-                        <a href="#">{{ 'Statistic'|trans }}</a>
-                        <i class="fa fa-angle-right"></i>
-                    </li>
-                    <li>
-                        <a href="#">{{ 'Search'|trans }}</a>
+                        <a class="current-db-search" href="javascript:;">{{ 'Statistic'|trans }}</a>
                     </li>
                 </ul>
             </div>
@@ -111,7 +107,8 @@
     </div>
 </div>
 <!-- END FOOTER -->
-{% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
+{% include 'OivBundle:blocks:popup-info.html.twig' %}
+{% block load_js %}{% endblock load_js %}
 </body>
 <!-- END BODY -->
 </html>

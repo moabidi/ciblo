@@ -1,9 +1,16 @@
 #########################
 # SIMPLE SEARCH
 #########################
+Country Plug: Fiche Pays
+Advanced Search on DataBase: Recherche Avancée sur la Base des Données
 Choose: Sélectionner
 a country: un pays
 a continent: un continent
+Countries: Pays
+View more: En savoir plus
+View: Voir
+Result of search: Résultat de recherche
+Country: Pays
 #Education
 countryCode: Pays
 formationTitle: Intitulé de la formation
@@ -53,6 +60,7 @@ grapeColor: Couleur
 internetAdress: Lien cépage
 #Fiche OIV
 area: Superficie
+Individual Consumption: Consommation Individuelle
 Education: Formation
 count variety: Nombre de cépage
 count education: Nombre de formation
@@ -63,11 +71,11 @@ import: Import
 export: Export
 total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
-place: Lieu
+Zone: Zone
 Database: Base de données
 World: Monde
 Naming: Appellations
-Variety: Cépages
+Variety: Variété
 Education: Formations
 Statistic: Statistiques
 Annual statistics of: Statistiques annuelles de
@@ -78,7 +86,6 @@ Download PNG image: Télécharger PNG image
 Download SVG vector image: Télécharger
 Download XLS: Télécharger XLS
 in: en
-Simple search: Recherche simple
 Advanced search: Recherche avancée
 Year min: Année min
 Year max: Année max

@@ -2,18 +2,18 @@
     {% for fieldName, filter in filters.StatData %}
         {% if filter.values|length %}
             {% if fieldName == 'value' %}
-                <li>
-                    <a class="text-center">{{ 'Value Min'|trans }}</a>
+                <li class="filter">
+                    <a class="text-center filter-name">{{ 'Value Min'|trans }}</a>
                     <input data-view="stat" type="text" name="valueMin" id="value-min-stat" class="form-control value-min"/>
                 </li>
-                <li>
-                    <a class="text-center">{{ 'Value Max'|trans }}</a>
+                <li class="filter">
+                    <a class="text-center filter-name">{{ 'Value Max'|trans }}</a>
                     <input data-view="stat" type="text" name="valueMax" id="value-max-stat" class="form-control value-max"/>
                 </li>
 
             {% else %}
-            <li>
-                <a class="text-center">{{ fieldName|trans }}</a>
+            <li class="filter">
+                <a class="text-center filter-name">{{ fieldName|trans }}</a>
                 <select {% if fieldName == 'statType' %}title="{{ 'Choose'|trans }}" class="form-control bs-select" multiple{% else %}class="form-control select2me"{% endif %} data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">
                 {% if fieldName != 'statType' %}<option value="">{{ 'Choose'|trans }}</option>{% endif %}
                     {% for value in filter.values %}

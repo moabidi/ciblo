@@ -1,19 +1,19 @@
 <div class="filter-search container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="col-md-4 form-group" id="adv-search">
-                <!-- input type="text" class="form-control" placeholder="Search for snippets" / -->
-                <label class="control-label">{{ 'Database'|trans }}</label>
-                <select id="typeSearch" class="form-control selectpicker" data-live-search="true" name="dbType" >
-                    <option value="" selected="">{{ 'Choose'|trans }}</option>
-                    <option value="naming">{{ 'Naming'|trans }}</option>
-                    <option value="variety">{{ 'Variety'|trans }}</option>
-                    <option value="education">{{ 'Education'|trans }}</option>
-                    <option value="stat">{{ 'Statistic'|trans }}</option>
-                </select>
-            </div>
+        <div class="display-md-flex col-md-12 col-sm-12">
+            {#<div class="col-md-4 form-group" id="adv-search">#}
+                {#<!-- input type="text" class="form-control" placeholder="Search for snippets" / -->#}
+                {#<label class="control-label">{{ 'Database'|trans }}</label>#}
+                {#<select id="typeSearch" class="form-control selectpicker" data-live-search="true" name="dbType" >#}
+                    {#<option value="" selected="">{{ 'Choose'|trans }}</option>#}
+                    {#<option value="naming">{{ 'Naming'|trans }}</option>#}
+                    {#<option value="variety">{{ 'Variety'|trans }}</option>#}
+                    {#<option value="education">{{ 'Education'|trans }}</option>#}
+                    {#<option value="stat">{{ 'Statistic'|trans }}</option>#}
+                {#</select>#}
+            {#</div>#}
             {% include 'OivBundle:filters:countries.html.twig' %}
-            <div class="col-md-4 form-group" >
+            <div class="col-md-4 col-sm-4 form-group" >
                 <label class="control-label">{{ 'year'|trans }}</label>
                 <select id="year" class="form-control selectpicker" data-live-search="true" name="year">
                     {% for year in (("now"|date('Y'))-2)..1995 %}
@@ -22,38 +22,43 @@
 
                 </select>
             </div>
-            <div class="col-md-2 form-group hide">
-                <label class="control-label">{{ 'Year min'|trans }}</label>
-                <select id="yearMin" class="form-control selectpicker" data-live-search="true" name="yearMin">
-                    {% for year in ("now"|date('Y'))-2..1995 %}
-                    <option value="{{ year }}" >{{ year }}</option>
-                    {% endfor %}
-
-                </select>
+            <div class="btn-search col-md-4 col-sm-4 form-group">
+                <label class="control-label"></label>
+                {#<button id="simpleSearch" class="btn btn-primary btn-search" data-dbtype="" title="{{ 'Country Plug'|trans }}">{{ 'Country Plug'|trans }}</button>#}
+                <a id="advancedSearch" class="btn btn-warning btn-search" href="/fr/statistiques/recherche" title="{{ 'Advanced search'|trans }}">{{ 'Advanced search'|trans }}</a>
             </div>
-            <div class="col-md-2 form-group hide">
-                <label class="control-label">{{ 'Year max'|trans }}</label>
-                <select id="yearMax" class="form-control selectpicker" data-live-search="true" name="yearMax">
-                    {% for year in ("now"|date('Y'))-2..1995 %}
-                    <option value="{{ year }}" >{{ year }}</option>
-                    {% endfor %}
+            {#<div class="col-md-2 form-group hide">#}
+                {#<label class="control-label">{{ 'Year min'|trans }}</label>#}
+                {#<select id="yearMin" class="form-control selectpicker" data-live-search="true" name="yearMin">#}
+                    {#{% for year in ("now"|date('Y'))-2..1995 %}#}
+                    {#<option value="{{ year }}" >{{ year }}</option>#}
+                    {#{% endfor %}#}
 
-                </select>
-            </div>
+                {#</select>#}
+            {#</div>#}
+            {#<div class="col-md-2 form-group hide">#}
+                {#<label class="control-label">{{ 'Year max'|trans }}</label>#}
+                {#<select id="yearMax" class="form-control selectpicker" data-live-search="true" name="yearMax">#}
+                    {#{% for year in ("now"|date('Y'))-2..1995 %}#}
+                    {#<option value="{{ year }}" >{{ year }}</option>#}
+                    {#{% endfor %}#}
+
+                {#</select>#}
+            {#</div>#}
         </div>
     </div>
-    {% include 'OivBundle:filters:appellations.html.twig' %}
-    {% include 'OivBundle:filters:cepage.html.twig' %}
-    {% include 'OivBundle:filters:formation.html.twig' %}
-    {% include 'OivBundle:filters:protections.html.twig' %}
-    {% include 'OivBundle:filters:statistique.html.twig' %}
+    {#{% include 'OivBundle:filters:appellations.html.twig' %}#}
+    {#{% include 'OivBundle:filters:cepage.html.twig' %}#}
+    {#{% include 'OivBundle:filters:formation.html.twig' %}#}
+    {#{% include 'OivBundle:filters:protections.html.twig' %}#}
+    {#{% include 'OivBundle:filters:statistique.html.twig' %}#}
 
-    <div class=container-fluid">
-        <div class="col-md-12 text-center">
-            <button id="simpleSearch" class="btn btn-primary btn-search" data-dbtype="" title="{{ 'Simple search'|trans }}">{{ 'Simple search'|trans }}</button>
-            <a id="advancedSearch" class="btn btn-warning btn-search" href="/fr/statistiques/recherche" title="{{ 'Advanced search'|trans }}">{{ 'Advanced search'|trans }}</a>
-        </div>
-    </div>
+    {#<div class=container-fluid">#}
+        {#<div class="col-md-4 ">#}
+            {#<button id="simpleSearch" class="btn btn-primary btn-search" data-dbtype="" title="{{ 'Country Plug'|trans }}">{{ 'Country Plug'|trans }}</button>#}
+            {#<a id="advancedSearch" class="btn btn-warning btn-search" href="/fr/statistiques/recherche" title="{{ 'Advanced search'|trans }}">{{ 'Advanced search'|trans }}</a>#}
+        {#</div>#}
+    {#</div>#}
 
 
 </div>

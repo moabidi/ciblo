@@ -15,18 +15,9 @@
                 downloadXLS: "{{ ('Download XLS'|trans)|raw }}"
             };
             $.handleSearch._g1 = jQuery.extend(true, {}, $.statCharts);
-//            $.handleSearch._g2 = jQuery.extend(true, {}, $.statCharts);
-//            $.handleSearch._g3 = jQuery.extend(true, {}, $.statCharts);
-//            $.handleSearch._g4 = jQuery.extend(true, {}, $.statCharts);
-
             $.handleSearch._g1._container = 'container-graphic';
-            {#$.handleSearch._g1._xAxis = {{ stats.xAxis|json_encode|raw }};#}
-            {#$.handleSearch._g1._data = {{ stats.yAxis[stats.label]|json_encode|raw }};#}
-            {#$.handleSearch._g1._title = {{ (stats.label|trans)|json_encode|raw  }};#}
             {#$.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';#}
-//            $.handleSearch._g1._mesure = '1000 QX';
             $.handleSearch._g1._lang =  lang;
-//            $.handleSearch._g1._init();
             $('.highcharts-credits').remove();
         });
     });

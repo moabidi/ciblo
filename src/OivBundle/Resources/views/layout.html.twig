@@ -23,7 +23,7 @@
     {% include 'OivBundle:blocks:header.html.twig' %}
     <div class="full-search ">
     {% include 'OivBundle:blocks:filter_search.html.twig' %}
-    {% include 'OivBundle:blocks:result_search.html.twig' %}
+    {#{% include 'OivBundle:blocks:result_search.html.twig' %}#}
     {% include 'OivBundle:blocks:fiche_country.html.twig' %}
     {% include 'OivBundle:blocks:result_stats_country.html.twig' %}
     </div>
@@ -34,6 +34,7 @@
     </div>
     {% include 'OivBundle:blocks:footer.html.twig' %}
 </div>
+{% include 'OivBundle:blocks:popup-info.html.twig' %}
 <script type="text/javascript">
     var rootUrl  = '/';
     var userLang = 'fr';
@@ -64,7 +65,8 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
-{#<script src="{{ asset('/bundles/oiv/js/base-search.js') }}"></script>#}
+<script src="{{ asset('/bundles/oiv/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ asset('/bundles/oiv/js/jquery.modal.min.js') }}"></script>
 <script src="{{ asset('/bundles/oiv/js/oiv-handler-search.js') }}"></script>
 <script src="{{ asset('/bundles/oiv/js/oiv-stats-charts.js') }}"></script>
 <script src="{{ asset('/bundles/oiv/js/jquery-loading.js') }}"></script>

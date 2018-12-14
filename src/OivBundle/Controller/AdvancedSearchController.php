@@ -23,7 +23,7 @@ class AdvancedSearchController extends BaseController
     public function indexAction(Request $request)
     {
         $selectedCountryCode = $request->query->get('countryCode','oiv');
-        $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => '2016'];
+        $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => date('Y')-2];
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
