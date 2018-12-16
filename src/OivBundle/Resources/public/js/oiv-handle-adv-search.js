@@ -330,6 +330,26 @@ $(function($){
             });
         };
 
+        this._initSortData = function() {
+            $('th.sorting, th.sorting_asc, th.sorting_desc').on('click', function () {
+                var view = 'global';
+                var data = $.handleSearch._dataFilter;
+                var offset = '0';
+                var limit = $('#limit-pg').val();
+                var sort = $(this).attr('data-sort');
+                var order = $(this).hasClass('sorting_asc') ? 'DESC':'ASC';
+                /** Set default filter */
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab1':data;
+                data += '&offset='+offset+'&limit='+limit+'&sort='+sort+'&order='+order;
+                $.handleSearch._sendRequest(view, 'POST', data);
+                if ($(this).hasClass('sorting_asc')) {
+                    $(this).removeClass('sorting_asc').addClass('sorting_desc');
+                } else {
+                    $(this).removeClass('sorting_desc').addClass('sorting_asc');
+                }
+            });
+        }
+
         /**
          * Export data into pdf or csv file via ajax request
          * @private
@@ -444,6 +464,7 @@ $(function($){
         $.handleSearch._initKeypSearch();
         $.handleSearch._initHandlePagination();
         $.handleSearch._initHandlePagePagination();
+        $.handleSearch._initSortData();
         $.handleSearch._initHandleResetFilters();
         $.handleSearch._initShowSelectedStatType();
         $.handleSearch._initGetInfoNaming();

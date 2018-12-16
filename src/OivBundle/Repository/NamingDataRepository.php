@@ -8,8 +8,12 @@
 
 namespace OivBundle\Repository;
 
+use Doctrine\ORM\Query\Expr;
+
 class NamingDataRepository extends BaseRepository
 {
+    protected $_sort = 'appellationName';
+    protected $_order = 'ASC';
 
     /**
      * SELECT count(*) FROM oivdataw.naming_data  where COUNTRY_CODE='FRA'
@@ -20,32 +24,7 @@ class NamingDataRepository extends BaseRepository
      */
     public function getCountNaming($aCriteria = [])
     {
-//        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
-//        $this->_queryBuilder
-//            ->select('COUNT(o) as total')
-//            ->from($this->_entityName, 'o');
-//        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
-//            $this->_queryBuilder
-//                ->innerJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
-//                ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)')
-//                ->setParameter('tradeBloc', $aCriteria['countryCode']);
-//        }
-//        $result = $this->_queryBuilder->getQuery()->getOneOrNullResult();
-
-        $tableName = $this->getEntityManager()->getClassMetadata($this->_entityName)->getTableName();
-        $tableCountryName = $this->getEntityManager()->getClassMetadata('OivBundle:Country')->getTableName();
-        $cnx = $this->getEntityManager()->getConnection();
-        $stm = $cnx->prepare('select COUNT(*) as total from  '.$tableName.' o' .
-        ' inner join '.$tableCountryName.' c on c.ISO3 = o.COUNTRY_CODE AND c.TRADE_BLOC  = :tradeBloc'.
-        ' inner join ( SELECT COUNTRY_CODE, MAX(LAST_DATE) as LAST_DATE FROM '. $tableName .' group by COUNTRY_CODE) b ON b.COUNTRY_CODE = o.COUNTRY_CODE AND b.LAST_DATE = o.LAST_DATE'
-        );
-        $stm->bindValue('tradeBloc', $aCriteria['countryCode']);
-        $stm->execute();
-        $result = $stm->fetch();
-        if (isset($result['total'])) {
-            return $result['total'];
-        }
-        return null;
+        return parent::getCountDB($aCriteria);
     }
 
 
@@ -53,9 +32,11 @@ class NamingDataRepository extends BaseRepository
      * @param array $aCriteria
      * @param int $offset
      * @param int $limit
+     * @param null $sort
+     * @param null $order
      * @return mixed
      */
-    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100)
+    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
     {
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $this->_queryBuilder->select('o.id, o.countryCode, o.versioning,  o.appellationCode,o.appellationName, o.parentCode, o.parentName, o.typeNationalCode, o.typeInternationalCode,

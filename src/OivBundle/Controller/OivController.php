@@ -73,6 +73,8 @@ class OivController extends BaseController
         if (class_exists('OivBundle\\Entity\\'.$table)) {
             $offset =  $request->request->get('offset',0);
             $limit  =  $request->request->get('limit',20);
+            $sort   =  $request->request->get('sort');
+            $order  =  $request->request->get('order');
 
             $aCriteria = $this->getCriteriaRequest($request);
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);

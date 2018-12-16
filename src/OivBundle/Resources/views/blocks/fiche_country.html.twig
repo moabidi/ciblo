@@ -36,12 +36,12 @@
                         </thead>
                         <tbody class="bg-wihte">
                         <tr id="area" data-measure="HA">
-                            <td colspan="1"> <a class="product">{{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></a></td>
-                            <td colspan="4" class="text-center">
-                                <a>{% if stats.globalArea.val|default(0) %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} {% else %} - {% endif %}</a>
-                                <a data-graph="container-g5" data-statType="area" class="float-left stat-type btn btn-default btn-xs">
+                            <td class="float-right"> <a class="product">{{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></a></td>
+                            <td class="">
+                                <a data-graph="container-g5" data-statType="prod" class=" stat-type btn btn-default btn-xs">
                                     <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                 </a>
+                                <span class=""><span class="valStatType">{% if stats.globalArea.val|default(0) %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} {% else %} - {% endif %}</span></span>
                             </td>
                         </tr>
                         </tbody>

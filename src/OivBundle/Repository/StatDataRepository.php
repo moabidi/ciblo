@@ -12,6 +12,8 @@ use Doctrine\ORM\QueryBuilder;
 
 class StatDataRepository extends BaseRepository
 {
+    protected $_sort = 'countryCode';
+    protected $_order = 'ASC';
 
     /**
      * SELECT VALUE FROM oivdataw.stat_data where COUNTRY_CODE='FRA'  and  YEAR='2016' and  stat_type='C_PROD_GRP'
@@ -29,7 +31,7 @@ class StatDataRepository extends BaseRepository
         $this->makeQuery(array_merge($aCriteria,['statType'=>$statType]));
 //        var_dump($this->_queryBuilder->getQuery()->getDQL());
 //        var_dump($this->_queryBuilder->getQuery()->getResult());die;
-        $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();
+        $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();//var_dump($this->_queryBuilder->getQuery()->getSQL());
         if (isset($result['value'])) {
             $val = intval($result['value']) ? intval($result['value']):'0';
             $measure = $result['measureType'];
@@ -77,12 +79,15 @@ class StatDataRepository extends BaseRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100)
+    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
     {
+        $this->_sort = $sort ? $sort:$this->_sort;
+        $this->_order = $order ? $order:$this->_order;
         $this->_queryBuilder = $this->getQueryResult($aCriteria);
         $this->_queryBuilder
                             ->setFirstResult($offset)
-                            ->setMaxResults($limit);
+                            ->setMaxResults($limit)
+                            ->orderBy('o.'.$this->_sort,$this->_order);
         $result = $this->_queryBuilder->getQuery()->getArrayResult();
         return $this->reformatArray($result);
     }

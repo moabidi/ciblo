@@ -68,16 +68,17 @@ class BaseController extends Controller
         $minData = $minDate ? $minDate:'1990';
         $maxDate = $maxDate ? $maxDate:date('Y')-2;
         $allStats = $this->getStatProducts(array_merge($aCriteria, ['yearMin' => $minData, 'yearMax' => $maxDate]));
+        //var_dump($aCriteria,$repository->getSingleValueStatType('A_SURFACE', $aCriteria));die;
         return [
             'products' => $this->getStatProducts($aCriteria,true),
             'graphProducts' => $this->formatDataGraph($allStats,$minData,$maxDate),
             'globalArea' => $repository->getSingleValueStatType('A_SURFACE', $aCriteria),
-            'rfreshIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
-            'rtableIndivCons' => $repository->getSingleValueStatType('L_COMSUMPTION_TABLE_GRP', $aCriteria),
-            'rsecIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
-            'usedArea' => $repository->getSingleValueStatType('C_PROD_GRP', $aCriteria),
-            'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria),
+//            'rfreshIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
+//            'rtableIndivCons' => $repository->getSingleValueStatType('L_COMSUMPTION_TABLE_GRP', $aCriteria),
+//            'rsecIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
+//            'usedArea' => $repository->getSingleValueStatType('C_PROD_GRP', $aCriteria),
             'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria),
+            'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria),
             'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
         ];
     }
@@ -141,7 +142,7 @@ class BaseController extends Controller
                 'label' => 'Surface',
                 'name' => 'area',
                 'stat' => [
-                    'prod' => 'C_PROD_GRP',
+                    'prod' => 'A_SURFACE',
                 ]
 
             ],
