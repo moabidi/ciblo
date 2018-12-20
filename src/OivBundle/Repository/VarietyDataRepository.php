@@ -27,23 +27,33 @@ class VarietyDataRepository extends BaseRepository
     }
 
     /**
+     * Add default order
+     */
+    protected function addDefaultOrder()
+    {
+        $this->_queryBuilder->orderBy('c.countryNameFr','ASC');
+        $this->_queryBuilder->addOrderBy('o.codeVivc','ASC');
+    }
+
+    /**
      * @return array
      */
     public static function getConfigFields() {
         return [
+            'countryNameFr' => ['tab1','tab2'],
             'versioning' => [],
-            'countryCode' => ['tab1','tab2'],
-            'isMainVariety' => ['filter','tab1','tab2'],
-            'areaCultivated' => ['filter','tab1','tab2'],
-            'areaYear' => ['filter','tab1','tab2'],
+//            'countryCode' => ['tab1','tab2'],
+            'isMainVariety' => [],
+            'areaCultivated' => [],
+            'areaYear' => [],
             'grapeVarietyName' => ['filter','tab1','tab2'],
-            'codeVivc' => ['filter','tab1','tab2'],
+            'synonym'=>['filter','tab2'],
+            'codeVivc' => ['tab1','tab2'],
             'varietyNationalNameVivc'=> [],
-            'synonym'=>['filter','tab1','tab2'],
-            'nationalVarietyId'=>['filter','tab1','tab2'],
+            'nationalVarietyId'=>[],
             'grapeColor'=>[],
-            'lastDate'=>['filter','tab1','tab2'],
-            'internetAdress'=>['tab1']
+            'lastDate'=>['tab2'],
+            'internetAdress'=>[]
         ];
     }
 }

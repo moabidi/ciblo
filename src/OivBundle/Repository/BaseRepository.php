@@ -43,14 +43,21 @@ class BaseRepository extends EntityRepository
      */
     public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
     {
-        $this->_sort = $sort ? $sort:$this->_sort;
+        $this->_sort = $sort ? 'o.'.$sort:'o.'.$this->_sort;
         $this->_order = $order ? $order:$this->_order;
         $this->getQueryResult($aCriteria);
         $this->_queryBuilder
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->orderBy('o.'.$this->_sort,$this->_order);
-        $result = $this->_queryBuilder->getQuery()->getArrayResult();
+            ->setMaxResults($limit);
+        if ($sort) {
+            if ($this->_sort == 'o.countryCode') {
+                $this->_sort = 'c.countryNameFr';
+            }
+            $this->_queryBuilder->orderBy($this->_sort, $this->_order);
+        } else {
+            $this->addDefaultOrder();
+        }
+        $result = $this->_queryBuilder->getQuery()->getArrayResult();//var_dump($result[0],$this->reformatArray($result)[0]);
         return $this->reformatArray($result);
     }
 
@@ -76,37 +83,15 @@ class BaseRepository extends EntityRepository
      */
     public function getCountDB($aCriteria = [])
     {
-        $tableName = $this->getEntityManager()->getClassMetadata($this->_entityName)->getTableName();
-        $tableCountryName = $this->getEntityManager()->getClassMetadata('OivBundle:Country')->getTableName();
-        $cnx = $this->getEntityManager()->getConnection();
-        $zone = '';
-        $sql = 'select COUNT(*) as total from  '.$tableName.' o' ;
-        $sql .= ' inner join ( SELECT COUNTRY_CODE, MAX(LAST_DATE) as LAST_DATE FROM '. $tableName .' group by COUNTRY_CODE) b ON b.COUNTRY_CODE = o.COUNTRY_CODE AND b.LAST_DATE = o.LAST_DATE';
-        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
-            $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
-            if ( in_array($aCriteria['countryCode'], ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE'])) {
-                $sql .= ' inner join ' . $tableCountryName . ' c on c.ISO3 = o.COUNTRY_CODE AND c.TRADE_BLOC  = :tradeBloc';
-                $zone = 'tradeBloc';
-            } else {
-                $aCountryCode = explode(',',$aCriteria['countryCode']);
-                if (count($aCountryCode) ==1) {
-                    $sql .= ' where o.COUNTRY_CODE = :countryCode';
-                    $zone = 'countryCode';
-                } else {
-                    $sql .= ' where o.COUNTRY_CODE IN (\''. implode('\',\'',$aCountryCode) .'\')';
-                }
-            }
-        }
-        $stm = $cnx->prepare($sql);
-        if ($zone) {
-            $stm->bindValue($zone, $aCriteria['countryCode']);
-        }
-        $stm->execute();
-        $result = $stm->fetch();
+        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $this->_queryBuilder
+            ->select('COUNT(o) as total')
+            ->from($this->_entityName, 'o');
+        $this->addCountryCriteria($aCriteria);
+        $result = $this->_queryBuilder->getQuery()->getOneOrNullResult();
         if (isset($result['total'])) {
             return $result['total'];
         }
-        return null;
     }
 
     /**
@@ -185,8 +170,8 @@ class BaseRepository extends EntityRepository
                 //var_dump($field,$val);
                 //$cond = 'o.'.$field.' = :'+$field;
                 $this->_queryBuilder
-                    ->andWhere(sprintf('o.%s = :%s',$field,$field))
-                    ->setParameter(sprintf('%s',$field),$val);
+                    ->andWhere(sprintf('o.%s like :%s',$field,$field))
+                    ->setParameter(sprintf('%s',$field),'%'.$val.'%');
             }
         });
         $this->_queryBuilder = $queryBuilder;
@@ -203,7 +188,7 @@ class BaseRepository extends EntityRepository
                 $this->_queryBuilder
                     ->innerJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
                     //->innerJoin('( SELECT v.countryCode, MAX(v.lastDate) as lastDate FROM ' . $this->_entityName . ' v group by v.countryCode)','b','ON', 'b.countryCode = o.countryCode AND b.lastDate = o.lastDate')
-                    ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)')
+                    //->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)')
                     ->setParameter('tradeBloc', $aCriteria['countryCode']);
             } else {
                 $aCountryCode = explode(',',$aCriteria['countryCode']);
@@ -211,13 +196,13 @@ class BaseRepository extends EntityRepository
                     $this->_queryBuilder
                         ->andWhere('o.countryCode = :countryCode')
                         ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode')
-                        ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)')
+                        //->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)')
                         ->setParameter('countryCode', $aCountryCode[0]);
                 } else {
                     $this->_queryBuilder
                         ->andWhere('o.countryCode IN (\''. implode('\',\'',$aCountryCode) .'\')')
-                        ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode')
-                        ->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)');
+                        ->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
+                        //->andWhere('o.lastDate  = (SELECT MAX(v.lastDate) FROM ' . $this->_entityName . ' v WHERE v.countryCode = o.countryCode)');
                 }
             }
         } else {

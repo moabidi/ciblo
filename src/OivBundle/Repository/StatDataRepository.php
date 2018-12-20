@@ -81,13 +81,16 @@ class StatDataRepository extends BaseRepository
      */
     public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
     {
-        $this->_sort = $sort ? $sort:$this->_sort;
+        $this->_sort = $sort ? 'o.'.$sort:'o.'.$this->_sort;
         $this->_order = $order ? $order:$this->_order;
         $this->_queryBuilder = $this->getQueryResult($aCriteria);
         $this->_queryBuilder
                             ->setFirstResult($offset)
-                            ->setMaxResults($limit)
-                            ->orderBy('o.'.$this->_sort,$this->_order);
+                            ->setMaxResults($limit);
+        if ($this->_sort == 'o.countryCode') {
+            $this->_sort = 'c.countryNameFr';
+        }
+        $this->_queryBuilder->orderBy($this->_sort,$this->_order);
         $result = $this->_queryBuilder->getQuery()->getArrayResult();
         return $this->reformatArray($result);
     }
@@ -113,7 +116,7 @@ class StatDataRepository extends BaseRepository
         if ($count) {
             $this->_queryBuilder->select(' count(o) as total');
         } else {
-            $this->_queryBuilder->select('o');
+            $this->_queryBuilder->select('c.countryNameFr, o');
         }
 
         $this->_queryBuilder
@@ -168,7 +171,10 @@ class StatDataRepository extends BaseRepository
                         ->Andwhere('o.countryCode IN (\''. implode('\',\'',$aCountryCode) .'\')');
                         //->setParameter('countryCode', implode('\',\'',$aCountryCode));
                 }
+                $this->_queryBuilder->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
             }
+        } else {
+            $this->_queryBuilder->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
         }
     }
 
@@ -178,16 +184,17 @@ class StatDataRepository extends BaseRepository
     public static function getConfigFields()
     {
         return [
+            'countryNameFr' => ['tab1','tab2'],
             'versioning' => [],
-            'countryCode' => ['tab1','tab2'],
+            'countryCode' => ['filter'],
             'statType' => ['filter','tab1','tab2'],
-            'measureType' => ['tab1','tab2'],
             'metricCompType' => ['filter','tab1','tab2'],
             'year' => ['tab1','tab2'],
-            'value' => ['filter','tab1','tab2'],
+            'measureType' => ['tab1','tab2'],
+            'value' => ['tab1','tab2'],
+            'lastDate'=>[],
+            'grapesDestination'=>[],
             'infoSource'=> [],
-            'lastDate'=>['filter','tab1','tab2'],
-            'grapesDestination'=>['filter','tab1','tab2']
         ];
     }
 

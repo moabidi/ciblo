@@ -12,18 +12,19 @@ $(function($){
         this._g5;
 
         this._uri = '/fr/statistiques/';
-
+        this._dataSort = '';
         this._dataFilter;
+        this._dataTableFilter;
         this._listType = ['prod', 'export','import','consumption','indovcons'];
 
-        this._sendRequest = function(view, method, data, top) {
+        this._sendRequest = function(view, method, data, top, changeHeader) {
             $('.card').loading({circles: 3, overlay: true, width:275, top: top});
             $.ajax({
                 'url': $.handleSearch._uri + view,
                 'method': method,
                 'data': data
             }).done(function(response){
-                $.handleSearch._handleSuccess(response, view);
+                $.handleSearch._handleSuccess(response, view, changeHeader);
                 setTimeout(function(){
                     $('.card').loading({destroy: true});
                 }, 200);
@@ -36,24 +37,40 @@ $(function($){
             });
         };
 
-        this._handleSuccess = function(response, view) {
+        this._handleSuccess = function(response, view, changeHeader) {
             switch (view) {
-                case 'global': $.handleSearch._refreshGlobalView(response);break;
+                case 'global': $.handleSearch._refreshGlobalView(response, changeHeader);break;
                 case 'info-naming': $.handleSearch._refreshPopupView(response);break;
                 case 'graph': $.handleSearch._refreshGraphView(response);break;
-                case 'global-country': $.handleSearch._refreshDataCountryView(response);break;
+                case 'global-country': $.handleSearch._refreshDataCountryView(response, changeHeader);break;
             }
         };
 
+        /**
+         *
+         * @param error
+         * @private
+         */
         this._handleFailure = function(error) {
             alert('error response');
             console.log('error response');
         };
 
-        this._refreshGlobalView = function(response) {
-            $.handleSearch._refreshTableResult(response,'resultSearch');
+        /**
+         *
+         * @param response
+         * @param changeHeader
+         * @private
+         */
+        this._refreshGlobalView = function(response, changeHeader) {
+            $.handleSearch._refreshTableResult(response,'resultStats', changeHeader);
         };
 
+        /**
+         *
+         * @param response
+         * @private
+         */
         this._refreshPopupView = function(response) {
             var html = '';
             if (response.data != 'undefined') {
@@ -90,23 +107,39 @@ $(function($){
 
         };
 
-        this._refreshDataCountryView = function(response) {
-            $.handleSearch._refreshTableResult(response,'resultStats');
+        /**
+         *
+         * @param response
+         * @param changeHeader
+         * @private
+         */
+        this._refreshDataCountryView = function(response, changeHeader) {
+            $.handleSearch._refreshTableResult(response,'resultStats', changeHeader);
         };
 
-        this._refreshTableResult = function (content, idTable) {
+        /**
+         *
+         * @param content
+         * @param idTable
+         * @param changeHeader
+         * @private
+         */
+        this._refreshTableResult = function (content, idTable, changeHeader) {
             var hearder = '';
             var hearderFilter = '';
             var body = '';
             //console.log(content, content.length);
             if (typeof content.data != 'undefined') {
-                $.each(content.labelfields, function (key, val) {
-                    if (val != 'id') {
-                        hearder += '<th>' + val + '</th>';
-                        hearderFilter += '<th><input class="filter-col" type="text"></th>';
-                    }
-                });
-                hearder = '<tr>'+hearder+'</tr><tr>'+hearderFilter+'</tr>';
+                if (changeHeader) {
+                    $.each(content.labelfields, function (key, val) {
+                        if (val != 'id') {
+                            var info = key=='codeVivc' ? ' <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="'+$.handleSearch._trans.infoCodeVivc+'"></span>':'';
+                            hearder += '<th data-sort="' + key + '" class="sorting">' + val + info + '</th>';
+                            hearderFilter += '<th><input name="'+key+'" class="filter-col" type="text"><i class="glyphicon glyphicon-search"></i></th>';
+                        }
+                    });
+                    hearder = '<tr>' + hearder + '</tr><tr>' + hearderFilter + '</tr>';
+                }
                 $.each(content.data, function (key, items) {
                     body += '<tr data-dbType="'+content.dbType+'" data-id="'+items.id+'" data-country="'+items.countryCode+'">';
                     $.each(items, function (key, val) {
@@ -148,12 +181,18 @@ $(function($){
                     $('#next-pg-'+idTable).attr('data-offset', content.next);
                     $('#last-pg-'+idTable).attr('data-offset', content.last);
                 }
+                if (hearder != '') {
+                    $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
+                } else {
+                    $('#' + idTable + ' tbody').html(body);
+                }
+                //$('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             }else{
                 hearder = '<tr><th class="text-center">Aucune résulat touvée pour votre recherche</th></tr>';
                 body = '<tr><td></td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
+                $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             }
-            $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');
         };
 
@@ -162,7 +201,7 @@ $(function($){
                 var data = $.handleSearch._getFiltersData($(this),view);
                 if (!data) return false;
                 var posLoader = $(this).offset().top;
-                $.handleSearch._sendRequest(view, 'POST', data, posLoader);
+                $.handleSearch._sendRequest(view, 'POST', data, posLoader, true);
                 $('#container-graph').removeClass('show').addClass('hide');
                 $('.result-search').removeClass('hide').addClass('show');
                 return false;
@@ -176,9 +215,11 @@ $(function($){
                 return false;
             }
             var data = 'dbType='+db+'&countryCode='+$('#country').val();
-            data += '&year='+ $('#year').val();
+            data += '&view=tab1';
 
             $.handleSearch._dataFilter = data;
+            $.handleSearch._dataSort = '';
+            $.handleSearch._dataTableFilter = '';
             if (view == 'global-country') {
                 data += '&limit='+$('#limit-pg-resultStats').val();
             }
@@ -300,24 +341,14 @@ $(function($){
          * @private
          */
         this._initRefreshFilter = function() {
-            $('#typeSearch').on('change', function() {
-                $('#naming').removeClass('show').addClass('hide');
-                $('#education').removeClass('show').addClass('hide');
-                $('#variety').removeClass('show').addClass('hide');
-                $('#stat').removeClass('show').addClass('hide');
-                $('#protection').removeClass('show').addClass('hide');
-                $('#'+$(this).val()).removeClass('hide').addClass('show');
-                if ($(this).val() == 'stat') {
-                    $('#yearMax').parents().eq(1).removeClass('hide').addClass('show');
-                    $('#yearMin').parents().eq(1).removeClass('hide').addClass('show');
-                    $('#year').parents().eq(1).removeClass('show').addClass('hide');
-                }else{
-                    $('#yearMax').parents().eq(1).removeClass('show').addClass('hide');
-                    $('#yearMin').parents().eq(1).removeClass('show').addClass('hide');
-                    $('#year').parents().eq(1).removeClass('hide').addClass('show');
-                }
-                $('#simpleSearch').attr('data-dbType',$(this).val());
-                $('#advancedSearch').attr('data-dbType',$(this).val());
+            $('#advancedSearch').on('click', function() {
+                var countryCode = $('#country').val();
+                var year = $('#year').val();
+                var href = window.location.href.split('?');
+                href = href[0];
+                href = href.endsWith('/') ? href+'recherche':href+'/recherche';
+                window.location.href = href + '?year=' + year + '&countryCode=' + countryCode;
+                return false;
             });
         };
 
@@ -341,7 +372,7 @@ $(function($){
                 var posLoader = $(this).offset().top;
                 var data = 'appellationName=' + $(this).attr('data-appellationName');
                 data += $(this).attr('data-fieldname') == 'referenceName' ? '&isCtg=0':'&isCtg=1';
-                $.handleSearch._sendRequest('info-naming', 'POST', data, posLoader);
+                $.handleSearch._sendRequest('info-naming', 'POST', data, posLoader, false);
             });
         }
 
@@ -352,8 +383,9 @@ $(function($){
                 var posLoader = $(this).offset().top;
                 var offset = $(this).attr('data-offset');
                 var limit = $(this).parents().eq(3).find('.offset-pg').val();
-                data += '&offset='+offset+'&limit='+limit;
-                $.handleSearch._sendRequest(view, 'POST', data, posLoader);
+                data += $.handleSearch._dataTableFilter;
+                data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
+                $.handleSearch._sendRequest(view, 'POST', data, posLoader, false);
             });
         }
 
@@ -364,22 +396,77 @@ $(function($){
                 var posLoader = $(this).offset().top;
                 var offset = '0';
                 var limit = $(this).val();
-                data += '&offset='+offset+'&limit='+limit;
-                $.handleSearch._sendRequest(view, 'POST', data, posLoader);
+                data += $.handleSearch._dataTableFilter;
+                data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
+                $.handleSearch._sendRequest(view, 'POST', data, posLoader, false);
             });
         }
+
+
+        this._initSortData = function() {
+            $('body').on('click','th.sorting, th.sorting_asc, th.sorting_desc', function () {
+                var view = 'global';
+                var data = $.handleSearch._dataFilter;
+                var offset = '0';
+                var limit = $('#limit-pg-resultStats').val();
+                var sort = $(this).attr('data-sort');
+                var order = $(this).hasClass('sorting_asc') ? 'DESC':'ASC';
+                $.handleSearch._dataSort = '&sort='+sort+'&order='+order;
+                /** Set default filter */
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab1':data;
+                data += $.handleSearch._dataTableFilter;
+                data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
+                $.handleSearch._sendRequest(view, 'POST', data, false);
+                if ($(this).hasClass('sorting_asc')) {
+                    $(this).parent().find('th').removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
+                    $(this).removeClass('sorting_asc').addClass('sorting_desc');
+                } else {
+                    $(this).parent().find('th').removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
+                    $(this).removeClass('sorting_desc').addClass('sorting_asc');
+                }
+            });
+        };
+
+        /**
+         * Search with filter table
+         * @private
+         */
+        this._initSearchTable = function() {
+            $('body').on('click','#resultStats thead .glyphicon-search', function () {
+                var values = '';
+                $('body').find('#resultStats thead input.filter-col').each(function(){
+                    if ($(this).val()) {
+                        values += '&tableFilters['+$(this).attr('name')+']='+$(this).val();
+                    }
+                });
+                $.handleSearch._dataTableFilter = values;
+                if ($.handleSearch._dataTableFilter) {
+                    var view = 'global';
+                    var data = $.handleSearch._dataFilter;
+                    var offset = '0';
+                    var limit = $('#limit-pg-resultStats').val();
+                    /** Set default filter */
+                    data = data == undefined ? 'dbType=stat&countryCode=oiv&view=tab1' : data;
+                    data += $.handleSearch._dataTableFilter;
+                    data += '&offset=' + offset + '&limit=' + limit + $.handleSearch._dataSort;
+                    $.handleSearch._sendRequest(view, 'POST', data, false);
+                }
+            });
+        };
 
         /**
          * Search on keyup
          */
         this._initKeypSearch = function() {
             $(document).on("keyup", ".filter-col", function () {
-                var value = $(this).val().toLowerCase();
-                var index = $(this).parent().index() + 1;
-                var table = $(this).parents().eq(3);
-                $(table).find("tbody tr").filter(function () {
-                    $(this).toggle($(this).find('td:nth-child('+index+')').text().toLowerCase().indexOf(value) > -1)
-                });
+                if ($('.pagination').hasClass('hide')) {
+                    var value = $(this).val().toLowerCase();
+                    var index = $(this).parent().index() + 1;
+                    var table = $(this).parents().eq(3);
+                    $(table).find("tbody tr").filter(function () {
+                        $(this).toggle($(this).find('td:nth-child(' + index + ')').text().toLowerCase().indexOf(value) > -1)
+                    });
+                }
             });
         };
 
@@ -417,6 +504,8 @@ $(function($){
         $.handleSearch._initChangeCountry();
         $.handleSearch._initHandlePagination();
         $.handleSearch._initHandlePagePagination();
+        $.handleSearch._initSortData();
+        $.handleSearch._initSearchTable();
         $.handleSearch._initGetInfoNaming();
         $('.selectpicker').selectpicker();
         $('.selectpicker').trigger('change');

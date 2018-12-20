@@ -45,6 +45,7 @@ class OivController extends BaseController
         //$aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['selectedYear'] = $selectedYear;
+        $aParams['transData'] = ['infoCodeVivc'=>$this->get('translator')->trans('infoCodeVivc')];
         //var_dump($aParams['globalResult']);die;
         return $this->render('OivBundle:search:result.html.twig', $aParams);
     }
@@ -75,13 +76,14 @@ class OivController extends BaseController
             $limit  =  $request->request->get('limit',20);
             $sort   =  $request->request->get('sort');
             $order  =  $request->request->get('order');
+            $view  =  $request->request->get('view');
 
             $aCriteria = $this->getCriteriaRequest($request);
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
             //var_dump($offset,$limit,$count);die();
             if ($count  && ($count>$offset)) {
                 //$result['last'] = floor($count/$limit)*$limit;
-                $result = $this->getResultGLobalSearch($table, $aCriteria, 'tab1', $offset, $limit);
+                $result = $this->getResultGLobalSearch($table, $aCriteria, $view, $offset, $limit,$sort,$order);
                 $result = $this->formatDataTable($result);
                 $result = $this->getParamsPagination($result, $count, $offset, $limit);
                 $result['dbType'] = $request->request->get('dbType');
@@ -100,12 +102,8 @@ class OivController extends BaseController
      */
     public function globalStatSearchAction(Request $request)
     {
-        $aCriteria = [];
         $result = [];
-        $aCriteria['countryCode'] = $request->request->get('countryCode','oiv');
-        if ($request->request->has('year')) {
-            $aCriteria['year'] = $request->request->get('year');
-        }
+        $aCriteria = $this->getCriteriaRequest($request);
         $table = ucfirst($request->request->get('dbType')).'Data';
         if (class_exists('OivBundle\\Entity\\'.$table)) {
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
@@ -113,7 +111,9 @@ class OivController extends BaseController
                 $view = $request->request->get('view');
                 $offset =  $request->request->get('offset',0);
                 $limit  =  $request->request->get('limit',20);
-                $result = $this->getResultGLobalSearch($table, $aCriteria, $view, $offset, $limit);
+                $sort   =  $request->request->get('sort');
+                $order  =  $request->request->get('order');
+                $result = $this->getResultGLobalSearch($table, $aCriteria, $view, $offset, $limit,$sort,$order);
                 $result = $this->formatDataTable($result);
                 $result = $this->getParamsPagination($result, $count, $offset, $limit);
                 $result['dbType'] = $request->request->get('dbType');

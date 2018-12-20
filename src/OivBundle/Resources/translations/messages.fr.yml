@@ -11,53 +11,62 @@ View more: En savoir plus
 View: Voir
 Result of search: Résultat de recherche
 Country: Pays
-#Education
 countryCode: Pays
+countryNameFr: Pays
+Database: Données
+Country File: Fiche Pays
+rtable: Raisins de table
+rin: Vin
+rfresh: Raisins frais
+rsec: Raisins secs
+area: Surface
+#Education
 formationTitle: Intitulé de la formation
 university: Établissement
 tutelle: Tutelle
 level: Niveau et catégorie
 diploma: Diplôme(s) octroyé(s)
 cooperation: Coopérations universitaires éventuelles
-month: Mois
-hourCourses: Heures de classe
-credits: Crédits
+month: Durée de formation
+hourCourses: Nombre d'heure de formation
+credits: Crédits ECTS
 prior: Pré-requis
 deadline: Deadline
-contact: Contact
+contact: Adresse et contact
 adress: Adresse
 lastDate: dernière date de mise à jour
-internetAdress: Adresse internet
+internetAdress: Adresse et contact
 #Appelation
-appellationCode: Code IG
-appellationName: Appellation
-parentCode: Code Appellation parent
-parentName: Appellation parent
-typeNationalCode: Type d'indication type 1
-typeInternationalCode: Type d'indication type 2
-productCategoryName: Catégories du produit
-productType: Type du produit
-referenceName: Base légale
+appellationCode: Code
+appellationName: IG/AO
+parentCode: Code IG/AO supérieure
+parentName: Unité géographique supérieure
+typeNationalCode: Type d'indication national
+typeInternationalCode: Type d'indication international
+productCategoryName: Catégories de produits
+productType: Produits
+referenceName: Base reglementaire
 url: Lien sur base légale
 #Stat
 statType: Série
 measureType: Unité
-metricCompType: Type de données
+metricCompType: Produit
 year: Année
 value: Valeur
 infoSource: Source info
 grapesDestination: Vocation du raisin
 #Variety
-isMainVariety: Variété principale
-areaCultivated: Surface cultivée
+isMainVariety: Variéte Principale
+areaCultivated: Surface
 areaYear: Année surface cultivée
 grapeVarietyName: Nom variété
-codeVivc: Code VIVC
-varietyNationalNameVivc: Nom national VIVC
+codeVivc: VIVC
+infoCodeVivc: Vitis International Variety Catalogue
+varietyNationalNameVivc: Code OIV
 synonym: Synonyme
 nationalVarietyId: Id variété nationale
 grapeColor: Couleur
-internetAdress: Lien cépage
+internetAdress: adresse internet
 #Fiche OIV
 area: Superficie
 Individual Consumption: Consommation Individuelle
@@ -69,6 +78,7 @@ prod: Production
 consumption: Consommation
 import: Import
 export: Export
+indovcons: Consommation individuelle
 total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
 Zone: Zone
@@ -76,6 +86,7 @@ Database: Base de données
 World: Monde
 Naming: Appellations
 Variety: Variété
+Varieties: Variétés
 Education: Formations
 Statistic: Statistiques
 Annual statistics of: Statistiques annuelles de

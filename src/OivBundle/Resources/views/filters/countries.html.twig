@@ -11,7 +11,7 @@
         </optgroup>
         <optgroup label="{{ 'Choose'|trans }} {{ 'a continent'|trans }}">
             {% for item in tradeBlocs %}
-                <option value="{{ item.tradeBloc }}" {% if countryCode == item.tradeBloc %}selected=""{% endif %}">{{ item.tradeBloc }}</option>
+                <option value="{{ item.tradeBloc }}" {% if countryCode == item.tradeBloc %}selected=""{% endif %}">{{ item.tradeBloc|capitalize }}</option>
             {% endfor %}
         </optgroup>
         <optgroup label="{{ 'Choose'|trans }} {{ 'a country'|trans }}">

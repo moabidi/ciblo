@@ -10,6 +10,7 @@
                         {{ fieldName|trans }}
                     </th>
                 {% endfor %}
+                    <th>Actions</th>
                 </tr>
                 <tr role="row" class="filter">
                 {% for fieldName, value in globalResult.0 %}
@@ -20,6 +21,13 @@
                         </a>
                     </td>
                 {% endfor %}
+                    <td rowspan="1" colspan="1">
+                        <div class="margin-bottom-5">
+                            <button class="btn btn-sm yellow filter-submit margin-bottom"><i
+                                        class="fa fa-search"></i> {{ 'Rechercher'|trans }}
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +36,16 @@
                     {% for fieldName, value in row %}
                         <td>{{ value|raw }}</td>
                     {% endfor %}
+                    <td rowspan="1" colspan="1">
+                        <div class="margin-bottom-5">
+                            <button class="btn btn-sm yellow filter-submit margin-bottom"><i
+                                        class="fa fa-edit"></i> Editer
+                            </button>
+                        </div>
+                        {#<button class="btn btn-sm red filter-cancel"><i#}
+                                    {#class="fa fa-times"></i> Reset#}
+                        {#</button>#}
+                    {#</td>#}
                 </tr>
             {% endfor %}
             </tbody>

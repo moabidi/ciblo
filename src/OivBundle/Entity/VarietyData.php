@@ -112,6 +112,11 @@ class VarietyData
      */
     private $internetAdress;
 
-
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="LAST_DATA", type="string", length=1, nullable=false)
+     */
+    private $lastData;
 }
 

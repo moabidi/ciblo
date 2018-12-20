@@ -1,15 +1,30 @@
 {% extends 'OivBundle:advancedSearch:layout.html.twig' %}
-{% block menu_user %}
-    <li class="dropdown dropdown-user">
-    <a href="/fr/statistiques/backoffice/login">
-        Connexion
-    </a>
-{% endblock %}
-
 {% block selectedFilter %}
     {% include 'OivBundle:advancedSearch/blocks:selected-filters.html.twig' %}
 {% endblock %}
 
+{% block menu_user %}
+    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+    <li class="dropdown dropdown-user">
+        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+            <img alt="" class="img-circle" src=" {{ asset('/bundles/oiv/img/backoffice/avatar1.jpg') }}"/>
+            <span class="username username-hide-on-mobile"> UserName </span>
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-default">
+            <li>
+                <a href="extra_profile.html">
+                    <i class="icon-user"></i> My Profile
+                </a>
+            </li>
+            <li>
+                <a href="/fr/statistiques/backoffice/login">
+                    <i class="icon-key"></i> Log Out
+                </a>
+            </li>
+        </ul>
+    </li>
+{% endblock %}
 {% block actions %}
     <div class="actions">
         <div class="btn-group">
@@ -26,34 +41,33 @@
                     <a class="export-btn" data-export="pdf" href="javascript:;"> {{ 'Export to'|trans }} PDF</a>
                 </li>
                 {#<li>#}
-                    {#<a id="export-point" href="javascript:;"> {{ 'Export to power point'|trans }} </a>#}
+                {#<a id="export-point" href="javascript:;"> {{ 'Export to power point'|trans }} </a>#}
                 {#</li>#}
             </ul>
         </div>
     </div>
 {% endblock %}
-
 {% block dataTable %}
-<div class="tabbable">
-    <ul class="nav nav-tabs nav-tabs-lg">
-        <li class="active">
-            <a href="#tab_table" data-toggle="tab" aria-expanded="true">
-                {{ 'Details'|trans }}
-            </a>
-        </li>
-        <li>
-            <a href="#tab_graph" data-toggle="tab" aria-expanded="true">
-                {{ 'Graphic'|trans }}
-            </a>
-        </li>
-    </ul>
+    <div class="tabbable">
+        <ul class="nav nav-tabs nav-tabs-lg">
+            <li class="active">
+                <a href="#tab_table" data-toggle="tab" aria-expanded="true">
+                    {{ 'Details'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="#tab_graph" data-toggle="tab" aria-expanded="true">
+                    {{ 'Graphic'|trans }}
+                </a>
+            </li>
+        </ul>
 
         <div class="tab-content">
             <div class="tab-pane active" id="tab_table">
                 <div class="table-container">
                     <div id="datatable_orders_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer">
                         {#{% include 'OivBundle:advancedSearch/blocks:pagination.html.twig' %}#}
-                        {% include 'OivBundle:advancedSearch/blocks:table-adv-search.html.twig' %}
+                        {% include 'OivBundle:backOffice/blocks:table-adv-search.html.twig' %}
                         {% include 'OivBundle:advancedSearch/blocks:pagination.html.twig' %}
                     </div>
                 </div>
@@ -62,8 +76,8 @@
                 {% include 'OivBundle:advancedSearch/blocks:graphic.html.twig' %}
             </div>
         </div>
-</div>
+    </div>
 {% endblock %}
 {% block load_js %}
-        {% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
+    {% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
 {% endblock load_js %}

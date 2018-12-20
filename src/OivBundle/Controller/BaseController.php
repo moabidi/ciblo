@@ -9,6 +9,7 @@
 namespace OivBundle\Controller;
 
 
+use OivBundle\Entity\Country;
 use OivBundle\Repository\StatDataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,15 +18,18 @@ class BaseController extends Controller
 {
 
     /**
-     * @param string $table
+     * @param $table
      * @param array $aCriteria
+     * @param bool $view
      * @param int $offset
      * @param int $limit
-     * @return array
+     * @param $sort
+     * @param $order
+     * @return mixed
      */
-    protected function getResultGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =100)
+    protected function getResultGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =100, $sort= null, $order = null)
     {
-        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria,$offset, $limit);
+        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria,$offset, $limit, $sort, $order);
         if (in_array($view, ['tab1','tab2'])) {
             $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
             $translator = $this->get('translator');
@@ -89,9 +93,10 @@ class BaseController extends Controller
      */
     protected function getStatProducts($aCriteria = [], $single = false)
     {
+        $translator = $this->get('translator');
         $aProducts = [
             [
-                'label' => 'Raisins frais',
+                'label' => $translator->trans('rfresh'),
                 'name' => 'rfresh',
                 'stat' => [
                     'prod' => 'C_PROD_GRP',
@@ -103,7 +108,7 @@ class BaseController extends Controller
 
             ],
             [
-                'label' => 'Vin',
+                'label' => $translator->trans('rin'),
                 'name' => 'rin',
                 'stat' => [
                     'prod' => 'P_PRODUCTION_WINE',
@@ -115,7 +120,7 @@ class BaseController extends Controller
 
             ],
             [
-                'label' => 'Raisin de tables',
+                'label' => $translator->trans('rtable'),
                 'name' => 'rtable',
                 'stat' => [
                     'prod' => 'F_PROD_TABLE_GRP',
@@ -127,7 +132,7 @@ class BaseController extends Controller
 
             ],
             [
-                'label' => 'Raisin sec',
+                'label' => $translator->trans('rsec'),
                 'name' => 'rsec',
                 'stat' => [
                     'prod' => 'G_PROD_DRIED_GRP',
@@ -139,7 +144,7 @@ class BaseController extends Controller
 
             ],
             [
-                'label' => 'Surface',
+                'label' => $translator->trans('area'),
                 'name' => 'area',
                 'stat' => [
                     'prod' => 'A_SURFACE',
@@ -186,7 +191,7 @@ class BaseController extends Controller
             $productName = $product['name'];
             $formattedData['yAxis'][$productName] = [];
             array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $translator) {
-                $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($productName,$value, $formattedData['xAxis'],$translator);
+                $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($key,$value, $formattedData['xAxis'],$translator);
 
             });
             //var_dump($formattedData );die;
@@ -224,7 +229,11 @@ class BaseController extends Controller
             $translator = $this->get('translator');
             $aResult['labelfields'] = [];
             foreach($data[0] as $field => $val) {
-                $aResult['labelfields'][] = $translator->trans($field);
+                if (in_array($field, ['countryNameFr','countryNameEn','countryNameIt','countryNameEs'])) {
+                    $aResult['labelfields']['countryCode'] = $translator->trans($field);
+                } else {
+                    $aResult['labelfields'][$field] = $translator->trans($field);
+                }
             }
             $aResult['data'] = $data;
         }
@@ -256,6 +265,20 @@ class BaseController extends Controller
         foreach($request->request->all() as $field => $val) {
             if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
                 $aCriteria[$field] = $val;
+            }
+        }
+        if ($aTableFilters = $request->request->get('tableFilters')) {
+            if (isset($aTableFilters['countryCode'])){
+                /**@var Country $result */
+                $result = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountryCode($aTableFilters['countryCode']);
+                if ($result) {
+                    $aTableFilters['countryCode'] = $result->getIso3();
+                }
+            }
+            foreach($aTableFilters as $field => $val) {
+                if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
+                    $aCriteria[$field] = $val;
+                }
             }
         }
         return $aCriteria;

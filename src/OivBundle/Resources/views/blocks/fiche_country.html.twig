@@ -1,7 +1,12 @@
 <div class="fiche-country container ">
     <div class="row">
         <div class="info col-sm-12 col-md-12">
-            <p class="text-center">Cliquer sur une catégorie ou une série pour avoir le détail des données</p>
+            <p class="text-center">
+                Pour avoir une recheche avancée avec une comparaison des statistiques <a id="advancedSearch" href="/fr/statistiques/recherche?countryCode={{ countryCode }}&year={{ (("now"|date('Y'))-2) }}"> cliquer ici</a>
+            </p>
+            <p class="text-center">Cliquer sur une catégorie ou une série <a class="stat-type btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip"></span>
+                </a> pour avoir le détail des données</p>
             <div aria-label="...">
                 <ul class="pager">
                     <li data-year="{{ selectedYear+1 }}" id="nextYear" class="next {% if selectedYear+1 > "now"|date('Y') %}disabled{% endif %}">
@@ -30,19 +35,20 @@
             <div class="thumbnail">
                 <!--<img src="..." alt="...">-->
                 <div class="caption">
-                    <table class="products table block-table">
+                    <table class="products table block-table fixed-table">
                         <thead>
-                            <th colspan="5" class="text-center"><span>{{ 'area'|trans }}</span> <span class="mesure"> HA</span></th>
+                            <th colspan="6" class="text-center"><span>{{ 'area'|trans }}</span> <span class="mesure"> ha</span></th>
                         </thead>
                         <tbody class="bg-wihte">
-                        <tr id="area" data-measure="HA">
-                            <td class="float-right"> <a class="product">{{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></a></td>
+                        <tr id="area" data-measure="ha">
+                            <td class=""> <a class="product float-left-">{{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></a></td>
                             <td class="">
                                 <a data-graph="container-g5" data-statType="prod" class=" stat-type btn btn-default btn-xs">
                                     <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
                                 </a>
-                                <span class=""><span class="valStatType">{% if stats.globalArea.val|default(0) %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} {% else %} - {% endif %}</span></span>
+                                <span class="float-right"><span class="valStatType">{% if stats.globalArea.val|default(0) %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} {% else %} - {% endif %}</span></span>
                             </td>
+                            <td colspan="4"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -125,10 +131,10 @@
                         <table id="products" class="products table">
                             <thead>
                             <th></th>
-                            <th><span>{{ 'production'|trans }}</span> <span class="mesure">{{ '1000 HL'|trans }}</span></th>
-                            <th><span>{{ 'export'|trans }}</span> <span class="mesure">{{ '1000 HL'|trans }}</span></th>
-                            <th><span>{{ 'import'|trans }}</span> <span class="mesure">{{ '1000 HL'|trans }}</span></th>
-                            <th><span>{{ 'consumption'|trans }}</span> <span class="mesure">{{ '1000 HL'|trans }}</span></th>
+                            <th><span>{{ 'production'|trans }}</span> <span class="mesure">{{ '1000 hl'|trans }}</span></th>
+                            <th><span>{{ 'export'|trans }}</span> <span class="mesure">{{ '1000 hl'|trans }}</span></th>
+                            <th><span>{{ 'import'|trans }}</span> <span class="mesure">{{ '1000 hl'|trans }}</span></th>
+                            <th><span>{{ 'consumption'|trans }}</span> <span class="mesure">{{ '1000 hl'|trans }}</span></th>
                             <th><span>{{ 'consumption'|trans }}</span> <span class="mesure">{{ 'l/capita +15'|trans }}</span></th>
                             </thead>
                             <tbody>
@@ -189,7 +195,7 @@
                     <table class="table block-table">
                         <thead>
                             <th class="text-center">
-                                {{ 'Variety'|trans }}
+                                {{ 'Varieties'|trans }}
                                 <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count variety'|trans }}"></span>
                             </th>
                             <th class="text-center">
@@ -204,17 +210,17 @@
                         <tr>
                             <td class="text-center">
                                 <a class="btn-global-country-search" data-dbType="variety" href="javascript:;">
-                                    {{ stats.nbVariety|number_format(0, '.',' ') }}
+                                    {{ stats.nbVariety|number_format(0, '.',' ') }} <i class="glyphicon glyphicon-search"></i>
                                 </a>
                             </td>
                             <td class="text-center">
                                 <a class="btn-global-country-search" data-dbType="naming" href="javascript:;">
-                                    {{ stats.nbNaming|number_format(0, '.',' ') }}
+                                    {{ stats.nbNaming|number_format(0, '.',' ') }} <i class="glyphicon glyphicon-search"></i>
                                 </a>
                             </td>
                             <td class="text-center">
                                 <a class="btn-global-country-search" data-dbType="education" href="javascript:;">
-                                    {{ stats.nbEducation|number_format(0, '.',' ') }}
+                                    {{ stats.nbEducation|number_format(0, '.',' ') }} <i class="glyphicon glyphicon-search"></i>
                                 </a>
                             </td>
                         </tr>
@@ -248,6 +254,7 @@
                             downloadSVG: "{{ ('Download SVG vector image'|trans)|raw }}",
                             downloadXLS: "{{ ('Download XLS'|trans)|raw }}"
                         };
+                        $.handleSearch._trans = {{ transData|json_encode|raw }};
                         $.handleSearch._g1 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g2 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g3 = jQuery.extend(true, {}, $.statCharts);
@@ -268,7 +275,7 @@
                         $.handleSearch._g2._data = {{ stats.graphProducts.yAxis.rin|json_encode|raw }};
                         $.handleSearch._g2._title = {{ (stats.products.1.label|trans)|json_encode|raw  }};
                         {#$.handleSearch._g2._mesure = '{{ stats.products.1.measure |raw }}';#}
-                        $.handleSearch._g2._mesure = '1000 HL';
+                        $.handleSearch._g2._mesure = '1000 hl';
                         $.handleSearch._g2._lang =  lang;
                         $.handleSearch._g2._init();
 
@@ -294,7 +301,7 @@
                         $.handleSearch._g5._data = {{ stats.graphProducts.yAxis.area|json_encode|raw }};
                         $.handleSearch._g5._title = {{ (stats.products.4.label|trans)|json_encode|raw  }};
                         {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
-                        $.handleSearch._g5._mesure = 'HA';
+                        $.handleSearch._g5._mesure = 'ha';
                         $.handleSearch._g5._lang =  lang;
                         $.handleSearch._g5._init();
                         $('.highcharts-credits').remove();

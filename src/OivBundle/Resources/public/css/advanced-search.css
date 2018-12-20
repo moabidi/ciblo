@@ -135,6 +135,31 @@ li.sidebar-search-wrapper a {
 #popup .list-group-item {
     padding: 5px 10px;
 }
+#popup a.list-group-item .list-group-item-heading:hover {
+    color: #5b9bd1;
+    text-decoration: underline;
+}
+#datatable_orders tr.filter .icon-magnifier {
+    padding: 5px 10px;
+}
+#datatable_orders tr.filter td a{
+    display: flex;
+}
+#datatable_orders th {
+    position: sticky;
+    top: 0;
+}
+#datatable_orders thead tr:nth-child(2)>td {
+    position: sticky;
+    top: 36px;
+    white-space: nowrap;
+}
+#datatable_orders .filter-col {
+    width: auto;
+}
+#datatable_orders .filter input.form-filter {
+    width: auto;
+}
 /** End popup Naming **/
 @media (min-width: 992px) {
     #advSearch .page-sidebar-menu {

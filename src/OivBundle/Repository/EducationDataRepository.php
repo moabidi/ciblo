@@ -26,27 +26,38 @@ class EducationDataRepository extends BaseRepository
     }
 
     /**
+     * Add default order
+     */
+    protected function addDefaultOrder()
+    {
+        $this->_queryBuilder->orderBy('c.countryNameFr','ASC');
+        $this->_queryBuilder->addOrderBy('o.level','ASC');
+        $this->_queryBuilder->addOrderBy('o.university','ASC');
+    }
+
+    /**
      * @return array
      */
     public static function getConfigFields() {
         return [
+            'countryNameFr' => ['tab1','tab2'],
             'versioning' => [],
-            'countryCode' => ['tab1','tab2'],
-            'formationTitle' => ['filter'],
-            'university' => ['filter'],
-            'tutelle' => ['tab1','tab2'],
+//            'countryCode' => ['tab1','tab2'],
+            'formationTitle' => ['filter','tab1','tab2'],
+            'university' => ['filter','tab1','tab2'],
+            'tutelle' => ['tab2'],
             'level' => ['filter','tab1','tab2'],
             'diploma' => ['tab1','tab2'],
-            'cooperation' => ['tab1','tab2'],
-            'month'=> ['tab1','tab2'],
-            'hourCourses'=>['tab1','tab2'],
-            'credits'=>['tab1','tab2'],
-            'prior'=>['tab1','tab2'],
-            'deadline'=>['tab1','tab2'],
-            'contact'=>['tab1','tab2'],
-            'adress'=>['tab1','tab2'],
-            'lastDate'=>['tab1','tab2'],
-            'internetAdress'=>['tab1','tab2']
+            'cooperation' => ['tab2'],
+            'month'=> ['tab2'],
+            'hourCourses'=>['tab2'],
+            'credits'=>['tab2'],
+            'prior'=>['tab2'],
+            'deadline'=>['tab2'],
+            'contact'=>['tab2'],
+            'adress'=>['tab2'],
+            'lastDate'=>['tab2'],
+            'internetAdress'=>['tab2']
         ];
     }
 }

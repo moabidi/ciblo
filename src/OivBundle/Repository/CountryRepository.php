@@ -12,15 +12,18 @@ namespace OivBundle\Repository;
 class CountryRepository extends BaseRepository
 {
 
-//    public function getAllTradeBloc()
-//    {
-//        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
-//        $queryBuilder
-//            ->select('o.tradeBloc')
-//            ->from($this->_entityName, 'o')
-//            ->distinct('o.tradeBloc')
-//            ->orderBy('o.tradeBloc');
-//        return $queryBuilder->getQuery()->getArrayResult();
-//
-//    }
+    public function getCountryCode($countryName)
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select('o')
+            ->from($this->_entityName, 'o')
+            ->where('o.countryNameFr = :countryName')
+            ->orWhere('o.countryNameFr = :countryName')
+            ->orWhere('o.countryNameFr = :countryName')
+            ->orWhere('o.countryNameFr = :countryName')
+            ->setParameter('countryName', $countryName);
+        return $queryBuilder->getQuery()->getSingleResult();
+
+    }
 }

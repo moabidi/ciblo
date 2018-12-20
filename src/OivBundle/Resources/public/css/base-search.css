@@ -1,5 +1,5 @@
 #page .Header h1 {
-    margin-bottom: 0px;
+    margin-bottom: 50px;
 }
 #page .breadcrumb {
     background: none;
@@ -15,10 +15,25 @@
     background: #AE2B4A;
     color: #FFFFFF;
     text-align: center;
+    position: sticky;
+    top: 0;
+    white-space: nowrap;
+    padding: 5px 20px 5px 0;
+}
+#page .full-search table th.sorting {
+    background: #AE2B4A url('/bundles/oiv/css/plugins/datatables/media/images/sort_both.png') no-repeat center right;
+}
+#page .full-search table th.sorting_asc {
+    background: #AE2B4A  url('/bundles/oiv/css/plugins/datatables/media/images/sort_asc.png') no-repeat center right;
+}
+#page .full-search table th.sorting_desc {
+    background: #AE2B4A  url('/bundles/oiv/css/plugins/datatables/media/images/sort_desc.png') no-repeat center right;
 }
 #page .search-list table tr:nth-child(2)>th{
     background: #c1c1c1;
     color: #000000;
+    position: sticky;
+    top: 30px;
 }
 #page .btn {
     background: #FFFFFF;
@@ -290,6 +305,9 @@ body .filter-search {
 #page .fiche-country table.products{
     /*width: 720px;*/
     /*max-width: 720px;*/
+}
+#page .fixed-table {
+    table-layout: fixed;
 }
 #page .fiche-country table th {
    width: 120px;

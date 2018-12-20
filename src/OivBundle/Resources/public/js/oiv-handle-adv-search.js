@@ -8,6 +8,8 @@ $(function($){
         this._g4;
         this._uri = '/fr/statistiques/';
         this._dataFilter;
+        this._dataTableFilter;
+        this._dataSort = '';
         this._listType = ['prod', 'consumption','export','import'];
 
         /**
@@ -17,7 +19,7 @@ $(function($){
          * @param data
          * @private
          */
-        this._sendRequest = function(view, method, data) {
+        this._sendRequest = function(view, method, data, changeHeader) {
             global.blockUI({
                 target: '',
                 animate: true,
@@ -28,7 +30,7 @@ $(function($){
                 'method': method,
                 'data': data
             }).done(function(response){
-                $.handleSearch._handleSuccess(response, view);
+                $.handleSearch._handleSuccess(response, view, changeHeader);
                 setTimeout(function(){
                     global.unblockUI('');
                     $('.scroll-to-top').trigger('click');
@@ -49,9 +51,9 @@ $(function($){
          * @param view
          * @private
          */
-        this._handleSuccess = function(response, view) {
+        this._handleSuccess = function(response, view, changeHeader) {
             switch (view) {
-                case 'global': $.handleSearch._refreshTableResult(response, 'datatable_orders');break;
+                case 'global': $.handleSearch._refreshTableResult(response, 'datatable_orders',changeHeader);break;
                 case 'generate-export': $.handleSearch._refreshExport(response);break;
                 case 'stattype-countries': $.handleSearch._refreshGraphView(response);break;
                 case 'info-naming': $.handleSearch._refreshPopupView(response);break;
@@ -105,7 +107,7 @@ $(function($){
                     html += '</p></a>';
                 } else {
                     $.each(response.data, function (key, items) {
-                        html += '<a href="javascript:;" class="list-group-item">';
+                        html += '<a href="'+items.url+'" target="_blank" class="list-group-item">';
                         html += '<h4 class="list-group-item-heading">' + items.referenceName + '</h4>';
                         html += '</a>';
                     });
@@ -136,21 +138,24 @@ $(function($){
          * Refresh Result table
          * @param content
          * @param idTable
+         * @param changeHeader
          * @private
          */
-        this._refreshTableResult = function (content, idTable) {
+        this._refreshTableResult = function (content, idTable, changeHeader) {
             var hearder = '';
             var hearderFilter = '';
             var body = '';
             //console.log(content, content.length);
             if (typeof content.data != 'undefined') {
-                $.each(content.labelfields, function (key, val) {
-                    if (val != 'id') {
-                        hearder += '<th>' + val + '</th>';
-                        hearderFilter += '<td rowspan="1" colspan="1"><input class="form-control form-filter input-sm filter-col" type="text"></td>';
-                    }
-                });
-                hearder = '<tr role="row" class="heading">'+hearder+'</tr><tr role="row" class="filter">'+hearderFilter+'</tr>';
+                if (changeHeader) {
+                    $.each(content.labelfields, function (key, val) {
+                        if (val != 'id') {
+                            hearder += '<th data-sort="' + key + '" class="sorting" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1" >' + val + '</th>';
+                            hearderFilter += '<td rowspan="1" colspan="1"><a><input name="'+ key +'" class="form-control form-filter input-sm filter-col" type="text"><i class="icon-magnifier"></i></a></td>';
+                        }
+                    });
+                    hearder = '<tr role="row" class="heading">' + hearder + '</tr><tr role="row" class="filter">' + hearderFilter + '</tr>';
+                }
                 $.each(content.data, function (key, items) {
                     classCSS = key%2 ? 'odd':'even';
                     body += '<tr role="row '+classCSS+'">';
@@ -185,13 +190,18 @@ $(function($){
                     $('#current-pg').val(content.current);
                     $('#next-pg').attr('data-offset', content.next);
                 }
+                if (hearder != '') {
+                    $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
+                } else {
+                    $('#' + idTable + ' tbody').html(body);
+                }
             }else{
                 hearder = '<tr><th class="text-center">Aucune résulat touvée pour votre recherche</th></tr>';
                 body = '<tr><td></td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
                 $('#count-result').text(0);
+                $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             }
-            $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');
         };
 
@@ -226,7 +236,7 @@ $(function($){
                         });
                     }
                 }
-                $.handleSearch._sendRequest(view, 'POST', data);
+                $.handleSearch._sendRequest(view, 'POST', data, true);
                 return false;
             });
         };
@@ -252,13 +262,13 @@ $(function($){
             if(db == 'stat') {
                 data += '&yearMin='+ $('#yearMin').val();
                 data += '&yearMax='+ $('#yearMax').val();
-            }else{
-                data += '&year='+ $('#year').val();
             }
+            //else{
+            //    data += '&year='+ $('#year').val();
+            //}
             if (view == 'stattype-countries') {
-                data += '&statType='+$(btn).val()+'&view=tab2';
+                data += '&statType='+$(btn).val();
             } else if (view == 'global') {
-                data +='&view=tab1';
                 var slectedFilters = '[data-view=' + db + ']';
                 $(slectedFilters).each(function () {
                     //console.log($(this));
@@ -267,7 +277,10 @@ $(function($){
                     }
                 });
             }
+            data += '&view=tab2';
             $.handleSearch._dataFilter = data;
+            $.handleSearch._dataTableFilter = '';
+            $.handleSearch._dataSort = '';
             return data;
         };
 
@@ -307,9 +320,10 @@ $(function($){
                 var offset = $(this).attr('data-offset');
                 var limit = $('#limit-pg').val();
                 /** Set default filter */
-                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab1':data;
-                data += '&offset='+offset+'&limit='+limit;
-                $.handleSearch._sendRequest(view, 'POST', data);
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab2':data;
+                data += $.handleSearch._dataTableFilter;
+                data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
+                $.handleSearch._sendRequest(view, 'POST', data,false);
             });
         };
 
@@ -324,31 +338,63 @@ $(function($){
                 var offset = '0';
                 var limit = $(this).val();
                 /** Set default filter */
-                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab1':data;
-                data += '&offset='+offset+'&limit='+limit;
-                $.handleSearch._sendRequest(view, 'POST', data);
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab2':data;
+                data += $.handleSearch._dataTableFilter;
+                data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
+                $.handleSearch._sendRequest(view, 'POST', data, false);
             });
         };
 
         this._initSortData = function() {
-            $('th.sorting, th.sorting_asc, th.sorting_desc').on('click', function () {
+            $('body').on('click','th.sorting, th.sorting_asc, th.sorting_desc', function () {
                 var view = 'global';
                 var data = $.handleSearch._dataFilter;
                 var offset = '0';
                 var limit = $('#limit-pg').val();
                 var sort = $(this).attr('data-sort');
                 var order = $(this).hasClass('sorting_asc') ? 'DESC':'ASC';
+                $.handleSearch._dataSort = '&sort='+sort+'&order='+order;
                 /** Set default filter */
-                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab1':data;
-                data += '&offset='+offset+'&limit='+limit+'&sort='+sort+'&order='+order;
-                $.handleSearch._sendRequest(view, 'POST', data);
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab2':data;
+                data += $.handleSearch._dataTableFilter;
+                data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
+                $.handleSearch._sendRequest(view, 'POST', data, false);
                 if ($(this).hasClass('sorting_asc')) {
+                    $(this).parent().find('th').removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
                     $(this).removeClass('sorting_asc').addClass('sorting_desc');
                 } else {
+                    $(this).parent().find('th').removeClass('sorting_asc').removeClass('sorting_desc').addClass('sorting');
                     $(this).removeClass('sorting_desc').addClass('sorting_asc');
                 }
             });
-        }
+        };
+
+        /**
+         * Search with filter table
+         * @private
+         */
+        this._initSearchTable = function() {
+            $('body').on('click','#datatable_orders tr.filter .icon-magnifier', function () {
+                var values = '';
+                $('body').find('#datatable_orders tr.filter input').each(function(){
+                    if ($(this).val()) {
+                        values += '&tableFilters['+$(this).attr('name')+']='+$(this).val();
+                    }
+                });
+                $.handleSearch._dataTableFilter = values;
+                if ($.handleSearch._dataTableFilter) {
+                    var view = 'global';
+                    var data = $.handleSearch._dataFilter;
+                    var offset = '0';
+                    var limit = $('#limit-pg').val();
+                    /** Set default filter */
+                    data = data == undefined ? 'dbType=stat&countryCode=oiv&year=' + ((new Date()).getFullYear() - 2) + '&view=tab2' : data;
+                    data += $.handleSearch._dataTableFilter;
+                    data += '&offset=' + offset + '&limit=' + limit + $.handleSearch._dataSort;
+                    $.handleSearch._sendRequest(view, 'POST', data, false);
+                }
+            });
+        };
 
         /**
          * Export data into pdf or csv file via ajax request
@@ -359,7 +405,7 @@ $(function($){
                 var exportType = $(this).attr('data-export');
                 if ( exportType == 'csv' || exportType =='pdf' ) {
                     var data = $.handleSearch._dataFilter + '&exportType='+exportType;
-                    $.handleSearch._sendRequest('generate-export', 'POST', data);
+                    $.handleSearch._sendRequest('generate-export', 'POST', data, false);
                 } else {
                     alert('Export type not available')
                 }
@@ -408,13 +454,15 @@ $(function($){
          * Search on keyup on the data table
          */
         this._initKeypSearch = function() {
-            $(document).on("keyup", ".filter-col", function () {
-                var value = $(this).val().toLowerCase();
-                var index = $(this).parent().index() + 1;
-                var table = $(this).parents().eq(3);
-                $(table).find("tbody tr").filter(function () {
-                    $(this).toggle($(this).find('td:nth-child('+index+')').text().toLowerCase().indexOf(value) > -1)
-                });
+            $(document).on("keyup", "thead input.form-filter", function () {
+                if ($('.pagination.dataTables_length').hasClass('hide')) {
+                    var value = $(this).val().toLowerCase();
+                    var index = $(this).parents().eq(1).index() + 1;
+                    var table = $(this).parents().eq(4);
+                    $(table).find("tbody tr").filter(function () {
+                        $(this).toggle($(this).find('td:nth-child(' + index + ')').text().toLowerCase().indexOf(value) > -1)
+                    });
+                }
             });
         };
 
@@ -426,7 +474,7 @@ $(function($){
             $('body').on('click','td .info-naming' ,function () {
                 var data = 'appellationName=' + $(this).attr('data-appellationName');
                 data += $(this).attr('data-fieldname') == 'referenceName' ? '&isCtg=0':'&isCtg=1';
-                $.handleSearch._sendRequest('info-naming', 'POST', data);
+                $.handleSearch._sendRequest('info-naming', 'POST', data, false);
             });
         };
 
@@ -465,6 +513,7 @@ $(function($){
         $.handleSearch._initHandlePagination();
         $.handleSearch._initHandlePagePagination();
         $.handleSearch._initSortData();
+        $.handleSearch._initSearchTable();
         $.handleSearch._initHandleResetFilters();
         $.handleSearch._initShowSelectedStatType();
         $.handleSearch._initGetInfoNaming();

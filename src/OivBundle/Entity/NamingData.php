@@ -113,6 +113,13 @@ class NamingData
     private $url;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="LAST_DATA", type="string", length=1, nullable=false)
+     */
+    private $lastData;
+
+    /**
      * @return int
      */
     public function getVersioning()
