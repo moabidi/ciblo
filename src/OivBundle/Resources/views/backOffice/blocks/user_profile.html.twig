@@ -1,0 +1,91 @@
+{% extends 'OivBundle:backOffice:index_form.html.twig' %}
+{% block center_logo %}{% endblock center_logo %}
+{% block header %}
+    <div class="page-header navbar navbar-fixed-top">
+        <div class="page-header-inner">
+            <!-- BEGIN LOGO -->
+            <div class="page-logo">
+                <a href="index.html">
+                    <img src="/bundles/oiv/img/frontend/logo-small.png" alt="logo" class="logo-default">
+                </a>
+                <div class="menu-toggler sidebar-toggler hide">
+                </div>
+            </div>
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+            </a>
+            <div class="top-menu">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-user">
+                        <a href="{{ path('result-search') }}">{{ 'Country Plug'|trans }}</a>
+                    </li>
+                    <li class="dropdown dropdown-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <img alt="" class="img-circle" src=" {{ asset('/bundles/oiv/img/frontend/logo-small.png') }}"/>
+                            <span class="username username-hide-on-mobile"> {{ app.user.name }} </span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="{{ path('manager_backoffice') }}">
+                                    <i class="icon-key"></i> {{ 'Home'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="icon-key"></i> {{ 'Profile'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('oiv_logout') }}">
+                                    <i class="icon-key"></i> {{ 'Log Out'|trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock header %}
+{% block form %}
+<form class="register-form" action="{{ path('profile') }}" method="post">
+    <h3>{{ 'Edition profile'|trans }}</h3>
+    {#<p class="hint">#}
+        {#{{ 'Enter your personal details below'|trans }}:#}
+    {#</p>#}
+    {% if errors|default() and errors|length %}
+        <div class="alert alert-danger display-hide" style="display: block">
+            <button class="close" data-close="alert"></button>
+            {% for error in errors %}
+            <span>{{ error|trans }} </span><br>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if changed|default(false)%}
+        <div class="alert alert-success display-hide" style="display: block">
+            <button class="close" data-close="alert"></button>
+            <span>{{ 'Your changes has been saved with success'|trans }} </span>
+        </div>
+    {% endif %}
+    <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">{{ 'Name'|trans }}</label>
+        <input data-msg="{{ 'Name is required'|trans }}" class="form-control placeholder-no-fix" type="text" placeholder="{{ 'Name'|trans }}" name="name" value="{{ user.getName() }}"/>
+    </div>
+    <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">{{ 'Login'|trans }}</label>
+        <input data-msg="{{ 'Login is required'|trans }}" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="{{ 'Login'|trans }}" name="username" value="{{ user.getUsername() }}" />
+    </div>
+    <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">{{ 'Password'|trans }}</label>
+        <input data-msg="{{ 'Password is required'|trans }}" class="form-control placeholder-no-fix" type="password" autocomplete="off" id="register_password" placeholder="{{ 'Password'|trans }}" name="password" value="{{ user.getPassword() }}" />
+    </div>
+    <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">{{ 'Re-type Your Password'|trans }}</label>
+        <input data-msg="{{ 'Password is required'|trans }}" class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="{{ 'Re-type Your Password'|trans }}" name="rpassword"/>
+    </div>
+    <div class="form-actions">
+        <a href="{{ path('manager_backoffice') }}" class="btn btn-default">{{ 'Back'|trans }}</a>
+        <button type="submit" id="register-submit-btn" class="btn btn-success uppercase pull-right">{{ 'Submit'|trans }}</button>
+    </div>
+</form>
+{% endblock form %}

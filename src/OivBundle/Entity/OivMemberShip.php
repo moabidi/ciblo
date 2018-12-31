@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * OivMemberShip
  *
- * @ORM\Table(name="oiv_member_ship")
+ * @ORM\Table(name="OIV_MEMBER_SHIP")
  * @ORM\Entity(repositoryClass="OivBundle\Repository\OivMemberShipRepository")
  */
 class OivMemberShip

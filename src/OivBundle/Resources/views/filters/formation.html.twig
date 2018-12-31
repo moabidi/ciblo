@@ -6,7 +6,7 @@
                 <select data-view="education" id="{{ 'EducationData-' ~ fieldName }}" class="form-control select2me" data-live-search="true" name="{{ fieldName }}">
                     <option value="">{{ 'Choose'|trans }}</option>
                     {% for value in filter.values %}
-                        <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                        <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags }}</option>
                     {% endfor %}
                 </select>
             </li>

@@ -7,10 +7,10 @@ var Login = function() {
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
             rules: {
-                username: {
+                _username: {
                     required: true
                 },
-                password: {
+                _password: {
                     required: true
                 },
                 remember: {
@@ -19,10 +19,10 @@ var Login = function() {
             },
 
             messages: {
-                username: {
+                _username: {
                     required: "Username is required."
                 },
-                password: {
+                _password: {
                     required: "Password is required."
                 }
             },
@@ -49,24 +49,6 @@ var Login = function() {
                 form.submit(); // form validation success, call ajax form submit
             }
         });
-
-        $('.login-form input').keypress(function(e) {
-
-                if ($('.login-form').validate().form()) {
-                    $('.login-form').submit(); //form validation success, call ajax form submit
-                }
-
-                return false;
-
-        });
-
-       /*   $('.login-form button').submit(function(e) {
-            e.preventDefault();
-                if ($('.login-form').validate().form()) {
-                    ;//$('.login-form').submit(); //form validation success, call ajax form submit
-                }
-                return false;
-        });*/
     }
 
 
@@ -164,23 +146,9 @@ var Login = function() {
             ignore: "",
             rules: {
 
-                fullname: {
+                name: {
                     required: true
                 },
-                email: {
-                    required: true,
-                    email: true
-                },
-                address: {
-                    required: true
-                },
-                city: {
-                    required: true
-                },
-                country: {
-                    required: true
-                },
-
                 username: {
                     required: true
                 },
@@ -189,17 +157,19 @@ var Login = function() {
                 },
                 rpassword: {
                     equalTo: "#register_password"
-                },
-
-                tnc: {
-                    required: true
                 }
             },
 
             messages: { // custom messages for radio buttons and checkboxes
-                tnc: {
-                    required: "Please accept TNC first."
-                }
+                name: {
+                    required: "Name is required."
+                },
+                username: {
+                    required: "Username is required."
+                },
+                password: {
+                    required: "password is required."
+                },
             },
 
             invalidHandler: function(event, validator) { //display error alert on form submit   
@@ -222,6 +192,7 @@ var Login = function() {
                 } else if (element.closest('.input-icon').size() === 1) {
                     error.insertAfter(element.closest('.input-icon'));
                 } else {
+                    error.text(element.attr('data-msg'));
                     error.insertAfter(element);
                 }
             },

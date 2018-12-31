@@ -1,0 +1,59 @@
+<form id="form-{{ dbType|default('stat') }}" name="stat" role="form" class="form-horizontal {{ display|default('hide') }}">
+    <div class="form-body">
+        <input class="db-field" type="hidden" value="" name="id">
+        {% for fieldName, filter in fieldsForm %}
+            <div class="form-group">
+                <label class="col-md-4 control-label">{{ fieldName|trans }}</label>
+                <div class="col-md-8">
+                    <div class="input-icon right">
+                        {% if fieldName == 'countryCode' %}
+                            <select name="{{ fieldName }}" class="db-field form-control selectpicker" data-live-search="true">
+                                {% for country in countries %}
+                                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
+                                {% endfor %}
+                            </select>
+                        {% elseif fieldName == 'year'  %}
+                            <select name="{{ fieldName }}" class="db-field form-control selectpicker" data-live-search="true">
+                                {% for year in ("now"|date('Y'))..1995 %}
+                                    <option value="{{ year }}" name="year" >{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        {% elseif fieldName in ['statType']  %}
+                            <select title="{{ 'Choose'|trans }}" class="form-control bs-select" data-live-search="true" name="{{ fieldName }}">
+                                {% for productName, product in filter.values %}
+                                    <optgroup label="{{ productName|trans }}">
+                                        {% for value in product %}
+                                            <option value="{{ value['indicator'] }}">{{ value['statType']|trans }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                {% endfor %}
+                            </select>
+                        {% elseif fieldName in ['productType']  %}
+                            <select title="{{ 'Choose'|trans }}" class="form-control bs-select" data-live-search="true" name="{{ fieldName }}">
+                                {% for value in filter.values %}
+                                    <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
+                                {% endfor %}
+                            </select>
+                        {% elseif fieldName in ['isMainVariety', 'usableData']%}
+                            <div class="checkbox-list">
+                                <label class="checkbox-inline">
+                                    <input name="{{ fieldName }}" class="db-field" type="checkbox" value="1">
+                                </label>
+                            </div>
+                        {% else %}
+                        <input type="text" class="db-field form-control" name="{{ fieldName }}">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="form-actions">
+        <div class="row">
+            <div class="col-md-offset-4 col-md-8">
+                <button type="button" class="btn red reset-form">{{ 'Reset'|trans }}</button>
+                <button type="submit" class="btn yellow btn-create-data" data-dbType="{{ dbType|default() }}">{{ 'Submit'|trans }}</button>
+            </div>
+        </div>
+    </div>
+</form>

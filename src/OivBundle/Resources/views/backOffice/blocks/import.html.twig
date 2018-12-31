@@ -1,0 +1,15 @@
+<div class="portlet box purple">
+    {% include 'OivBundle:backOffice/blocks:caption-panel.html.twig' %}
+    <div class="portlet-body form">
+        {% include 'OivBundle:backOffice/blocks:upload-file.html.twig' with {'dbType':'stat','display':'show'} %}
+        {% include 'OivBundle:backOffice/blocks:upload-file.html.twig' with {'dbType':'naming'} %}
+        {% include 'OivBundle:backOffice/blocks:upload-file.html.twig' with {'dbType':'education'} %}
+        {% include 'OivBundle:backOffice/blocks:upload-file.html.twig' with {'dbType':'variety'} %}
+        <div class="table-scrollable" style="height: 700px;overflow-y: auto;">
+            <table id="datatable_import" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>

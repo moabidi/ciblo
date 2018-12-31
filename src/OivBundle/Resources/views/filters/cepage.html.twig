@@ -7,11 +7,11 @@
                     <option value="">{{ 'Choose'|trans }}</option>
                     {% if filter.values|length < 20 %}
                         {% for value in filter.values %}
-                            <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
+                            <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags }}</option>
                         {% endfor %}
                     {% else %}
                         {% for value in filter.values %}
-                            <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                            <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags }}</option>
                         {% endfor %}
                     {% endif %}
                 </select>
@@ -29,7 +29,7 @@
                         <option value="">{{ 'Choose'|trans }}</option>
                         {% if filter.values|length < 20 %}
                             {% for value in filter.values %}
-                                <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
+                                <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
                             {% endfor %}
                         {% else %}
                             {% for value in filter.values %}

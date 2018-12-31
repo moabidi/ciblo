@@ -2,16 +2,44 @@
 # http://symfony.com/doc/current/book/security.html
 security:
 
+    access_denied_url: /fr/statistiques/access-denied
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         in_memory:
-            memory: ~
+            memory:
+                users:
+                    admin:
+                        password: admin
+                        roles: 'ROLE_ADMIN'
+        oiv_user_provider:
+            entity:
+                class: OivBundle:Users
+                #property: username
+
+    encoders:
+#        Symfony\Component\Security\Core\User\User: plaintext
+        OivBundle\Entity\Users: sha512
+            #algorithm: bcrypt
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        bo_oiv:
+            provider: oiv_user_provider
+            pattern: /backoffice
+#            http_basic: ~
+            logout:
+                path: oiv_logout
+                target: oiv_login
+            form_login:
+                login_path: oiv_login
+                check_path: oiv_check_login
+                use_forward: true
+                default_target_path: manager_backoffice
+            access_denied_url: /fr/statistiques/access-denied
 
         main:
             anonymous: ~
@@ -22,3 +50,7 @@ security:
 
             # form_login: ~
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+
+    access_control:
+#        - { path: /backoffice/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /backoffice, roles: ROLE_ADMIN}

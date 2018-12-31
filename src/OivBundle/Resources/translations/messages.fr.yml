@@ -9,6 +9,7 @@ a continent: un continent
 Countries: Pays
 View more: En savoir plus
 View: Voir
+Total records: Résultat total
 Result of search: Résultat de recherche
 Country: Pays
 countryCode: Pays
@@ -43,8 +44,8 @@ parentCode: Code IG/AO supérieure
 parentName: Unité géographique supérieure
 typeNationalCode: Type d'indication national
 typeInternationalCode: Type d'indication international
-productCategoryName: Catégories de produits
-productType: Produits
+productCategoryName: Type de produit
+productType: Catégories de produits
 referenceName: Base reglementaire
 url: Lien sur base légale
 #Stat
@@ -61,7 +62,7 @@ areaCultivated: Surface
 areaYear: Année surface cultivée
 grapeVarietyName: Nom variété
 codeVivc: VIVC
-infoCodeVivc: Vitis International Variety Catalogue
+infoCodeVivc: Vitis International Variety Catalogue. Ce code est fourni et reconnu uniquement par certains pays
 varietyNationalNameVivc: Code OIV
 synonym: Synonyme
 nationalVarietyId: Id variété nationale
@@ -70,7 +71,6 @@ internetAdress: adresse internet
 #Fiche OIV
 area: Superficie
 Individual Consumption: Consommation Individuelle
-Education: Formation
 count variety: Nombre de cépage
 count education: Nombre de formation
 production: Production
@@ -119,32 +119,50 @@ WINE_ORIGIN: WINE_ORIGIN
 #CEPAGE Variété principale
 Y: OUI
 N: NON
-#Statistiques type de statistique
-A_SURFACE: A_SURFACE
+#Statistiques liste des produits
+AREA_VINEYARD: Superficie du vignoble
+GRAPES: Raisins frais
+TABLE_GRAPES: Raisins de table
+DRIED_GRAPES: Raisins secs
+WINE: Vin
+AREA: Superficie
+JUICE_GRAPES: Jus de raisins
+JUICE_MUST: Jus et mouts
+POPULATION: Population
+#Statistiques categorie des statistiques
+CONSUMPTION: CONSOMMATION
+PRODUCTION: PRODUCTION
+IMPORTATION: IMPORTATION
+EXPORTATION: EXPORTATION
+TOTAL_AREA : SUPERFICIE TOTALE
+CONSUMPTION_CAPITA: CONSOMMATION KAPITA
+
+#Statistiques indicator des statistiques
+A_SURFACE: Superficie du vignoble
 CONSUMPTION_PRODUCT_GRAPES: CONSUMPTION_PRODUCT_GRAPES
-C_PROD_GRP: C_PROD_GRP
-F_PROD_TABLE_GRP: F_PROD_TABLE_GRP
-G_PROD_DRIED_GRP: G_PROD_DRIED_GRP
-H_IMPORT_GRP: H_IMPORT_GRP
-INDUSTRIAL_USE_WINE: INDUSTRIAL_USE_WINE
-I_EXPORT_GRP: I_EXPORT_GRP
-J_IMPORT_DRIED_GRP: J_IMPORT_DRIED_GRP
-K_EXPORT_DRIED_GRP: K_EXPORT_DRIED_GRP
-L_COMSUMPTION_TABLE_GRP: L_COMSUMPTION_TABLE_GRP
+C_PROD_GRP: Production de raisins frais
+F_PROD_TABLE_GRP: Production de raisins de table
+G_PROD_DRIED_GRP: Production de raisins secs
+H_IMPORT_GRP: Importations de raisins frais
+INDUSTRIAL_USE_WINE: Usages indutriels de vin
+I_EXPORT_GRP: Exportations de raisins frais
+J_IMPORT_DRIED_GRP: Importations de raisins secs
+K_EXPORT_DRIED_GRP: Exportations de raisins secs
+L_COMSUMPTION_TABLE_GRP: Consommation de raisins de table
 M_COMSUMPTION_CAPITA_GRP: M_COMSUMPTION_CAPITA_GRP
 NATIONAL_GRAPE_ACCORDING_TO_VOCATION: NATIONAL_GRAPE_ACCORDING_TO_VOCATION
-N_CONSUMPTION_DRIED_GRP: N_CONSUMPTION_DRIED_GRP
-POPULATION_PLUS_15: POPULATION_PLUS_15
-PRODUCTION_JUICE: PRODUCTION_JUICE
-PRODUCTION_MUST: PRODUCTION_MUST
-P_PRODUCTION_WINE: P_PRODUCTION_WINE
-Q_IMPORT_WINE: Q_IMPORT_WINE
-REPARTITION_PRODUCT_AREA: REPARTITION_PRODUCT_AREA
-R_EXPORT_WINE: R_EXPORT_WINE
-S_CONSUMPTION_WINE: S_CONSUMPTION_WINE
+N_CONSUMPTION_DRIED_GRP: Consommation de raisins secs
+POPULATION_PLUS_15: Population (+15)
+PRODUCTION_JUICE: Production de Jus de raisins
+PRODUCTION_MUST: Production de Jus de mouts
+P_PRODUCTION_WINE: Production de vin
+Q_IMPORT_WINE: Importations de vin
+REPARTITION_PRODUCT_AREA: Répartition superficie du vignoble par variété des vignes
+R_EXPORT_WINE: Exportations de vin
+S_CONSUMPTION_WINE: Consommation de vin
 TOTAL_AGRI_AREA: TOTAL_AGRI_AREA
-TOTAL_POPULATION: TOTAL_POPULATION
-U1_STOCK_WINE: U1_STOCK_WINE
+TOTAL_POPULATION: Population
+U1_STOCK_WINE: Stocks de vin
 #Statistiques types de données
 ARABLE_LAND_PERMANENT_CROP: ARABLE_LAND_PERMANENT_CROP
 CONSUMPTION_DRIED_GRAPE: CONSUMPTION_DRIED_GRAPE
@@ -180,14 +198,50 @@ GRAPE_PRESSING: GRAPE_PRESSING
 GRAPE_PRESSING_MUST: GRAPE_PRESSING_MUST
 NONE: NONE
 #Unite
-MILLE_HL: (1000 HL)
-MILLE_QX: (1000 QX)
-MILLE_HA: (1000 HA)
-KG_CAPITA: (1000 KG)
+MILLE_HL: 1000 hl
+#MILLE_QX: 1000 qx
+MILLE_QX: tonnes
+MILLE_HA: 1000 ha
+#KG_CAPITA: 1000 kg
+KG_CAPITA: tonnes
 #########################
 # ADV SEARCH
 #########################
-Result: Résultat
+Results: Résultats
 Home: Accueil
 Export to: Export en
 Graphic: Graphique
+list: Série
+Your selection: Votre sélection
+records: lignes
+of: de
+#########################
+# BackOffice
+#########################
+Add data: Ajouter des données
+Import data: Importer des données
+Reset: Reset
+Submit: Valider
+Select file: Sélectionner un fichier
+Admin: Admin
+Save Data: Enregistrer les données
+Log Out: Déconnection
+Profile: Profile
+Name: Nom
+Login: Login
+Password: Mot de passe
+Name is required: Nom est obligatoire
+Login is required: Login est obligatoire
+Password is required: Mot de passe est obligatoire
+Login is required: Login est obligatoire
+Re-type Your Password: Retaper le mot de passe
+Your changes has been saved with success: Vos modifcations sont enregistrées avec succès
+The value of name is not valid: La valeur de champ Nom n'est pas valide
+The value of username is not valid: La valeur de champ Login n'est pas valide
+The value of password is not valid: La valeur de champ Mot de passe n'est pas valide
+You must enter the same passwords: Vous devez retaper le même mot de passe
+
+#########################
+# Login
+#########################
+Enter your username and password: Saisir votre login et mot de passe

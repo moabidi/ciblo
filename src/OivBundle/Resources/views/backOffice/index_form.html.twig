@@ -1,0 +1,91 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+    <title>Administration base de données </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/bundles/oiv/css/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/bundles/oiv/css/plugins/simple-line-icons/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/bundles/oiv/css/plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/bundles/oiv/css/plugins/uniform/css/uniform.default.css') }}" rel="stylesheet" type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link href="{{ asset('/bundles/oiv/css/login.css') }}" rel="stylesheet" type="text/css"/>
+    <!-- END PAGE LEVEL SCRIPTS -->
+    <!-- BEGIN THEME STYLES -->
+    <link href="{{ asset('/bundles/oiv/css/layout/components.css') }}" id="style_components" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/bundles/oiv/css/layout/plugins.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/bundles/oiv/css/layout/layout.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/bundles/oiv/css/layout/darkblue.css') }}" rel="stylesheet" type="text/css" id="style_color"/>
+    <link href="{{ asset('/bundles/oiv/css/layout/custom.css') }}" rel="stylesheet" type="text/css"/>
+    <!-- END THEME STYLES -->
+    <!--<link rel="shortcut icon" href="favicon.ico"/>-->
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body class="login">
+{% block header %}{% endblock header %}
+<div class="menu-toggler sidebar-toggler"></div>
+{% block center_logo %}
+<div class="logo">
+    <a href="index.html">
+        <img src="{{ asset('/bundles/oiv/img/frontend/logo-small.png') }}" alt=""/>
+    </a>
+</div>
+{% endblock center_logo %}
+<div class="content">
+
+    {% block form %}{% endblock form %}
+    {#<form class="forget-form" action="index.html" method="post">#}
+        {#<h3>Forget Password ?</h3>#}
+        {#<p>#}
+            {#Enter your e-mail address below to reset your password.#}
+        {#</p>#}
+        {#<div class="form-group">#}
+            {#<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"/>#}
+        {#</div>#}
+        {#<div class="form-actions">#}
+            {#<button type="button" id="back-btn" class="btn btn-default">Back</button>#}
+            {#<button type="submit" class="btn btn-success uppercase pull-right">Submit</button>#}
+        {#</div>#}
+    {#</form>#}
+</div>
+
+<!--[if lt IE 9]>
+<script src="{{ asset('/bundles/oiv/js/login/respond.min.js') }}"></script>
+<script src="{{ asset('/bundles/oiv/js/login/excanvas.min.js') }}"></script>
+<![endif]-->
+<script src="{{ asset('/bundles/oiv/js/login/jquery.min.js') }}" type="text/javascript"></script>
+{#<script src="{{ asset('/bundles/oiv/js/login/jquery-migrate.min.js') }}" type="text/javascript"></script>#}
+<script src="{{ asset('/bundles/oiv/js/login/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('/bundles/oiv/js/login/jquery.validate.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('/bundles/oiv/js/login/global.js') }}" type="text/javascript"></script>
+{#<script src="{{ asset('/bundles/oiv/js/login/layout.js') }}" type="text/javascript"></script>#}
+{#<!--<script src="{{ asset('/bundles/oiv/js/login/demo.js') }}" type="text/javascript"></script>-->#}
+<script src="{{ asset('/bundles/oiv/js/login/login.js') }}" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<script>
+    jQuery(document).ready(function() {
+        global.init(); // init metronic core components
+        //Layout.init(); // init current layout
+        Login.init();
+//Demo.init();
+    });
+</script>
+<!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>

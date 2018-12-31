@@ -2,65 +2,37 @@
     {% for fieldName, filter in filters.StatData %}
         {% if filter.values|length %}
             {% if fieldName == 'value' %}
-                <li class="filter">
-                    <a class="text-center filter-name">{{ 'Value Min'|trans }}</a>
-                    <input data-view="stat" type="text" name="valueMin" id="value-min-stat" class="form-control value-min"/>
-                </li>
-                <li class="filter">
-                    <a class="text-center filter-name">{{ 'Value Max'|trans }}</a>
-                    <input data-view="stat" type="text" name="valueMax" id="value-max-stat" class="form-control value-max"/>
-                </li>
-            {#{% elseif fieldName == 'statType' %}#}
-
-                {#<li class="filter">#}
-                    {#<a class="text-center filter-name">{{ 'Produit'|trans }}</a>#}
-                    {#<select class="form-control select2me" data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">#}
-                        {#<option value="">{{ 'Choose'|trans }}</option>#}
-                        {#<option value="P1">{{ 'Superficie du vignoble'|trans }}</option>#}
-                        {#<option value="P2">{{ 'Superficie'|trans }}</option>#}
-                        {#<option value="P3">{{ 'Raisins frais'|trans }}</option>#}
-                        {#<option value="P4">{{ 'Raisins de table'|trans }}</option>#}
-                        {#<option value="P5">{{ 'Raisins secs'|trans }}</option>#}
-                        {#<option value="P6">{{ 'Vin'|trans }}</option>#}
-                        {#<option value="P7">{{ 'Jus de raisins'|trans }}</option>#}
-                        {#<option value="P8">{{ 'Jus et mouts'|trans }}</option>#}
-                        {#<option value="P9">{{ 'Population'|trans }}</option>#}
-                    {#</select>#}
-                {#</li>#}
-            {#{% elseif fieldName == 'metricCompType' %}#}
-                {#<li class="filter">#}
-                    {#<a class="text-center filter-name">{{ 'Série'|trans }}</a>#}
-                    {#<select class="form-control select2me" data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">#}
-                        {#<option value="">{{ 'Choose'|trans }}</option>#}
-                        {#<option value="Superficie totale" data-gp="">{{ 'Superficie totale'|trans }}</option>#}
-                        {#<option value="s1">{{ 'Production'|trans }}</option>#}
-                        {#<option value="s2">{{ 'Exportations'|trans }}</option>#}
-                        {#<option value="S3">{{ 'Importations'|trans }}</option>#}
-                        {#<option value="s4">{{ 'Consommation'|trans }}</option>#}
-                        {#<option value="S5">{{ 'Consommation par habitant'|trans }}</option>#}
-                        {#<option value="s6">{{ 'Consommation par habitant (+15)'|trans }}</option>#}
-                        {#<option value="s7">{{ 'Rendement'|trans }}</option>#}
-                        {#<option value="s8">{{ 'Répartition par variété de vignes'|trans }}</option>#}
-                        {#<option value="s9">{{ 'Input vin'|trans }}</option>#}
-                        {#<option value="s10">{{ 'Input raisins secs'|trans }}</option>#}
-                        {#<option value="s11">{{ 'Input jus'|trans }}</option>#}
-                        {#<option value="s12">{{ 'Production CALC'|trans }}</option>#}
-                        {#<option value="s13">{{ 'Consommation CALC'|trans }}</option>#}
-                        {#<option value="s14">{{ 'Usages industriels'|trans }}</option>#}
-                        {#<option value="s15">{{ 'Stocks'|trans }}</option>#}
-                        {#<option value="s16">{{ 'Population totale'|trans }}</option>#}
-                        {#<option value="s17">{{ 'Population (+15)'|trans }}</option>#}
-                    {#</select>#}
-                {#</li>#}
+                {% if isBo|default(false) == true %}
+                    <li class="filter">
+                        <a class="text-center filter-name">{{ 'Value Min'|trans }}</a>
+                        <input data-view="stat" type="text" name="valueMin" id="value-min-stat" class="form-control value-min"/>
+                    </li>
+                    <li class="filter">
+                        <a class="text-center filter-name">{{ 'Value Max'|trans }}</a>
+                        <input data-view="stat" type="text" name="valueMax" id="value-max-stat" class="form-control value-max"/>
+                    </li>
+                {% endif %}
             {% else %}
             <li class="filter">
                 <a class="text-center filter-name">{{ fieldName|trans }}</a>
-                <select {% if fieldName == 'statType' %}title="{{ 'Choose'|trans }}" class="form-control bs-select" multiple{% else %}class="form-control select2me"{% endif %} data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">
-                {% if fieldName != 'statType' %}<option value="">{{ 'Choose'|trans }}</option>{% endif %}
-                    {% for value in filter.values %}
-                        <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                {% if fieldName == 'statType' %}
+                <select title="{{ 'Choose'|trans }}" class="form-control bs-select" multiple data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">
+                    {% for productName, product in filter.values %}
+                        <optgroup id="{{ productName|replace({' ':''}) }}" label="{{ productName|trans }}">
+                        {% for value in product %}
+                        <option value="{{ value['indicator'] }}">{{ value['statType']|trans|upper }}</option>
+                        {% endfor %}
+                        </optgroup>
                     {% endfor %}
                 </select>
+                {% else %}
+                <select class="form-control select2me" data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">
+                    <option value="">{{ 'Choose'|trans }}</option>
+                    {% for value in filter.values %}
+                        <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags('<br>')|trans }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
             </li>
             {% endif %}
         {% endif %}

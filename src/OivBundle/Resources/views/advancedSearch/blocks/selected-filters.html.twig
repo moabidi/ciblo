@@ -1,10 +1,10 @@
 <div class="col-md-3">
-    <span class="caption-subject font-red-sunglo bold uppercase" style="font-size: 15px;">{{ 'Countries'|trans }}</span>
+    <span class="caption-subject font-red-sunglo bold" style="font-size: 15px;">{{ 'Countries'|trans }}</span>
     <div class="ms-selection"></div>
 </div>
 <div id="selected-year" class="note col-md-2">
     <p>
-        <span class="caption-subject font-red-sunglo bold uppercase">Année</span>
+        <span class="caption-subject font-red-sunglo bold">{{ 'year'|trans|capitalize }}</span>
     </p>
     <p>
         <span class="label label-md label-warning">{{ selectedYear }}</span>
@@ -12,11 +12,13 @@
 </div>
 <div id="selected-statType" class="note col-md-7">
     <p>
-        <span class="caption-subject font-red-sunglo bold uppercase">Série</span>
-        <a data-action="selectAll" href="javascript:;">{{ 'select all'|trans }}</a>
+        <span class="caption-subject font-red-sunglo bold">{{ 'list'|trans|capitalize }}</span>
         <a data-action="deselectAll" href="javascript:;">{{ 'remove all'|trans }}</a>
     </p>
-    <p></p>
+    {% for productName, product in filters.StatData.statType.values %}
+    <p id="product-{{ productName|replace({' ':''}) }}" class="list-product hide"><span class="label label-md label-text">{{ productName|trans }}</span></p>
+    <p class="list-stat"></p>
+    {% endfor %}
 </div>
 <div id="selected-filters" class="note col-md-7 hide">
 </div>

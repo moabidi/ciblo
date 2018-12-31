@@ -1,12 +1,6 @@
 <div class="fiche-country container ">
     <div class="row">
         <div class="info col-sm-12 col-md-12">
-            <p class="text-center">
-                Pour avoir une recheche avancée avec une comparaison des statistiques <a id="advancedSearch" href="/fr/statistiques/recherche?countryCode={{ countryCode }}&year={{ (("now"|date('Y'))-2) }}"> cliquer ici</a>
-            </p>
-            <p class="text-center">Cliquer sur une catégorie ou une série <a class="stat-type btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip"></span>
-                </a> pour avoir le détail des données</p>
             <div aria-label="...">
                 <ul class="pager">
                     <li data-year="{{ selectedYear+1 }}" id="nextYear" class="next {% if selectedYear+1 > "now"|date('Y') %}disabled{% endif %}">
@@ -230,12 +224,7 @@
             </div>
         </div>
         <div id="container-graph" class="info col-sm-12 col-md-12">
-            <h2 class="text-center">
-                GRAPHIQUE
-                <a data-graph="container-g1" data-stattype="import" class="stat-type btn btn-default btn-xs">
-                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip"></span>
-                </a>
-            </h2>
+            <h2 class="text-center">GRAPHIQUE</h2>
 
             <div id="container-g1" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g2" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -309,5 +298,12 @@
                 });
             </script>
         </div>
+        <p class="text-center">Cliquer sur une catégorie ou une série <a class="stat-type btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip"></span>
+            </a> pour avoir le détail des données
+        </p>
+        <p class="text-center">
+            Pour avoir une recheche avancée avec une comparaison des statistiques <a id="advancedSearch" href="/fr/statistiques/recherche?countryCode={{ countryCode }}&year={{ (("now"|date('Y'))-2) }}"> cliquer ici</a>
+        </p>
     </div>
 </div>

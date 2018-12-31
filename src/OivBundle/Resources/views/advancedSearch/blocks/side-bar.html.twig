@@ -1,26 +1,16 @@
-<!-- BEGIN SIDEBAR -->
 <div class="page-sidebar-wrapper">
-    <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-    <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
     <div class="page-sidebar navbar-collapse collapse">
-        <!-- BEGIN SIDEBAR MENU -->
-        <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-        <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-        <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-        <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-        <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+
         <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-            <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
             <li class="sidebar-toggler-wrapper">
                 <a class="text-center">Affiner votre recherche</a>
             </li>
             {% include 'OivBundle:filters:countries.html.twig' with {'isAdvSearch':true} %}
 
             <li class="db">
-                <a href="javascript:;">
+                <a class="db-link filter-submit" data-dbType="naming" href="javascript:;">
                     <i class="icon-magnifier"></i>
-                    <span class="title">{{ 'Naming'|trans }}</span>
+                    <span class="title"><strong>{{ 'Naming'|trans }}</strong></span>
                     <span class="selected"></span>
                     <span class="arrow"></span>
                 </a>
@@ -30,9 +20,9 @@
                 </ul>
             </li>
             <li class="db">
-                <a href="javascript:;">
+                <a class="db-link filter-submit" data-dbType="variety" href="javascript:;">
                     <i class="icon-magnifier"></i>
-                    <span class="title">{{ 'Variety'|trans }}</span>
+                    <span class="title"><strong>{{ 'Varieties'|trans }}</strong></span>
                     <span class="selected"></span>
                     <span class="arrow"></span>
                 </a>
@@ -42,9 +32,9 @@
                 </ul>
             </li>
             <li class="db">
-                <a href="javascript:;">
+                <a class="db-link filter-submit" data-dbType="education" href="javascript:;">
                     <i class="icon-magnifier"></i>
-                    <span class="title">{{ 'Education'|trans }}</span>
+                    <span class="title"><strong>{{ 'Education'|trans }}</strong></span>
                     <span class="selected"></span>
                     <span class="arrow"></span>
                 </a>
@@ -54,9 +44,9 @@
                 </ul>
             </li>
             <li class="db active open">
-                <a href="javascript:;">
+                <a class="db-link filter-submit" data-dbType="stat" href="javascript:;">
                     <i class="icon-magnifier"></i>
-                    <span class="title">{{ 'Statistic'|trans }}</span>
+                    <span class="title"><strong>{{ 'Statistic'|trans }}</strong></span>
                     <span class="selected"></span>
                     <span class="arrow open"></span>
                 </a>
@@ -84,7 +74,4 @@
                 </ul>
             </li>
         </ul>
-        <!-- END SIDEBAR MENU -->
     </div>
-</div>
-<!-- END SIDEBAR -->

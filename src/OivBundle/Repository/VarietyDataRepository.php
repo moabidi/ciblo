@@ -40,20 +40,23 @@ class VarietyDataRepository extends BaseRepository
      */
     public static function getConfigFields() {
         return [
-            'countryNameFr' => ['tab1','tab2'],
+            'id'=>['tab3'],
+            'countryNameFr' => ['tab1','tab2','tab3'],
             'versioning' => [],
-//            'countryCode' => ['tab1','tab2'],
-            'isMainVariety' => [],
-            'areaCultivated' => [],
-            'areaYear' => [],
-            'grapeVarietyName' => ['filter','tab1','tab2'],
-            'synonym'=>['filter','tab2'],
-            'codeVivc' => ['tab1','tab2'],
-            'varietyNationalNameVivc'=> [],
-            'nationalVarietyId'=>[],
-            'grapeColor'=>[],
-            'lastDate'=>['tab2'],
-            'internetAdress'=>[]
+            'countryCode' => ['form'],
+            'isMainVariety' => ['form'],
+            'areaCultivated' => ['form'],
+            'areaYear' => ['form'],
+            'grapeVarietyName' => ['form','filter','tab1','tab2','tab3'],
+            'synonym'=>['form','filter','tab2','tab3'],
+            'codeVivc' => ['form','tab1','tab2','tab3'],
+            'varietyNationalNameVivc'=> ['form'],
+            'nationalVarietyId'=>['form'],
+            'grapeColor'=>['form'],
+            'lastDate'=>['tab2','tab3'],
+            'internetAdress'=>['form'],
+            'usableData' => ['form'],
+            'lastData' => [],
         ];
     }
 }

@@ -9,14 +9,20 @@
 namespace OivBundle\Controller;
 
 
+use Monolog\Logger;
 use OivBundle\Entity\Country;
 use OivBundle\Repository\StatDataRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class BaseController extends Controller
 {
 
+    protected $_aTableType = ['StatData', 'EducationData', 'NamingData', 'VarietyData'];
     /**
      * @param $table
      * @param array $aCriteria
@@ -27,10 +33,10 @@ class BaseController extends Controller
      * @param $order
      * @return mixed
      */
-    protected function getResultGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =100, $sort= null, $order = null)
+    protected function getResultGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =200, $sort= null, $order = null)
     {
         $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria,$offset, $limit, $sort, $order);
-        if (in_array($view, ['tab1','tab2'])) {
+        if (in_array($view, ['tab1','tab2','tab3'])) {
             $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
             $translator = $this->get('translator');
             array_walk($result, function (&$v, $k) use ($selectedFields, $translator) {
@@ -48,16 +54,18 @@ class BaseController extends Controller
     /**
      * @return array
      */
-    protected function getFiltredFiled()
+    protected function getFiltredFiled($view = 'public')
     {
-        $aTableType = ['StatData', 'EducationData', 'NamingData', 'VarietyData'];
-        foreach ($aTableType as $table) {
+        foreach ($this->_aTableType as $table) {
             $repository = $this->getDoctrine()->getRepository('OivBundle:' . $table);
             $aFiltredFields[$table] = $repository->getTaggedFields('filter');
             foreach ($aFiltredFields[$table] as $field => &$field) {
                 $aValues = $repository->getDistinctValueField($field);
                 $field = ['label' => $field, 'values' => $aValues];
             }
+        }
+        if (isset($aFiltredFields['StatData']['statType'])) {
+            $aFiltredFields['StatData']['statType']['values'] = $this->getDoctrine()->getRepository('OivBundle:StatDataParameter')->getListProduct($view);
         }
         return $aFiltredFields;
     }
@@ -77,10 +85,6 @@ class BaseController extends Controller
             'products' => $this->getStatProducts($aCriteria,true),
             'graphProducts' => $this->formatDataGraph($allStats,$minData,$maxDate),
             'globalArea' => $repository->getSingleValueStatType('A_SURFACE', $aCriteria),
-//            'rfreshIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
-//            'rtableIndivCons' => $repository->getSingleValueStatType('L_COMSUMPTION_TABLE_GRP', $aCriteria),
-//            'rsecIndivCons' => $repository->getSingleValueStatType('M_COMSUMPTION_CAPITA_GRP', $aCriteria),
-//            'usedArea' => $repository->getSingleValueStatType('C_PROD_GRP', $aCriteria),
             'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria),
             'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria),
             'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
@@ -186,31 +190,36 @@ class BaseController extends Controller
         for($y = $minDate; $y<=$maxDate; $y++) {
             $formattedData['xAxis'][]= $y;
         }
-
+        $mesure = '1000 QX';
         foreach ($aData as $product) {
             $productName = $product['name'];
             $formattedData['yAxis'][$productName] = [];
-            array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $translator) {
-                $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($key,$value, $formattedData['xAxis'],$translator);
-
+            array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $translator, $mesure) {
+                $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($key,$value, $formattedData['xAxis'],$translator,$mesure);
+                $formattedData['mesure'] = $mesure;
             });
             //var_dump($formattedData );die;
         }
         return $formattedData;
     }
 
-    protected function getDataProductGraph($productName,$aListData, $aListYears,$translator)
+    protected function getDataProductGraph($productName,$aListData, $aListYears,$translator,&$mesure)
     {
-        $formattedData['name'] = $translator->trans($productName);
         $formattedData['data'] = [];
+        $formattedData['name'] = $translator->trans($productName);
         foreach ($aListYears as $year) {
             $formattedData['data'][$year] = '';
         }
         if ($aListData) {
             foreach ($aListData as $stat) {
+                $mesure = isset($stat['measureType']) ? $stat['measureType']:'';
                 if ($stat['value']) {
                     $formattedData['data'][$stat['year']] = floatval($stat['value']);
                 }
+            }
+            if ($mesure) {
+                $mesure = $translator->trans($mesure);
+                $formattedData['name'] = $translator->trans($productName) . ' ('.$mesure.')';
             }
         }
         $formattedData['data'] = array_values($formattedData['data']);
@@ -262,6 +271,17 @@ class BaseController extends Controller
                 $aCriteria['yearMin'] = $request->request->get('yearMin');
             }
         }
+        if ($request->request->has('value')) {
+            $aCriteria['valueMax'] = $request->request->get('value');
+            $aCriteria['valueMin'] = $request->request->get('value');
+        }else{
+            if($request->request->get('valueMax')) {
+                $aCriteria['valueMax'] = $request->request->get('valueMax');
+            }
+            if($request->request->get('valueMin')) {
+                $aCriteria['valueMin'] = $request->request->get('valueMin');
+            }
+        }
         foreach($request->request->all() as $field => $val) {
             if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
                 $aCriteria[$field] = $val;
@@ -269,11 +289,7 @@ class BaseController extends Controller
         }
         if ($aTableFilters = $request->request->get('tableFilters')) {
             if (isset($aTableFilters['countryCode'])){
-                /**@var Country $result */
-                $result = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountryCode($aTableFilters['countryCode']);
-                if ($result) {
-                    $aTableFilters['countryCode'] = $result->getIso3();
-                }
+                $aTableFilters['countryCode'] = $this->getCountryCode($aTableFilters['countryCode']);
             }
             foreach($aTableFilters as $field => $val) {
                 if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
@@ -284,4 +300,39 @@ class BaseController extends Controller
         return $aCriteria;
     }
 
+    /**
+     * @return Logger object
+     */
+    protected function getLogger()
+    {
+        return $this->get('logger');
+    }
+
+    protected function checkIsXHTMLRequest(Request $request)
+    {
+        if ($request->isXmlHttpRequest() && !$request->isMethod('POST')) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function getCountryCode($countryName)
+    {
+        $countryCode = $countryName;
+        /**@var Country $result */
+        $result = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountryCode($countryName);
+        if ($result) {
+            $countryCode = $result->getIso3();
+        }
+        return $countryCode;
+    }
+
+    protected function getSerelizer()
+    {
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+
+        return new Serializer($normalizers, $encoders);
+
+    }
 }

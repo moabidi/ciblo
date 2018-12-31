@@ -108,21 +108,23 @@ class NamingDataRepository extends BaseRepository
     public static function getConfigFields()
     {
         return [
-            'countryNameFr' => ['tab1','tab2'],
-            'id' => [],
-            'versioning' => [],
-//            'countryCode' => ['tab1', 'tab2'],
-            'appellationCode' => [],
-            'appellationName' => ['filter', 'tab1', 'tab2'  ],
-            'parentCode' => [],
-            'parentName' => ['tab2'],
-            'typeNationalCode' => ['filter', 'tab1', 'tab2'],
-            'typeInternationalCode' => ['filter', 'tab1', 'tab2'],
-            'productCategoryName' => ['filter', 'tab2'],
-            'productType' => ['tab2'],
-            'referenceName' => ['tab2'],
-            'lastDate' => ['tab2'],
-            'url' => []
+            'id'=>['tab3'],
+            'countryNameFr' => ['tab1','tab2','tab3'],
+            'versioning' => ['form'],
+            'countryCode' => ['form',],
+            'appellationCode' => ['form',],
+            'appellationName' => ['form','filter','tab1','tab2','tab3' ],
+            'parentCode' => ['form',],
+            'parentName' => ['form','tab2','tab3'],
+            'typeNationalCode' => ['form','filter', 'tab1', 'tab2','tab3'],
+            'typeInternationalCode' => ['form','filter', 'tab1', 'tab2','tab3'],
+            'productType' => ['form','filter','tab2','tab3'],
+            'productCategoryName' => ['form','tab3'],
+            'referenceName' => ['form','tab2','tab3'],
+            'lastDate' => ['tab2','tab3'],
+            'url' => ['form'],
+            'usableData' => ['form'],
+            'lastData' => [],
         ];
     }
 }

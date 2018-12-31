@@ -115,9 +115,24 @@ class NamingData
     /**
      * @var bool
      *
+     * @ORM\Column(name="USABLE_DATA", type="string", length=1, nullable=false)
+     */
+    private $usableData;
+
+    /**
+     * @var bool
+     *
      * @ORM\Column(name="LAST_DATA", type="string", length=1, nullable=false)
      */
     private $lastData;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return int
@@ -327,6 +342,58 @@ class NamingData
         $this->url = $url;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isUsableData()
+    {
+        return $this->usableData;
+    }
 
+    /**
+     * @param boolean $usableData
+     */
+    public function setUsableData($usableData)
+    {
+        $this->usableData = $usableData;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isLastData()
+    {
+        return $this->lastData;
+    }
+
+    /**
+     * @param boolean $lastData
+     */
+    public function setLastData($lastData)
+    {
+        $this->lastData = $lastData;
+    }
+
+    /**
+     * @param $aHeader
+     * @return array|null
+     */
+    public static function getImportFieldsIdentifier()
+    {
+        return [
+            'countryCode' => 'Pays',
+            'appellationCode' => 'Code',
+            'appellationName' => 'IG/AO',
+            'parentCode' => 'Code IG/AO supérieure',
+            'parentName' => 'Unité géographique supérieure',
+            'typeNationalCode' => 'Type d\'indication national',
+            'typeInternationalCode' => 'Type d\'indication international',
+            'productCategoryName' => 'Catégories de produits',
+            'productType' => 'Produits',
+            'referenceName' => 'Base reglementaire',
+            'url' => 'Lien sur base légale',
+            'lastDate' => 'dernière date de mise à jour',
+        ];
+    }
 }
 

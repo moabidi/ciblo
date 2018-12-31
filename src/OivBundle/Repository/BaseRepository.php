@@ -19,14 +19,16 @@ class BaseRepository extends EntityRepository
 
     public function getDistinctValueField($field)
     {
+//        if ( $this->getEntityName() == 'OivBundle\Entity\StatData' && $field == 'statType') {
+//            die('++');
+//
+//        }
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $this->_queryBuilder
             ->select('o.'.$field)
             ->from($this->_entityName, 'o')
             ->distinct('o.'.$field)
             ->orderBy('o.'.$field);
-//        return $this->_queryBuilder->getQuery()->getArrayResult();
-//        var_dump($result);die;
         $result = $this->_queryBuilder->getQuery()->getArrayResult();
         return $this->reformatArray($result);
     }
@@ -231,6 +233,30 @@ class BaseRepository extends EntityRepository
             $this->_queryBuilder
                 ->Andwhere('o.year = :year')
                 ->setParameter('year',$aCriteria['year']);
+        }
+    }
+
+    /**
+     * @param array $aCriteria
+     */
+    protected function addValueCriteria($aCriteria = [])
+    {
+        if(!empty($aCriteria['valueMin']) || !empty($aCriteria['valueMax'])){
+
+            if (!empty($aCriteria['valueMin'])) {
+                $this->_queryBuilder
+                    ->Andwhere('o.value >= :valueMin')
+                    ->setParameter('valueMin', $aCriteria['valueMin']);
+            }
+            if (!empty($aCriteria['valueMax'])) {
+                $this->_queryBuilder
+                    ->Andwhere('o.value <= :valueMax')
+                    ->setParameter('valueMax', $aCriteria['valueMax']);
+            }
+        }elseif (!empty($aCriteria['value'])) {
+            $this->_queryBuilder
+                ->Andwhere('o.value = :value')
+                ->setParameter('value',$aCriteria['value']);
         }
     }
 

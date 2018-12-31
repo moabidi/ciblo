@@ -3,33 +3,32 @@
             <div class="pagination dataTables_paginate paging_bootstrap_extended">
                 <div class="pagination-panel">
                     Page
-                    <a id="prev-pg" data-offset="20" data-view="global" href="javascript:;" class="btn btn-sm default prev" title="Prev">
+                    <a id="prev-pg" data-offset="20" data-view="global" href="javascript:;" class="btn btn-sm default prev hide" title="Prev">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <input disabled id="current-pg" type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" maxlenght="5" style="text-align:center; margin: 0 5px;">
-                    <a id="next-pg" data-offset="20" data-view="global" href="javascript:;" class="btn btn-sm default next" title="Next">
+                    <input disabled id="current-pg" type="text" value="1" class="pagination-panel-input form-control input-mini input-inline input-sm" maxlenght="5" style="text-align:center; margin: 0 5px;">
+                    <a id="next-pg" data-offset="20" data-view="global" href="javascript:;" class="btn btn-sm default next {% if (countResult/200)|round(0,'ceil') < 2 %}hide{% endif %}" title="Next">
                         <i class="fa fa-angle-right"></i>
                     </a>
-                        of
-                    <span id="count-page" class="pagination-panel-total">18</span>
+                    {{ 'of'|trans }}
+                    <span id="count-page" class="pagination-panel-total">{{ (countResult/200)|round(0,'ceil') }}</span>
                 </div>
             </div>
             <div class="pagination dataTables_length">
                 <label>
                     <span class="seperator">|</span>
-                    View
+                    {{ 'View'|trans }}
                     <select id="limit-pg" name="datatable_orders_length"  data-view="global" aria-controls="datatable_orders" class="form-control input-xsmall input-sm input-inline">
                         <option value="20">20</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
-                        <option value="200">200</option>
+                        <option value="200" selected>200</option>
                     </select>
-                    records
-
+                    {{ 'records'|trans }}
                 </label>
             </div>
             <div id="info-pg" class="dataTables_info">
-                <span class="seperator">|</span> Found total <span id="count-result">178</span> records
+                <span class="seperator">|</span> {{ 'Total records'|trans }} <span id="count-result">{{ countResult }}</span>
             </div>
     </div>
     <div class="col-md-4 col-sm-12"></div>

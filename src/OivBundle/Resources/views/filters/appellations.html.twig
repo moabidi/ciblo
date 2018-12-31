@@ -18,7 +18,7 @@
                     <select data-view="naming" id="{{ 'NamingData-' ~ fieldName }}" class="form-control select2me" data-live-search="true" name="{{ fieldName }}">
                         <option value="">{{ 'Choose'|trans }}</option>
                         {% for value in filter.values %}
-                            <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                            <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags }}</option>
                         {% endfor %}
                     </select>
                 </li>
@@ -35,7 +35,7 @@
             <select data-view="naming" id="{{ 'NamingData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
                 <option value="">{{ 'Choose'|trans }}</option>
                 {% for value in filter.values %}
-                   <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
+                   <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace('<br/>',' - ')|replace('<br>',' - ')|striptags }}</option>
                {% endfor %}
             </select>
         </div>

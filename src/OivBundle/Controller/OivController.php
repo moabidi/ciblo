@@ -27,13 +27,7 @@ class OivController extends BaseController
         $aParams['stats'] = $this->getStatsCountry($aCriteria);
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
-//        $aParams['filters'] = $this->getFiltredFiled();
-//        $aParams['globalResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab1');
-//        $aParams['globalResult'] = [];
-//        $aParams['globalStatResult'] = $this->getResultGLobalSearch('NamingData', $aCriteria,'tab2');
-//        $aParams['globalStatResult'] = [];
         $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => $selectedCountryCode]);
-        //var_dump($aParams['selectedCountry'],$aParams['tradeBlocs']);die;
         if (!$aParams['selectedCountry'] ) {
             foreach ($aParams['tradeBlocs'] as $trade) {
                 if ($selectedCountryCode == $trade['tradeBloc'] ) {

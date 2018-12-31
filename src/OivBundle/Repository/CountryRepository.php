@@ -18,10 +18,12 @@ class CountryRepository extends BaseRepository
         $queryBuilder
             ->select('o')
             ->from($this->_entityName, 'o')
-            ->where('o.countryNameFr = :countryName')
+            ->where('o.iso3 = :countryName')
             ->orWhere('o.countryNameFr = :countryName')
-            ->orWhere('o.countryNameFr = :countryName')
-            ->orWhere('o.countryNameFr = :countryName')
+            ->orWhere('o.countryNameEn = :countryName')
+            ->orWhere('o.countryNameIt = :countryName')
+            ->orWhere('o.countryNameEs = :countryName')
+            ->orWhere('o.countryNameDe = :countryName')
             ->setParameter('countryName', $countryName);
         return $queryBuilder->getQuery()->getSingleResult();
 

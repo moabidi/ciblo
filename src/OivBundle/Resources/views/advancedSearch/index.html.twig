@@ -1,7 +1,10 @@
 {% extends 'OivBundle:advancedSearch:layout.html.twig' %}
 {% block menu_user %}
     <li class="dropdown dropdown-user">
-    <a href="/fr/statistiques/backoffice/login">
+        <a href="/fr/statistiques">{{ 'Country Plug'|trans }}</a>
+    </li>
+    <li class="dropdown dropdown-user">
+    <a href="{{ path('oiv_login') }}">
         Connexion
     </a>
 {% endblock %}
@@ -66,4 +69,5 @@
 {% endblock %}
 {% block load_js %}
         {% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
+        <script src=" {{ asset('/bundles/oiv/js/oiv-handle-adv-search.js') }}"></script>
 {% endblock load_js %}

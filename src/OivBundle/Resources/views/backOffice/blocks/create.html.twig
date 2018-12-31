@@ -1,0 +1,9 @@
+<div class="portlet box purple">
+    {% include 'OivBundle:backOffice/blocks:caption-panel.html.twig' %}
+    <div class="portlet-body form">
+        {% include 'OivBundle:backOffice/blocks:form.html.twig' with {'dbType':'stat','fieldsForm':forms.StatData,'display':'show'} %}
+        {% include 'OivBundle:backOffice/blocks:form.html.twig' with {'dbType':'naming','fieldsForm':forms.NamingData,'display':'hide'} %}
+        {% include 'OivBundle:backOffice/blocks:form.html.twig' with {'dbType':'education','fieldsForm':forms.EducationData,'display':'hide'} %}
+        {% include 'OivBundle:backOffice/blocks:form.html.twig' with {'dbType':'variety','fieldsForm':forms.VarietyData,'display':'hide'} %}
+    </div>
+</div>

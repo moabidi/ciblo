@@ -1,25 +1,42 @@
 {% extends 'OivBundle:advancedSearch:layout.html.twig' %}
+
+{% block head %}
+    {% include 'OivBundle:advancedSearch/blocks:head.html.twig' %}
+    <link href=" {{ asset('/bundles/oiv/css/oiv-bo.css') }}" rel="stylesheet" type="text/css"/>
+{% endblock head %}
+
+{% block sidebar %}
+    {% include 'OivBundle:advancedSearch/blocks:side-bar.html.twig' with {'isBo':true} %}
+{% endblock sidebar %}
+
 {% block selectedFilter %}
-    {% include 'OivBundle:advancedSearch/blocks:selected-filters.html.twig' %}
+    {% include 'OivBundle:advancedSearch/blocks:selected-filters.html.twig' with {'isBo':true} %}
 {% endblock %}
 
 {% block menu_user %}
-    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+    <li class="dropdown dropdown-user">
+        <a href="{{ path('result-search') }}">{{ 'Country Plug'|trans }}</a>
+    </li>
     <li class="dropdown dropdown-user">
         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-            <img alt="" class="img-circle" src=" {{ asset('/bundles/oiv/img/backoffice/avatar1.jpg') }}"/>
-            <span class="username username-hide-on-mobile"> UserName </span>
+            <img alt="" class="img-circle" src=" {{ asset('/bundles/oiv/img/frontend/logo-small.png') }}"/>
+            <span class="username username-hide-on-mobile"> {{ app.user.name }} </span>
             <i class="fa fa-angle-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-default">
             <li>
-                <a href="extra_profile.html">
-                    <i class="icon-user"></i> My Profile
+                <a href="javascript:;">
+                    <i class="icon-key"></i> {{ 'Home'|trans }}
                 </a>
             </li>
             <li>
-                <a href="/fr/statistiques/backoffice/login">
-                    <i class="icon-key"></i> Log Out
+                <a href="{{ path('profile') }}">
+                    <i class="icon-key"></i> {{ 'Profile'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('oiv_logout') }}">
+                    <i class="icon-key"></i> {{ 'Log Out'|trans }}
                 </a>
             </li>
         </ul>
@@ -48,7 +65,7 @@
     </div>
 {% endblock %}
 {% block dataTable %}
-    <div class="tabbable">
+    <div id="bo" class="tabbable">
         <ul class="nav nav-tabs nav-tabs-lg">
             <li class="active">
                 <a href="#tab_table" data-toggle="tab" aria-expanded="true">
@@ -58,6 +75,16 @@
             <li>
                 <a href="#tab_graph" data-toggle="tab" aria-expanded="true">
                     {{ 'Graphic'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="#tab_add" data-toggle="tab" aria-expanded="true">
+                    {{ 'Add data'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="#tab_import" data-toggle="tab" aria-expanded="true">
+                    {{ 'Import data'|trans }}
                 </a>
             </li>
         </ul>
@@ -75,9 +102,17 @@
             <div class="tab-pane" id="tab_graph">
                 {% include 'OivBundle:advancedSearch/blocks:graphic.html.twig' %}
             </div>
+            <div class="tab-pane" id="tab_add">
+                {% include 'OivBundle:backOffice/blocks:create.html.twig' %}
+            </div>
+            <div class="tab-pane" id="tab_import">
+                {% include 'OivBundle:backOffice/blocks:import.html.twig' %}
+            </div>
         </div>
     </div>
 {% endblock %}
 {% block load_js %}
     {% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
+    <script src=" {{ asset('/bundles/oiv/js/plugins/uniform/jquery.uniform.min.js') }}"></script>
+    <script src=" {{ asset('/bundles/oiv/js/oiv-bo.js') }}"></script>
 {% endblock load_js %}

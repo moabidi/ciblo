@@ -104,5 +104,223 @@ class StatData
      * @ORM\Column(name="LAST_DATA", type="string", length=1, nullable=false)
      */
     private $lastData;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersioning()
+    {
+        return $this->versioning;
+    }
+
+    /**
+     * @param int $versioning
+     */
+    public function setVersioning($versioning)
+    {
+        $this->versioning = $versioning;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
+    }
+
+    /**
+     * @param string $countryCode
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatType()
+    {
+        return $this->statType;
+    }
+
+    /**
+     * @param string $statType
+     */
+    public function setStatType($statType)
+    {
+        $this->statType = $statType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMeasureType()
+    {
+        return $this->measureType;
+    }
+
+    /**
+     * @param string $measureType
+     */
+    public function setMeasureType($measureType)
+    {
+        $this->measureType = $measureType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetricCompType()
+    {
+        return $this->metricCompType;
+    }
+
+    /**
+     * @param string $metricCompType
+     */
+    public function setMetricCompType($metricCompType)
+    {
+        $this->metricCompType = $metricCompType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * @param int $year
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfoSource()
+    {
+        return $this->infoSource;
+    }
+
+    /**
+     * @param string $infoSource
+     */
+    public function setInfoSource($infoSource)
+    {
+        $this->infoSource = $infoSource;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastDate()
+    {
+        return $this->lastDate;
+    }
+
+    /**
+     * @param \DateTime $lastDate
+     */
+    public function setLastDate($lastDate)
+    {
+        $this->lastDate = $lastDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGrapesDestination()
+    {
+        return $this->grapesDestination;
+    }
+
+    /**
+     * @param string $grapesDestination
+     */
+    public function setGrapesDestination($grapesDestination)
+    {
+        $this->grapesDestination = $grapesDestination;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isUsableData()
+    {
+        return $this->usableData;
+    }
+
+    /**
+     * @param boolean $usableData
+     */
+    public function setUsableData($usableData)
+    {
+        $this->usableData = $usableData;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isLastData()
+    {
+        return $this->lastData;
+    }
+
+    /**
+     * @param boolean $lastData
+     */
+    public function setLastData($lastData)
+    {
+        $this->lastData = $lastData;
+    }
+
+    /**
+     * @param $aHeader
+     * @return array|null
+     */
+    public static function getImportFieldsIdentifier()
+    {
+        return [
+            'countryCode' => 'Pays',
+            'statType' => 'Série',
+            'measureType' => 'Unité',
+            'metricCompType' => 'Produit',
+            'year' => 'Année',
+            'value' => 'Valeur',
+            'infoSource' => 'Source info',
+            'grapesDestination' => 'Vocation du raisin',
+        ];
+    }
 }
 

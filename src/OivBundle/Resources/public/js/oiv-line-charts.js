@@ -19,6 +19,16 @@ $(function ($) {
                 lang: this._lang
             });
             this._chart = Highcharts.chart(this._container, {
+                credits: {
+                    enabled: false
+                },
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: ["downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG","downloadCSV","downloadXLS"]
+                        }
+                    }
+                },
                 title: {
                     text: this._title
                 },
@@ -27,6 +37,9 @@ $(function ($) {
                 },
                 xAxis: {
                     categories: this._xAxis,
+                    title: {
+                        text: 'Années'
+                    }
                 },
                 yAxis: {
                     min: 0,

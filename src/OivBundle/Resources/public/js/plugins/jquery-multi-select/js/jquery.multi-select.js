@@ -381,6 +381,10 @@
             var selectionsLi = $(this).find('.ms-elem-selection');
             if (selectionsLi.filter('.ms-selected').length > 0){
               $(this).find('.ms-optgroup-label').show();
+              $(this).find('.ms-optgroup-label').each(function(){
+                var text = $(this).find('span').text();
+                $(this).find('span').text(text.replace('Sélectionner','Désélectionner'));
+              });
             }
           });
         } else {

@@ -1,0 +1,19 @@
+<form id="import-{{ dbType|default('stat') }}" class="{{ display|default('hide') }}" enctype="multipart/form-data" method="post">
+    <div class="row fileupload-buttonbar">
+        <div class="col-md-offset-3 col-lg-6">
+                    <span class="btn fileinput-button">
+                        <span> {{ 'Select file'|trans }} </span>
+                        <input type="file" name="dataFile">
+                    </span>
+        </div>
+    </div>
+    <div class="form-actions">
+        <div class="row">
+            <div class="col-md-offset-4 col-md-8">
+                <button type="button" class="btn red reset-upload">{{ 'Reset'|trans }}</button>
+                <button type="submit" class="btn yellow btn-upload-data" data-dbType="{{ dbType|default() }}">{{ 'Submit'|trans }}</button>
+                <button type="submit" class="btn yellow btn-import-data hide" data-dbType="{{ dbType|default() }}" data-save="1">{{ 'Save Data'|trans }}</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -18,4 +18,5 @@
             <li><a id="last-pg-{{ numTab|default('resultSearch') }}" data-view="{{ view|default('global') }}" data-offset="100" href="javascript:;">{{ 'last'|trans }}</a></li>
         </ul>
     </div>
+    <div id="total-result" class="form-group"> {{ 'Total records'|trans }} <span>{{ total|default() }}</span></div>
 </div>

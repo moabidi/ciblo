@@ -126,6 +126,7 @@ class StatDataRepository extends BaseRepository
         $this->addStatTypeCriteria($aCriteria);
         $this->addCountryCriteria($aCriteria);
         $this->addYearCriteria($aCriteria);
+        $this->addValueCriteria($aCriteria);
         return $this->_queryBuilder;
     }
 
@@ -184,17 +185,20 @@ class StatDataRepository extends BaseRepository
     public static function getConfigFields()
     {
         return [
-            'countryNameFr' => ['tab1','tab2'],
-            'versioning' => [],
-            'countryCode' => ['filter'],
-            'statType' => ['filter','tab1','tab2'],
-            'metricCompType' => ['filter','tab1','tab2'],
-            'year' => ['tab1','tab2'],
-            'measureType' => ['tab1','tab2'],
-            'value' => ['tab1','tab2'],
+            'id'=>['tab3'],
+            'countryNameFr' => ['tab1','tab2','tab3'],
+            'versioning' => ['form'],
+            'countryCode' => ['form'],
+            'statType' => ['form','filter','tab1','tab2','tab3'],
+            'metricCompType' => ['form','tab1','tab2','tab3'],
+            'year' => ['form','tab1','tab2','tab3'],
+            'measureType' => ['form','tab1','tab2','tab3'],
+            'value' => ['form','filter','tab1','tab2','tab3'],
+            'grapesDestination'=>['form'],
+            'infoSource'=> ['form'],
             'lastDate'=>[],
-            'grapesDestination'=>[],
-            'infoSource'=> [],
+            'usableData' => ['form'],
+            'lastData' => [],
         ];
     }
 

@@ -4,3 +4,6 @@ oiv:
     prefix:   /{_locale}/statistiques
     requirements:
             _locale: 'fr|en'
+
+oiv_logout:
+    path: /fr/statistiques/backoffice/logout

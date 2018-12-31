@@ -9,13 +9,14 @@
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
+    {% block head %}
     {% include 'OivBundle:advancedSearch/blocks:head.html.twig' %}
+    {% endblock head %}
 </head>
 
 <body class="page-header-fixed page-quick-sidebar-over-content ">
 <!-- BEGIN HEADER -->
 <div class="page-header navbar navbar-fixed-top">
-    <!-- BEGIN HEADER INNER -->
     <div class="page-header-inner">
         <!-- BEGIN LOGO -->
         <div class="page-logo">
@@ -23,31 +24,26 @@
                 <img src="{{ asset('/bundles/oiv/img/frontend/logo-small.png') }}" alt="logo" class="logo-default"/>
             </a>
             <div class="menu-toggler sidebar-toggler hide">
-                <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
             </div>
         </div>
-        <!-- END LOGO -->
-        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
         <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
            data-target=".navbar-collapse">
         </a>
-        <!-- END RESPONSIVE MENU TOGGLER -->
-        <!-- BEGIN TOP NAVIGATION MENU -->
         <div class="top-menu">
             <ul class="nav navbar-nav pull-right">
                 {% block menu_user %}{% endblock %}
             </ul>
         </div>
-        <!-- END TOP NAVIGATION MENU -->
     </div>
-    <!-- END HEADER INNER -->
 </div>
 <!-- END HEADER -->
 <div class="clearfix">
 </div>
 <!-- BEGIN CONTAINER -->
 <div id="advSearch" class="page-container">
-    {% include 'OivBundle:advancedSearch/blocks:side-bar.html.twig' %}
+    {% block sidebar %}
+        {% include 'OivBundle:advancedSearch/blocks:side-bar.html.twig' %}
+    {% endblock sidebar %}
     <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
         <div class="page-content">
@@ -61,11 +57,8 @@
                 <ul class="page-breadcrumb">
                     <li>
                         <i class="fa fa-home"></i>
-                        <a href="/fr/statistiques">{{ 'Home'|trans }}</a>
+                        <a href="javascript:;">{{ 'Your selection'|trans }}</a>
                         <i class="fa fa-angle-right"></i>
-                    </li>
-                    <li>
-                        <a class="current-db-search" href="javascript:;">{{ 'Statistic'|trans }}</a>
                     </li>
                 </ul>
             </div>
@@ -80,7 +73,7 @@
                     <div class="portlet">
                         <div class="portlet-title">
                             <div class="caption">
-                                <i class="fa fa-shopping-cart"></i>{{ 'Result'|trans }}
+                                <i class="fa fa-shopping-cart"></i>{{ 'Results'|trans }}
                             </div>
                             {% block actions %}{% endblock %}
                         </div>

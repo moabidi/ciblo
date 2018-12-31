@@ -3,12 +3,9 @@ $(function($){
     $.handleSearch = new function() {
 
         this._g1;
-        this._g2;
-        this._g3;
-        this._g4;
         this._uri = '/fr/statistiques/';
-        this._dataFilter;
-        this._dataTableFilter;
+        this._dataFilter ='';
+        this._dataTableFilter = '';
         this._dataSort = '';
         this._listType = ['prod', 'consumption','export','import'];
 
@@ -95,14 +92,14 @@ $(function($){
                 if (response.isCtg == '1') {
                     var prevCtg = '';
                     $.each(response.data, function (key, items) {
-                        if (prevCtg != items.productCategoryName) {
+                        if (prevCtg != items.productType) {
                             html += prevCtg != '' ? '</p></a>' : '';
                             html += '<a href="javascript:;" class="list-group-item">';
-                            html += '<h4 class="list-group-item-heading">' + items.productCategoryName + '</h4>';
+                            html += '<h4 class="list-group-item-heading">' + items.productType + '</h4>';
                             html += '<p class="list-group-item-text">';
                         }
-                        html += '<button class="btn btn-primary" type="button">' + items.productType + '</button>';
-                        prevCtg = items.productCategoryName;
+                        html += '<button class="btn btn-primary" type="button">' + items.productCategoryName + '</button>';
+                        prevCtg = items.productType;
                     });
                     html += '</p></a>';
                 } else {
@@ -128,10 +125,11 @@ $(function($){
          */
         this._refreshGraphView = function(response) {
             $.handleSearch._g1._xAxis = response.xAxis;
-            $.handleSearch._g1._data = response.yAxis[response.label];
+            $.handleSearch._g1._data = response.yAxis[response.statType];
             $.handleSearch._g1._title = response.label;
-            $.handleSearch._g1._mesure = '1000 QX';
+            $.handleSearch._g1._mesure = response.mesure;
             $.handleSearch._g1._init();
+            $('a[href="#tab_graph"]').trigger('click');
         };
 
         /**
@@ -196,13 +194,14 @@ $(function($){
                     $('#' + idTable + ' tbody').html(body);
                 }
             }else{
-                hearder = '<tr><th class="text-center">Aucune résulat touvée pour votre recherche</th></tr>';
+                hearder = '<tr><th class="text-center">Aucun résulat touvé pour votre recherche</th></tr>';
                 body = '<tr><td></td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
                 $('#count-result').text(0);
                 $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             }
             $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');
+            $('a[href="#tab_table"]').trigger('click');
         };
 
         /**
@@ -215,22 +214,38 @@ $(function($){
             $(document).on('click',btn, function() {
                 var data = $.handleSearch._getFiltersData($(this),view);
                 if (!data) return false;
+                var blockDBFilter;
+                if ($(this).hasClass('btn')) {
+                    blockDBFilter = $(this).parents().eq(2);
+                } else {
+                    blockDBFilter = $(this).parent();
+                }
                 if ($(this).hasClass('filter-submit')) {
-                    $(this).parents().eq(3).find('li.db').removeClass('active');
-                    $(this).parents().eq(2).addClass('active');
-                    $('.current-db-search').text($(this).parents().eq(2).find('span.title').text());
+                    if ($(this).hasClass('db-link')){
+                        $(this).parents().eq(1).find('li.db').removeClass('active');
+                        $(this).parent().addClass('active open');
+                        $('.current-db-search').text($(this).find('span.title').text());
+                    } else{
+                        $(this).parents().eq(3).find('li.db').removeClass('active');
+                        $(this).parents().eq(2).addClass('active open');
+                        $('.current-db-search').text($(this).parents().eq(2).find('span.title').text());
+                    }
+                    $('#tab_graph').removeClass('show').addClass('hide');
+                    $('a[href=#tab_graph]').removeClass('show').addClass('hide');
                     if ($(this).attr('data-dbtype') == 'stat') {
                         $('#selected-filters').removeClass('show').addClass('hide');
                         $('#selected-statType').removeClass('hide').addClass('show');
+                        $('#tab_graph').removeClass('hide').addClass('show');
+                        $('a[href=#tab_graph]').removeClass('hide').addClass('show');
                     } else {
                         $('#selected-statType').removeClass('show').addClass('hide');
                         $('#selected-filters').removeClass('hide').addClass('show');
                         $('#selected-filters').html('');
-                        $.each($(this).parents().eq(2).find('li.filter'), function() {
+                        $.each($(blockDBFilter).find('li.filter'), function() {
                             var val = $(this).find('select').val();
                             val = val ? val:'Tout';
                             $('#selected-filters').append('<p>' +
-                                '<span class="caption-subject font-red-sunglo bold uppercase">'+ $(this).find('a.filter-name').text()+'</span>' +
+                                '<span class="caption-subject font-red-sunglo bold">'+ $(this).find('a.filter-name').text()+'</span>' +
                                 '<span class="label label-md label-warning">'+val+'</span>' +
                                 '</p>');
                         });
@@ -429,12 +444,18 @@ $(function($){
          */
         this._initShowSelectedStatType = function() {
             $('#StatData-statType').on('change', function(){
-                $('#selected-statType p:nth-child(2)').html('');
+                $('#selected-statType p.list-stat').html('');
+                $('#selected-statType p.list-product').removeClass('show').addClass('hide');
                 if ($(this).val()) {
                     $.each($(this).val(), function (k, v) {
-                        $('#selected-statType p:nth-child(2)').append(
+                        var statType = $('#StatData-statType option[value="'+v+'"]');
+                        var product = $('#StatData-statType option[value="'+v+'"]').parent();
+                        var selectedProduct = $('#selected-statType').find('#product-'+$(product).attr('id'))[0];
+                        $(selectedProduct).removeClass('hide').addClass('show');
+                        $(selectedProduct).next().removeClass('hide').addClass('show');
+                        $(selectedProduct).next().append(
                             '<button data-dbType="stat" value="' + v + '" class="btn btn-sm yellow table-group-action-submit">' +
-                            '<i class="fa fa-check"></i>' + v +
+                            '<i class="fa fa-check"></i>' + $(statType).text() +
                             '</button>'
                         );
                     });
@@ -498,6 +519,14 @@ $(function($){
             }
             return x1 + x2;
         }
+
+        this._checkFilterYear = function () {
+            $('#yearMax, #yearMin').on('change', function(e) {
+               if ($('#yearMax').val() < $('#yearMin')) {
+                   alert('Année min doit être inferieure à l\'année Max');
+               }
+            });
+        }
     };
 
     $(document).ready(function(){
@@ -506,7 +535,7 @@ $(function($){
         QuickSidebar.init(); // init quick sidebar
 
         $.handleSearch._initSearchButton('.filter-submit','global');
-        $.handleSearch._initSearchButton('#selected-statType p:nth-child(2) button','stattype-countries');
+        $.handleSearch._initSearchButton('#selected-statType p.list-stat button','stattype-countries');
         $.handleSearch._initExportButton();
         $.handleSearch._changeYearStat();
         $.handleSearch._initKeypSearch();
@@ -517,29 +546,18 @@ $(function($){
         $.handleSearch._initHandleResetFilters();
         $.handleSearch._initShowSelectedStatType();
         $.handleSearch._initGetInfoNaming();
-        //$('.multi-select').multiSelect();
+        $.handleSearch._checkFilterYear();
         $('.multi-select').multiSelect({
             selectableHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder=''>",
-            selectionHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder=''>",
             afterInit: function(ms){
                 var that = this,
                     $selectableSearch = that.$selectableUl.prev(),
-                    $selectionSearch = that.$selectionUl.prev(),
-                    selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
-                    selectionSearchString = '#selectedFilter .ms-elem-selection.ms-selected';
+                    selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)';
 
                 that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
                     .on('keydown', function(e){
                         if (e.which === 40){
                             that.$selectableUl.focus();
-                            return false;
-                        }
-                    });
-
-                that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
-                    .on('keydown', function(e){
-                        if (e.which == 40){
-                            that.$selectionUl.focus();
                             return false;
                         }
                     });

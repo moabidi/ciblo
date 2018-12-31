@@ -1,6 +1,9 @@
 li.sidebar-search-wrapper a {
     color: #b4bcc8;
 }
+.page-sidebar .page-sidebar-menu > li.db.active > a, .page-sidebar .page-sidebar-menu > li.db.active.open > a{
+    background-color: #c49f47;
+}
 #selectedFilter span.caption-subject {
     font-size: 15px;
     padding-right: 5px;
@@ -50,7 +53,7 @@ li.sidebar-search-wrapper a {
     -moz-border-radius: 3px;
     border-radius: 3px;
     position: relative;
-    height: 200px;
+    height: 150px;
     padding: 0;
     overflow-y: auto;
 }
@@ -64,7 +67,7 @@ li.sidebar-search-wrapper a {
     outline: thin dotted \9;
 }
 
-#selectedFilter ul.ms-list{
+#selectedFilter ul.ms-list, #selectedFilter ul.ms-optgroup{
     margin: 0;
     list-style-type: none;
     padding: 0;
@@ -159,6 +162,14 @@ li.sidebar-search-wrapper a {
 }
 #datatable_orders .filter input.form-filter {
     width: auto;
+}
+#datatable_orders_wrapper .table-scrollable {
+    margin: 0 !important;
+}
+#selected-year span.label-warning, #selected-filters span.label-warning, #selected-statType span.label-text {
+    /*font-size: 14px;*/
+    color: rgb(102, 102, 102);
+    background: none;
 }
 /** End popup Naming **/
 @media (min-width: 992px) {
