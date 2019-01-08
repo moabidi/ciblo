@@ -3,7 +3,7 @@
 
         <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
             <li class="sidebar-toggler-wrapper">
-                <a class="text-center">Affiner votre recherche</a>
+                <a class="text-center">{{ 'Refine your search'|trans }}</a>
             </li>
             {% include 'OivBundle:filters:countries.html.twig' with {'isAdvSearch':true} %}
 
@@ -75,3 +75,4 @@
             </li>
         </ul>
     </div>
+</div>

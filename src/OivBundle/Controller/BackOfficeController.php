@@ -121,6 +121,19 @@ class BackOfficeController extends BaseController
         $aParams['globalResult'] = $this->getResultGLobalSearch('StatData', $aCriteria,'tab3');
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['selectedYear'] = $selectedYear;
+        $oTranslator = $this->get('translator');
+        $aParams['transData'] = [
+            'infoCodeVivc'=>$oTranslator->trans('infoCodeVivc'),
+            'data_not_available'=> $oTranslator->trans('Data not available'),
+            'no_result_search'=> $oTranslator->trans('No results found for your search'),
+            'no_result_found'=> $oTranslator->trans('No results found'),
+            'error_response'=> $oTranslator->trans('error response'),
+            'no_result_export'=> $oTranslator->trans('No data to exported'),
+            'select_country'=> $oTranslator->trans('Please select at least one country'),
+            'no_type_export'=> $oTranslator->trans('Export type not available'),
+            'error_year'=> $oTranslator->trans('Year Min must be less than Year Max'),
+            'text_all'=> $oTranslator->trans('All'),
+        ];
         return $this->render('OivBundle:backOffice:index.html.twig',$aParams);
     }
 

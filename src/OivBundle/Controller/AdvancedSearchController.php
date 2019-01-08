@@ -32,6 +32,19 @@ class AdvancedSearchController extends BaseController
         $aParams['globalResult'] = $this->getResultGLobalSearch('StatData', $aCriteria,'tab2');
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['selectedYear'] = $selectedYear;
+        $oTranslator = $this->get('translator');
+        $aParams['transData'] = [
+            'infoCodeVivc'=>$oTranslator->trans('infoCodeVivc'),
+            'data_not_available'=> $oTranslator->trans('Data not available'),
+            'no_result_search'=> $oTranslator->trans('No results found for your search'),
+            'no_result_found'=> $oTranslator->trans('No results found'),
+            'error_response'=> $oTranslator->trans('error response'),
+            'no_result_export'=> $oTranslator->trans('No data to exported'),
+            'select_country'=> $oTranslator->trans('Please select at least one country'),
+            'no_type_export'=> $oTranslator->trans('Export type not available'),
+            'error_year'=> $oTranslator->trans('Year Min must be less than Year Max'),
+            'text_all'=> $oTranslator->trans('All'),
+        ];
         return $this->render('OivBundle:advancedSearch:index.html.twig',$aParams);
     }
 
@@ -71,7 +84,7 @@ class AdvancedSearchController extends BaseController
                 $handle = fopen('php://output', 'w+');
                 $header = [];
                 foreach(array_keys($results[0]) as $field) {
-                    $header[] = $translator->trans($field);
+                    $header[] = mb_convert_encoding($translator->trans($field), 'ISO-8859-1', 'UTF-8');;
                 }
                 fputcsv($handle, $header, ';');
                 foreach ($results as $row) {
@@ -81,7 +94,8 @@ class AdvancedSearchController extends BaseController
             });
 
             $response->setStatusCode(200);
-            $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+            $response->headers->set('Content-Encoding', ' ISO-8859-1');
+            $response->headers->set('Content-Type', 'text/csv; charset=ISO-8859-1');
             $response->headers->set('Content-Disposition','attachment; filename="export-'.date('Ymd-his').'.csv"');
 
             return $response;

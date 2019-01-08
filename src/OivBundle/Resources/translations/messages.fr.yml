@@ -15,7 +15,6 @@ Country: Pays
 countryCode: Pays
 countryNameFr: Pays
 Database: Données
-Country File: Fiche Pays
 rtable: Raisins de table
 rin: Vin
 rfresh: Raisins frais
@@ -76,8 +75,8 @@ count education: Nombre de formation
 production: Production
 prod: Production
 consumption: Consommation
-import: Import
-export: Export
+import: Importation
+export: Exportation
 indovcons: Consommation individuelle
 total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
@@ -101,21 +100,31 @@ Advanced search: Recherche avancée
 Year min: Année min
 Year max: Année max
 Search: Recherche
+Data provided by Membership: Données fournis par les Etats Membres
+Data not available: Données non disponibles
+Click on a category or series: Cliquer sur une catégorie ou une série
+for details of the data: pour avoir le détail des données
+To have an advanced search with a comparison of the statistics: Pour avoir une recheche avancée avec une comparaison des statistiques
+click here: cliquer ici
+GRAPHIC: GRAPHIQUE
+No results found for your search: Aucun résulat touvé pour votre recherche
+No results found: Aucun résultat trouvé
+error response: Erreur de réponse
 #APPELATION Type du produit
-AROMATISED_WINE: AROMATISED_WINE
+AROMATISED_WINE: AROMATISED WINE
 GRAPE: GRAPE
-GRAPE_JUICE: GRAPE_JUICE
+GRAPE_JUICE: GRAPE JUICE
 MISTELLE: MISTELLE
-NONE: NONE
-SPECIAL_WINE: SPECIAL_WINE
-SPIRITUOUS_BEVERAGE: SPIRITUOUS_BEVERAGE
+NONE: Non classé
+SPECIAL_WINE: SPECIAL WINE
+SPIRITUOUS_BEVERAGE: SPIRITUOUS BEVERAGE
 WINE: WINE
-WINE_VINEGAR: WINE_VINEGAR
+WINE_VINEGAR: WINE VINEGAR
 #APPELATION Type d'indication type 2
 GI: GI
 PDO: PDO
 PGI: PGI
-WINE_ORIGIN: WINE_ORIGIN
+WINE_ORIGIN: Wine of origin
 #CEPAGE Variété principale
 Y: OUI
 N: NON
@@ -134,9 +143,8 @@ CONSUMPTION: CONSOMMATION
 PRODUCTION: PRODUCTION
 IMPORTATION: IMPORTATION
 EXPORTATION: EXPORTATION
-TOTAL_AREA : SUPERFICIE TOTALE
+TOTAL_AREA: SUPERFICIE TOTALE
 CONSUMPTION_CAPITA: CONSOMMATION KAPITA
-
 #Statistiques indicator des statistiques
 A_SURFACE: Superficie du vignoble
 CONSUMPTION_PRODUCT_GRAPES: CONSUMPTION_PRODUCT_GRAPES
@@ -163,47 +171,15 @@ S_CONSUMPTION_WINE: Consommation de vin
 TOTAL_AGRI_AREA: TOTAL_AGRI_AREA
 TOTAL_POPULATION: Population
 U1_STOCK_WINE: Stocks de vin
-#Statistiques types de données
-ARABLE_LAND_PERMANENT_CROP: ARABLE_LAND_PERMANENT_CROP
-CONSUMPTION_DRIED_GRAPE: CONSUMPTION_DRIED_GRAPE
-CONSUMPTION_GRAPE: CONSUMPTION_GRAPE
-CONSUMPTION_GRAPE_JUICE: CONSUMPTION_GRAPE_JUICE
-CONSUMPTION_WINE: CONSUMPTION_WINE
-JUICE_PRODUCTION: JUICE_PRODUCTION
-MUST_PRODUCTION: MUST_PRODUCTION
-ORIGIN_ALL: ORIGIN_ALL
-ORIGIN_FRESH_GRAPES_IMPORTED: ORIGIN_FRESH_GRAPES_IMPORTED
-ORIGIN_FRESH_GRAPES_USED_DRYING_GRAPES: ORIGIN_FRESH_GRAPES_USED_DRYING_GRAPES
-ORIGIN_FRESH_GRAPES_USED_TABLE_GRAPES: ORIGIN_FRESH_GRAPES_USED_TABLE_GRAPES
-ORIGIN_FRESH_GRAPES_USED_WINE_GRAPES: ORIGIN_FRESH_GRAPES_USED_WINE_GRAPES
-PRODUCT_DISTILLATE: PRODUCT_DISTILLATE
-PRODUCT_OTHER: PRODUCT_OTHER
-UNIQUE: UNIQUE
-VIGNES_NON_PRODUCTION_RAISINS_A_SECHER: VIGNES_NON_PRODUCTION_RAISINS_A_SECHER
-VIGNES_NON_PRODUCTION_RAISINS_CUVES: VIGNES_NON_PRODUCTION_RAISINS_CUVES
-VIGNES_NON_PRODUCTION_RAISINS_TABLES: VIGNES_NON_PRODUCTION_RAISINS_TABLES
-VIGNES_NON_PRODUCTION_TOTAL: VIGNES_NON_PRODUCTION_TOTAL
-VIGNES_PRODUCTION_RAISINS_A_SECHER: VIGNES_PRODUCTION_RAISINS_A_SECHER
-VIGNES_PRODUCTION_RAISINS_CUVES: VIGNES_PRODUCTION_RAISINS_CUVES
-VIGNES_PRODUCTION_RASINS_TABLES: VIGNES_PRODUCTION_RASINS_TABLES
-VIGNES_PRODUCTION_TOTAL: VIGNES_PRODUCTION_TOTAL
-VIGNES_TOTAL_TOUTES_VOCATIONS: VIGNES_TOTAL_TOUTES_VOCATIONS
-#Statistiques vocation du raisin
-ALL_DESTINATION: ALL_DESTINATION
-DIRECT_CONSUMPTION: DIRECT_CONSUMPTION
-EXCEPT_PRESSING_DRYING_INCL_LOST: EXCEPT_PRESSING_DRYING_INCL_LOST
-GRAPE_DRYING: GRAPE_DRYING
-GRAPE_DRYING_PISCO: GRAPE_DRYING_PISCO
-GRAPE_PRESSING: GRAPE_PRESSING
-GRAPE_PRESSING_MUST: GRAPE_PRESSING_MUST
-NONE: NONE
 #Unite
 MILLE_HL: 1000 hl
 #MILLE_QX: 1000 qx
 MILLE_QX: tonnes
 MILLE_HA: 1000 ha
+HA: 1000 ha
+TONNES: tonnes
 #KG_CAPITA: 1000 kg
-KG_CAPITA: tonnes
+KG_CAPITA: kg/capita
 #########################
 # ADV SEARCH
 #########################
@@ -215,12 +191,19 @@ list: Série
 Your selection: Votre sélection
 records: lignes
 of: de
+No data to exported: Pas de données à exporter
+Please select at least one country: Veuillez sélectionner au moins un pays
+Export type not available: Type d'export pas disponible
+Year Min must be less than Year Max: Année min doit être inferieure à l'année Max
+All: Tout
+remove all: supprimer tout
+Refine your search: Affiner votre recherche
 #########################
 # BackOffice
 #########################
 Add data: Ajouter des données
 Import data: Importer des données
-Reset: Reset
+Reset: Réinitialiser
 Submit: Valider
 Select file: Sélectionner un fichier
 Admin: Admin
@@ -245,3 +228,5 @@ You must enter the same passwords: Vous devez retaper le même mot de passe
 # Login
 #########################
 Enter your username and password: Saisir votre login et mot de passe
+pseudo: Login
+Identify: S'identifier

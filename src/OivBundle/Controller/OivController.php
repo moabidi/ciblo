@@ -39,8 +39,15 @@ class OivController extends BaseController
         //$aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['selectedYear'] = $selectedYear;
-        $aParams['transData'] = ['infoCodeVivc'=>$this->get('translator')->trans('infoCodeVivc')];
-        //var_dump($aParams['globalResult']);die;
+        $oTranslator = $this->get('translator');
+        $aParams['transData'] = [
+            'infoCodeVivc'=>$oTranslator->trans('infoCodeVivc'),
+            'data_not_available'=> $oTranslator->trans('Data not available'),
+            'no_result_search'=> $oTranslator->trans('No results found for your search'),
+            'no_result_found'=> $oTranslator->trans('No results found'),
+            'error_response'=> $oTranslator->trans('error response'),
+
+        ];
         return $this->render('OivBundle:search:result.html.twig', $aParams);
     }
 

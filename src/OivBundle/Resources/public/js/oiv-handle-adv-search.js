@@ -3,7 +3,7 @@ $(function($){
     $.handleSearch = new function() {
 
         this._g1;
-        this._uri = '/fr/statistiques/';
+        this._uri;
         this._dataFilter ='';
         this._dataTableFilter = '';
         this._dataSort = '';
@@ -37,7 +37,7 @@ $(function($){
                     global.unblockUI('');
                     $('.scroll-to-top').trigger('click');
                 }, 500);
-                alert('error response');
+                alert($.handleSearch._trans.error_response);
                 console.log('error response', error);
             });
         };
@@ -63,7 +63,7 @@ $(function($){
          * @private
          */
         this._handleFailure = function(error) {
-            alert('error response');
+            alert($.handleSearch._trans.error_response);
             console.log('error response');
         };
 
@@ -76,7 +76,7 @@ $(function($){
             if (typeof response.href != 'undefined') {
                 window.open(response.href);
             } else {
-                alert('Pas de données à exporter');
+                alert($.handleSearch._trans.no_result_export);
             }
 
         };
@@ -112,7 +112,7 @@ $(function($){
             }
             $('#popup h3').html(response.appellationName);
             if (html == '') {
-                html = 'Aucun résultat trouvé !';
+                html = $.handleSearch._trans.no_result_found;
             }
             $('#popup div').html(html);
             $('#popup').modal();
@@ -149,7 +149,7 @@ $(function($){
                     $.each(content.labelfields, function (key, val) {
                         if (val != 'id') {
                             hearder += '<th data-sort="' + key + '" class="sorting" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1" >' + val + '</th>';
-                            hearderFilter += '<td rowspan="1" colspan="1"><a><input name="'+ key +'" class="form-control form-filter input-sm filter-col" type="text"><i class="icon-magnifier"></i></a></td>';
+                            hearderFilter += '<td rowspan="1" colspan="1"><a><input name="'+ key +'" class="form-control form-filter input-sm filter-col" type="text"><i class="fa fa-remove"></i><i class="icon-magnifier"></i></a></td>';
                         }
                     });
                     hearder = '<tr role="row" class="heading">' + hearder + '</tr><tr role="row" class="filter">' + hearderFilter + '</tr>';
@@ -194,7 +194,7 @@ $(function($){
                     $('#' + idTable + ' tbody').html(body);
                 }
             }else{
-                hearder = '<tr><th class="text-center">Aucun résulat touvé pour votre recherche</th></tr>';
+                hearder = '<tr><th class="text-center">'+ $.handleSearch._trans.no_result_search+'</th></tr>';
                 body = '<tr><td></td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
                 $('#count-result').text(0);
@@ -230,12 +230,11 @@ $(function($){
                         $(this).parents().eq(2).addClass('active open');
                         $('.current-db-search').text($(this).parents().eq(2).find('span.title').text());
                     }
-                    $('#tab_graph').removeClass('show').addClass('hide');
+                    $('#tab_graph').removeClass('active');
                     $('a[href=#tab_graph]').removeClass('show').addClass('hide');
                     if ($(this).attr('data-dbtype') == 'stat') {
                         $('#selected-filters').removeClass('show').addClass('hide');
                         $('#selected-statType').removeClass('hide').addClass('show');
-                        $('#tab_graph').removeClass('hide').addClass('show');
                         $('a[href=#tab_graph]').removeClass('hide').addClass('show');
                     } else {
                         $('#selected-statType').removeClass('show').addClass('hide');
@@ -243,7 +242,7 @@ $(function($){
                         $('#selected-filters').html('');
                         $.each($(blockDBFilter).find('li.filter'), function() {
                             var val = $(this).find('select').val();
-                            val = val ? val:'Tout';
+                            val = val ? val:$.handleSearch._trans.text_all;
                             $('#selected-filters').append('<p>' +
                                 '<span class="caption-subject font-red-sunglo bold">'+ $(this).find('a.filter-name').text()+'</span>' +
                                 '<span class="label label-md label-warning">'+val+'</span>' +
@@ -270,7 +269,7 @@ $(function($){
                 return false;
             }
             if (!$('#country').val()) {
-                alert('Veuillez sélectionner au moins un pays');
+                alert($.handleSearch._trans.select_country);
                 return false;
             }
             var data = 'dbType='+db+'&countryCode='+$('#country').val()+'&limit='+$('#limit-pg').val();
@@ -411,6 +410,30 @@ $(function($){
             });
         };
 
+        this._initResetTable = function() {
+            $('body').on('click','#datatable_orders tr.filter .fa-remove', function () {
+                if ($(this).parent().find('input').val()) {
+                    $(this).parent().find('input').val('');
+                    var values = '';
+                    $('body').find('#datatable_orders tr.filter input').each(function(){
+                        if ($(this).val()) {
+                            values += '&tableFilters['+$(this).attr('name')+']='+$(this).val();
+                        }
+                    });
+                    $.handleSearch._dataTableFilter = values;
+                    var view = 'global';
+                    var data = $.handleSearch._dataFilter;
+                    var offset = '0';
+                    var limit = $('#limit-pg').val();
+                    /** Set default filter */
+                    data = data == undefined ? 'dbType=stat&countryCode=oiv&year=' + ((new Date()).getFullYear() - 2) + '&view=tab2' : data;
+                    data += $.handleSearch._dataTableFilter;
+                    data += '&offset=' + offset + '&limit=' + limit + $.handleSearch._dataSort;
+                    $.handleSearch._sendRequest(view, 'POST', data, false);
+                }
+            });
+        };
+
         /**
          * Export data into pdf or csv file via ajax request
          * @private
@@ -422,7 +445,7 @@ $(function($){
                     var data = $.handleSearch._dataFilter + '&exportType='+exportType;
                     $.handleSearch._sendRequest('generate-export', 'POST', data, false);
                 } else {
-                    alert('Export type not available')
+                    alert($.handleSearch._trans.no_type_export);
                 }
             });
         };
@@ -483,6 +506,7 @@ $(function($){
                     $(table).find("tbody tr").filter(function () {
                         $(this).toggle($(this).find('td:nth-child(' + index + ')').text().toLowerCase().indexOf(value) > -1)
                     });
+                    $('#count-result').text($(table).find("tbody tr:visible").length);
                 }
             });
         };
@@ -522,8 +546,8 @@ $(function($){
 
         this._checkFilterYear = function () {
             $('#yearMax, #yearMin').on('change', function(e) {
-               if ($('#yearMax').val() < $('#yearMin')) {
-                   alert('Année min doit être inferieure à l\'année Max');
+               if ($('#yearMax').val() < $('#yearMin').val()) {
+                   alert($.handleSearch._trans.error_year);
                }
             });
         }
@@ -543,6 +567,7 @@ $(function($){
         $.handleSearch._initHandlePagePagination();
         $.handleSearch._initSortData();
         $.handleSearch._initSearchTable();
+        $.handleSearch._initResetTable();
         $.handleSearch._initHandleResetFilters();
         $.handleSearch._initShowSelectedStatType();
         $.handleSearch._initGetInfoNaming();
@@ -564,7 +589,6 @@ $(function($){
             },
             afterSelect: function(){
                 this.qs1.cache();
-                this.qs2.cache();
             },
             afterDeselect: function(){
                 this.qs1.cache();
@@ -575,6 +599,8 @@ $(function($){
             iconBase: 'fa',
             tickIcon: 'fa-check'
         });
+        $('.bs-select').selectpicker('refresh');
+
         $('.select2me').select2({
             placeholder: "Select",
             allowClear: true

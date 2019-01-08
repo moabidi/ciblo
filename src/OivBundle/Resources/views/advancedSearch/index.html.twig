@@ -4,9 +4,24 @@
         <a href="/fr/statistiques">{{ 'Country Plug'|trans }}</a>
     </li>
     <li class="dropdown dropdown-user">
-    <a href="{{ path('oiv_login') }}">
-        Connexion
-    </a>
+        <a href="{{ path('oiv_login') }}">
+            Connexion
+        </a>
+    </li>
+    {% set langs = {'de':'Deutsch','en':'English', 'es':'Español', 'fr':'Français', 'it':'Italian'} %}
+    <li class="dropdown dropdown-user">
+        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+            <span class="username username-hide-on-mobile"> {{ langs[app.request.locale] }} </span>
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-default">
+            <li><a href="/fr/statistiques/recherche">Deutsch</a></li>
+            <li><a href="/en/statistiques/recherche">English</a></li>
+            <li><a href="/fr/statistiques/recherche">Español</a></li>
+            <li><a href="/fr/statistiques/recherche">Français</a></li>
+            <li><a href="/fr/statistiques/recherche">Italian</a></li>
+        </ul>
+    </li>
 {% endblock %}
 
 {% block selectedFilter %}

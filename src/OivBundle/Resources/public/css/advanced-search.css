@@ -142,8 +142,8 @@ li.sidebar-search-wrapper a {
     color: #5b9bd1;
     text-decoration: underline;
 }
-#datatable_orders tr.filter .icon-magnifier {
-    padding: 5px 10px;
+#datatable_orders tr.filter .icon-magnifier,#datatable_orders tr.filter .fa-remove {
+    padding: 5px 3px;
 }
 #datatable_orders tr.filter td a{
     display: flex;
@@ -170,6 +170,9 @@ li.sidebar-search-wrapper a {
     /*font-size: 14px;*/
     color: rgb(102, 102, 102);
     background: none;
+}
+.bootstrap-select.bs-select li.dropdown-header{
+    cursor: pointer;
 }
 /** End popup Naming **/
 @media (min-width: 992px) {

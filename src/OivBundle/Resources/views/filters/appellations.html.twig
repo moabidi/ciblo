@@ -18,29 +18,11 @@
                     <select data-view="naming" id="{{ 'NamingData-' ~ fieldName }}" class="form-control select2me" data-live-search="true" name="{{ fieldName }}">
                         <option value="">{{ 'Choose'|trans }}</option>
                         {% for value in filter.values %}
-                            <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags }}</option>
+                            <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags }}</option>
                         {% endfor %}
                     </select>
                 </li>
                 {% endif %}
             {% endif %}
     {% endfor %}
-{% else %}
-<div id="naming" class="row hide">
-    <div class="col-md-12">
-	{% for fieldName, filter in filters.NamingData %}
-        {% if filter.values|length %}
-        <div class="col-md-4 form-group">
-            <label class="control-label">{{ fieldName|trans }}</label>
-            <select data-view="naming" id="{{ 'NamingData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
-                <option value="">{{ 'Choose'|trans }}</option>
-                {% for value in filter.values %}
-                   <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace('<br/>',' - ')|replace('<br>',' - ')|striptags }}</option>
-               {% endfor %}
-            </select>
-        </div>
-        {% endif %}
-    {% endfor %}
-    </div>
-</div>
 {% endif %}

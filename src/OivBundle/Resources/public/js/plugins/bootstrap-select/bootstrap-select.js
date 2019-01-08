@@ -266,6 +266,7 @@
         return '<li' +
         (typeof classes !== 'undefined' ? ' class="' + classes + '"' : '') +
         (typeof index !== 'undefined' | null === index ? ' data-original-index="' + index + '"' : '') +
+        (typeof classes !== 'undefined' && classes === 'dropdown-header' ? ' data-optgroup="' + index + '"' : '') +
         '>' + content + '</li>';
       };
 
@@ -318,6 +319,7 @@
 
             // Get the opt group label
             var label = $this.parent().attr('label');
+            var indexParent = $this.parent().index() + 1;
             var labelSubtext = typeof $this.parent().data('subtext') !== 'undefined' ? '<small class="muted text-muted">' + $this.parent().data('subtext') + '</small>' : '';
             var labelIcon = $this.parent().data('icon') ? '<span class="' + that.options.iconBase + ' ' + $this.parent().data('icon') + '"></span> ' : '';
             label = labelIcon + '<span class="text">' + label + labelSubtext + '</span>';
@@ -326,7 +328,7 @@
               _li.push(generateLI('', null, 'divider'));
             }
 
-            _li.push(generateLI(label, null, 'dropdown-header'));
+            _li.push(generateLI(label, indexParent, 'dropdown-header'));
           }
 
           _li.push(generateLI(generateA(text, 'opt ' + optionClass, inline, optID), index));
@@ -819,6 +821,32 @@
 
       this.$element.change(function () {
         that.render(false);
+      });
+
+      this.$menu.on('click','.inner li.dropdown-header',function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (that.multiple && $(e.currentTarget).hasClass('dropdown-header')) {
+            var $options = that.$element.find('option'),
+                $optgroup = $(e.currentTarget),
+                optgroupID = $optgroup.data('optgroup'),
+                $optgroupLis = that.$menu.find('li>a').filter('[data-optgroup="' + optgroupID + '"]').not('.divider, .dropdown-header, .disabled, .hidden'),
+                selectAll = $optgroupLis.parent().filter('.selected').length !== $optgroupLis.length;
+
+              $optgroupLis.each(function(index) {
+                var $this = $(this);
+                $options.eq($this.parent().data('originalIndex')).prop('selected', selectAll);
+                $this.parent().toggleClass('selected', selectAll);
+              });
+              that.render(false)
+              that.$element.change();
+          }
+          if (that.options.liveSearch) {
+            that.$searchbox.focus();
+          } else {
+            that.$button.focus();
+          }
       });
     },
 

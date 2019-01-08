@@ -20,7 +20,9 @@ $(function ($) {
             });
             this._chart = Highcharts.chart(this._container, {
                 credits: {
-                    enabled: false
+                    enabled: true,
+                    text: 'Copyright OIV',
+                    href:'http://www.oiv.int'
                 },
                 exporting: {
                     buttons: {

@@ -146,40 +146,6 @@ class StatDataRepository extends BaseRepository
     }
 
     /**
-     * @param $aCriteria
-     */
-    protected function addCountryCriteria($aCriteria = [])
-    {
-        if (!empty($aCriteria['countryCode']) && $aCriteria['countryCode'] != 'oiv') {
-            $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
-            $aCountryCode = explode(',',$aCriteria['countryCode']);
-            if ( count(array_intersect($aCountryCode, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']))) {
-                if (count($aCountryCode) ==1) {
-                    $this->_queryBuilder
-                        ->innerJoin('OivBundle:Country', 'c', 'WITH', 'c.iso3 = o.countryCode AND c.tradeBloc  = :tradeBloc')
-                        ->setParameter('tradeBloc', $aCountryCode[0]);
-                } else {
-                    $this->_queryBuilder
-                        ->innerJoin('OivBundle:Country', 'c', 'WITH', 'c.iso3 = o.countryCode AND c.tradeBloc  IN (\''. implode('\',\'',$aCountryCode) .'\')');
-                }
-            } else {
-                if (count($aCountryCode) ==1) {
-                    $this->_queryBuilder
-                        ->Andwhere('o.countryCode = :countryCode')
-                        ->setParameter('countryCode', $aCountryCode[0]);
-                } else {
-                    $this->_queryBuilder
-                        ->Andwhere('o.countryCode IN (\''. implode('\',\'',$aCountryCode) .'\')');
-                        //->setParameter('countryCode', implode('\',\'',$aCountryCode));
-                }
-                $this->_queryBuilder->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
-            }
-        } else {
-            $this->_queryBuilder->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.countryCode');
-        }
-    }
-
-    /**
      * @return array
      */
     public static function getConfigFields()

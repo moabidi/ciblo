@@ -29,13 +29,17 @@
             <div class="thumbnail">
                 <!--<img src="..." alt="...">-->
                 <div class="caption">
-                    <table class="products table block-table fixed-table">
+                    <table id="products" class="products table block-table fixed-table">
                         <thead>
                             <th colspan="6" class="text-center"><span>{{ 'area'|trans }}</span> <span class="mesure"> ha</span></th>
                         </thead>
                         <tbody class="bg-wihte">
                         <tr id="area" data-measure="ha">
-                            <td class=""> <a class="product float-left-">{{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></a></td>
+                            <td class="">
+                                <a class="product float-left-" data-graph="container-g5" href="javascript:;">
+                                    {{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span>
+                                </a>
+                            </td>
                             <td class="">
                                 <a data-graph="container-g5" data-statType="prod" class=" stat-type btn btn-default btn-xs">
                                     <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
@@ -46,18 +50,6 @@
                         </tr>
                         </tbody>
                     </table>
-                    {#<table class="table block-table">#}
-                        {#<thead>#}
-                            {#<th colspan="3" class="text-center">{{ 'Individual Consumption'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span></th>#}
-                        {#</thead>#}
-                        {#<tbody class="bg-wihte">#}
-                        {#<tr>#}
-                            {#<td class="text-center"><a>{{ 'Vin'|trans }} <br>{% if stats.rtableIndivCons.val|default(0) %}{{ (stats.rtableIndivCons.val)|number_format(0, '.',' ') }} (l/per capita +15) {% else %} 0  (l/per capita +15){% endif %}</a></td>#}
-                            {#<td class="text-center"><a>{{ 'Raisin table'|trans }} <br>{% if stats.rfreshIndivCons.val|default(0) %}{{ (stats.rfreshIndivCons.val)|number_format(0, '.',' ') }} (kg/capita) {% else %} 0  (kg/capita){% endif %}</a></td>#}
-                            {#<td class="text-center"><a>{{ 'Raisin Sec'|trans }} <br>{% if stats.rsecIndivCons.val|default(0) %}{{ (stats.rsecIndivCons.val)|number_format(0, '.',' ') }} (kg/capita) {% else %} 0  (kg/capita){% endif %}</a></td>#}
-                        {#</tr>#}
-                        {#</tbody>#}
-                    {#</table>#}
                     <div class="search-list table-responsive table-wrapper-scroll-y table-fixed">
                         <table id="products" class="products table">
                             <thead>
@@ -73,8 +65,9 @@
                                 {% if product.name != 'rin' and product.name != 'area' %}
                                 <tr id="{{ product.name }}" data-measure="{{ product.measure|default() }}">
                                     <td>
-                                        <a class="product" data-graph="container-g{{ loop.index }}" href="#">
+                                        <a class="product" data-graph="container-g{{ loop.index }}" href="javascript:;">
                                             {{ product.label|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ product.label|trans }}"></span>
+                                            <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques" style="color: #fff;background: #c1c1c1;padding: 4px;"></span>
                                         </a>
                                     </td>
                                     <td>
@@ -138,6 +131,7 @@
                                         <td>
                                             <a class="product" data-graph="container-g{{ loop.index }}" href="#">
                                                 {{ product.label|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ product.label|trans }}"></span>
+                                                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques" style="color: #fff;background: #c1c1c1;padding: 4px;"></span>
                                             </a>
                                         </td>
                                         <td>
@@ -190,14 +184,14 @@
                         <thead>
                             <th class="text-center">
                                 {{ 'Varieties'|trans }}
-                                <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count variety'|trans }}"></span>
+                                <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'Data provided by Membership'|trans }}"></span>
                             </th>
                             <th class="text-center">
-                                IG/AO <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="Nombre d'appelation géographique"></span>
+                                IG/AO <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'Data provided by Membership'|trans }}"></span>
                             </th>
                             <th class="text-center">
                                 {{ 'Education'|trans }}
-                                <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'total count education'|trans }}"></span>
+                                <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'Data provided by Membership'|trans }}"></span>
                             </th>
                         </thead>
                         <tbody class="bg-wihte">
@@ -224,8 +218,7 @@
             </div>
         </div>
         <div id="container-graph" class="info col-sm-12 col-md-12">
-            <h2 class="text-center">GRAPHIQUE</h2>
-
+            <h2 class="text-center">{{ 'GRAPHIC'|trans }}</h2>
             <div id="container-g1" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g2" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g3" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -243,6 +236,7 @@
                             downloadSVG: "{{ ('Download SVG vector image'|trans)|raw }}",
                             downloadXLS: "{{ ('Download XLS'|trans)|raw }}"
                         };
+                        $.handleSearch._uri = '{{ '/' ~ app.request.locale ~ '/statistiques/' }}';
                         $.handleSearch._trans = {{ transData|json_encode|raw }};
                         $.handleSearch._g1 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g2 = jQuery.extend(true, {}, $.statCharts);
@@ -284,26 +278,27 @@
                         {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
                         $.handleSearch._g4._mesure = 'tonnes';
                         $.handleSearch._g4._lang =  lang;
+                        $.handleSearch._g4._init();
 
                         $.handleSearch._g5._container = 'container-g5';
                         $.handleSearch._g5._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g5._data = {{ stats.graphProducts.yAxis.area|json_encode|raw }};
                         $.handleSearch._g5._title = {{ (stats.products.4.label|trans)|json_encode|raw  }};
                         {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
-                        $.handleSearch._g5._mesure = 'ha';
+                        $.handleSearch._g5._mesure = '1000 ha';
                         $.handleSearch._g5._lang =  lang;
                         $.handleSearch._g5._init();
-                        $('.highcharts-credits').remove();
+
                     });
                 });
             </script>
         </div>
-        <p class="text-center">Cliquer sur une catégorie ou une série <a class="stat-type btn btn-default btn-xs">
+        <p class="text-center">{{ 'Click on a category or series'|trans }} <a href="javascript:;" class="stat-type btn btn-default btn-xs">
                 <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip"></span>
-            </a> pour avoir le détail des données
+            </a> {{ 'for details of the data'|trans }}
         </p>
         <p class="text-center">
-            Pour avoir une recheche avancée avec une comparaison des statistiques <a id="advancedSearch" href="/fr/statistiques/recherche?countryCode={{ countryCode }}&year={{ (("now"|date('Y'))-2) }}"> cliquer ici</a>
+            {{ 'To have an advanced search with a comparison of the statistics'|trans }} <a id="advancedSearch" href="/fr/statistiques/recherche?countryCode={{ countryCode }}&year={{ (("now"|date('Y'))-2) }}"> {{ 'click here'|trans }}</a>
         </p>
     </div>
 </div>

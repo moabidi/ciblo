@@ -4,14 +4,14 @@
 $(function($){
 
     $.handleSearch = new function() {
-
+        this._locale;
         this._g1;
         this._g2;
         this._g3;
         this._g4;
         this._g5;
 
-        this._uri = '/fr/statistiques/';
+        this._uri;
         this._dataSort = '';
         this._dataFilter;
         this._dataTableFilter;
@@ -32,7 +32,7 @@ $(function($){
                 setTimeout(function(){
                     $('.card').loading({destroy: true});
                 }, 200);
-                alert('error response');
+                alert($.handleSearch._trans.error_response);
                 console.log('error response', error);
             });
         };
@@ -52,7 +52,7 @@ $(function($){
          * @private
          */
         this._handleFailure = function(error) {
-            alert('error response');
+            alert($.handleSearch._trans.error_response);
             console.log('error response');
         };
 
@@ -97,7 +97,7 @@ $(function($){
             }
             $('#popup h3').html(response.appellationName);
             if (html == '') {
-                html = 'Aucun résultat trouvé !';
+                html = $.handleSearch._trans.no_result_found;
             }
             $('#popup div').html(html);
             $('#popup').modal();
@@ -135,7 +135,7 @@ $(function($){
                         if (val != 'id') {
                             var info = key=='codeVivc' ? ' <span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="'+$.handleSearch._trans.infoCodeVivc+'"></span>':'';
                             hearder += '<th data-sort="' + key + '" class="sorting">' + val + info + '</th>';
-                            hearderFilter += '<th><input name="'+key+'" class="filter-col" type="text"><i class="glyphicon glyphicon-search"></i></th>';
+                            hearderFilter += '<th><input name="'+key+'" class="filter-col" type="text"><i class="glyphicon glyphicon-remove"></i><i class="glyphicon glyphicon-search"></i></th>';
                         }
                     });
                     hearder = '<tr>' + hearder + '</tr><tr>' + hearderFilter + '</tr>';
@@ -180,8 +180,8 @@ $(function($){
                     $('#current-pg-'+idTable).text(content.current+'/'+content.total);
                     $('#next-pg-'+idTable).attr('data-offset', content.next);
                     $('#last-pg-'+idTable).attr('data-offset', content.last);
-                    $('#total-result span').text(content.count);
                 }
+                $('#total-result span').text(content.count);
                 if (hearder != '') {
                     $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
                 } else {
@@ -189,7 +189,7 @@ $(function($){
                 }
                 //$('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             }else{
-                hearder = '<tr><th class="text-center">Aucune résulat touvée pour votre recherche</th></tr>';
+                hearder = '<tr><th class="text-center">'+$.handleSearch._trans.no_result_search+'</th></tr>';
                 body = '<tr><td></td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
                 $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
@@ -273,7 +273,11 @@ $(function($){
             $('#nextYear,#prevYear').on('click', function () {
                if ( $(this).attr('data-year')) {
                    var year = parseInt($(this).attr('data-year'));
-
+                   var currentYear = (new Date()).getFullYear();
+                   if (year > (currentYear-2) || year < 1995) {
+                       alert ($.handleSearch._trans.data_not_available);
+                       return false;
+                   }
                    $('#nextYear .year').html(year+1);
                    $('#currentYear').html(year);
                    $('#prevYear .year').html(year-1);
@@ -456,6 +460,30 @@ $(function($){
             });
         };
 
+        this._initResetTable = function() {
+            $('body').on('click','#resultStats thead .glyphicon-remove', function () {
+                if ($(this).parent().find('input').val()) {
+                    $(this).parent().find('input').val('');
+                    var values = '';
+                    $('body').find('#resultStats thead input.filter-col').each(function(){
+                        if ($(this).val()) {
+                            values += '&tableFilters['+$(this).attr('name')+']='+$(this).val();
+                        }
+                    });
+                    $.handleSearch._dataTableFilter = values;
+                    var view = 'global';
+                    var data = $.handleSearch._dataFilter;
+                    var offset = '0';
+                    var limit = $('#limit-pg-resultStats').val();
+                    /** Set default filter */
+                    data = data == undefined ? 'dbType=stat&countryCode=oiv&view=tab1' : data;
+                    data += $.handleSearch._dataTableFilter;
+                    data += '&offset=' + offset + '&limit=' + limit + $.handleSearch._dataSort;
+                    $.handleSearch._sendRequest(view, 'POST', data, false);
+                }
+            });
+        };
+
         /**
          * Search on keyup
          */
@@ -468,6 +496,7 @@ $(function($){
                     $(table).find("tbody tr").filter(function () {
                         $(this).toggle($(this).find('td:nth-child(' + index + ')').text().toLowerCase().indexOf(value) > -1)
                     });
+                    $('#total-result span').text($(table).find("tbody tr:visible").length);
                 }
             });
         };
@@ -495,8 +524,6 @@ $(function($){
     };
 
     $(document).ready(function() {
-        //$.handleSearch._initSearchButton('btn-country-search','country');
-        //$.handleSearch._initSearchButton('btn-product-search','country-statistic');
         $.handleSearch._initSearchButton('.btn-global-country-search','global-country');
         $.handleSearch._initStatButton();
         $.handleSearch._initStatTypeButton();
@@ -508,6 +535,7 @@ $(function($){
         $.handleSearch._initHandlePagePagination();
         $.handleSearch._initSortData();
         $.handleSearch._initSearchTable();
+        $.handleSearch._initResetTable();
         $.handleSearch._initGetInfoNaming();
         $('.selectpicker').selectpicker();
         $('.selectpicker').trigger('change');

@@ -39,6 +39,25 @@ class NamingDataRepository extends BaseRepository
 
     /**
      * @param array $aCriteria
+     * @return int
+     */
+    public function getTotalResult($aCriteria = [])
+    {
+        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $this->_queryBuilder
+            ->select('count(o) as total')
+            ->from($this->_entityName, 'o')
+            ->addGroupBy('o.appellationName');
+        $this->addAllCriteria($aCriteria);
+        $result = $this->_queryBuilder->getQuery()->getArrayResult();
+        if (count($result)) {
+            return count($result);
+        }
+        return null;
+    }
+
+    /**
+     * @param array $aCriteria
      * @param int $offset
      * @param int $limit
      * @param null $sort

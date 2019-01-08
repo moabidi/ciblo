@@ -18,28 +18,4 @@
             </li>
         {% endif %}
     {% endfor %}
-{% else %}
-<div id="variety" class="row hide">
-    <div class="col-md-12">
-        {% for fieldName, filter in filters.VarietyData %}
-            {% if filter.values|length %}
-                <div class="col-md-4 form-group">
-                    <label class="control-label">{{ fieldName|trans }}</label>
-                    <select data-view="variety" id="{{ 'VarietyData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
-                        <option value="">{{ 'Choose'|trans }}</option>
-                        {% if filter.values|length < 20 %}
-                            {% for value in filter.values %}
-                                <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
-                            {% endfor %}
-                        {% else %}
-                            {% for value in filter.values %}
-                                <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
-                            {% endfor %}
-                        {% endif %}
-                    </select>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-</div>
 {% endif %}

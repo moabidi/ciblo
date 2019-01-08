@@ -77,10 +77,10 @@ class BaseController extends Controller
     protected function getStatsCountry($aCriteria = [], $minDate = false, $maxDate = false)
     {
         $repository = $this->get('oiv.stat_repository');
-        $minData = $minDate ? $minDate:'1990';
+        $minData = $minDate ? $minDate:'1995';
         $maxDate = $maxDate ? $maxDate:date('Y')-2;
         $allStats = $this->getStatProducts(array_merge($aCriteria, ['yearMin' => $minData, 'yearMax' => $maxDate]));
-        //var_dump($aCriteria,$repository->getSingleValueStatType('A_SURFACE', $aCriteria));die;
+        //var_dump($aCriteria,$repository->('A_SURFACE', $aCriteria));die;
         return [
             'products' => $this->getStatProducts($aCriteria,true),
             'graphProducts' => $this->formatDataGraph($allStats,$minData,$maxDate),
@@ -290,14 +290,42 @@ class BaseController extends Controller
         if ($aTableFilters = $request->request->get('tableFilters')) {
             if (isset($aTableFilters['countryCode'])){
                 $aTableFilters['countryCode'] = $this->getCountryCode($aTableFilters['countryCode']);
+                $aTableFilters['countryCode'] = $this->checkFiltredCountry($aTableFilters['countryCode'], $aCriteria['countryCode']);
             }
             foreach($aTableFilters as $field => $val) {
                 if (property_exists('OivBundle\\Entity\\'.$table, $field) && $val) {
                     $aCriteria[$field] = $val;
+                    if ($field == 'year') {
+                        $aCriteria['yearMax'] = $aCriteria['yearMin'] = $val;
+                    }
                 }
             }
         }
         return $aCriteria;
+    }
+
+    /** Check filtred country in selected country
+     * @param $filtredCountry
+     * @param $selectedCountry
+     * @return string
+     */
+    protected function checkFiltredCountry($filtredCountry, $selectedCountry)
+    {
+        $selectedCountry = trim($selectedCountry);
+        $aSelectedCountry = explode(',',$selectedCountry);
+        if (in_array('oiv',$aSelectedCountry)) {
+            return $this->getCountryCode($filtredCountry);
+        } else {
+            if (count(array_intersect([$filtredCountry],$aSelectedCountry))){
+                return $this->getCountryCode($filtredCountry);;
+            } elseif(count(array_intersect($aSelectedCountry, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']))) {
+                $result = $this->getDoctrine()->getRepository('OivBundle:Country')->checkFiltredCountry($filtredCountry,$aSelectedCountry);
+                if ($result) {
+                    return $result->getIso3();
+                }
+            }
+        }
+        return 'noCountry';
     }
 
     /**
@@ -321,7 +349,7 @@ class BaseController extends Controller
         $countryCode = $countryName;
         /**@var Country $result */
         $result = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountryCode($countryName);
-        if ($result) {
+        if ($result instanceof Country) {
             $countryCode = $result->getIso3();
         }
         return $countryCode;

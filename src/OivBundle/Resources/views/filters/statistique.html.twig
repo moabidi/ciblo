@@ -18,7 +18,7 @@
                 {% if fieldName == 'statType' %}
                 <select title="{{ 'Choose'|trans }}" class="form-control bs-select" multiple data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">
                     {% for productName, product in filter.values %}
-                        <optgroup id="{{ productName|replace({' ':''}) }}" label="{{ productName|trans }}">
+                        <optgroup data-optgroup={{ loop.index }} id="{{ productName|replace({' ':''}) }}" label="{{ productName|replace({' ':''})|trans }}">
                         {% for value in product %}
                         <option value="{{ value['indicator'] }}">{{ value['statType']|trans|upper }}</option>
                         {% endfor %}
@@ -37,22 +37,4 @@
             {% endif %}
         {% endif %}
     {% endfor %}
-{% else %}
-<div id="stat" class="row hide">
-    <div class="col-md-12">
-        {% for fieldName, filter in filters.StatData %}
-            {% if filter.values|length %}
-                <div class="col-md-4 form-group">
-                    <label class="control-label">{{ fieldName|trans }}</label>
-                    <select data-view="stat" id="{{ 'StatData-' ~ fieldName }}" class="form-control selectpicker" data-live-search="true" name="{{ fieldName }}">
-                        <option value="">{{ 'Choose'|trans }}</option>
-                        {% for value in filter.values %}
-                            <option value="{{ value[fieldName] }}">{{ value[fieldName] }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-</div>
 {% endif %}

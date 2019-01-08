@@ -18,6 +18,18 @@ $(function ($) {
                 lang: this._lang
             });
             Highcharts.chart(this._container, {
+                credits: {
+                    enabled: true,
+                    text: 'Copyright OIV',
+                    href:'http://www.oiv.int'
+                },
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: ["downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG","downloadCSV","downloadXLS"]
+                        }
+                    }
+                },
                 chart: {
                     type: 'column'
                 },

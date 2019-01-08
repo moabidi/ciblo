@@ -23,7 +23,8 @@
                             <td rowspan="1" colspan="1" style="background-color: #DDD;">
                                 <a>
                                 <input type="text" class="form-control form-filter input-sm" name="{% if fieldName in ['countryNameFr','countryNameEn','countryNameIt','countryNameEs'] %}countryCode{% else %}{{ fieldName }}{% endif %}">
-                                <i class="icon-magnifier"></i>
+                                    <i class="fa fa-remove"></i>
+                                    <i class="icon-magnifier"></i>
                                 </a>
                             </td>
                             {% endif %}

@@ -1,10 +1,6 @@
-<div id="container-graphic">
-
-</div>
+<div id="container-graphic"></div>
 <script type="text/javascript">
     $(document).ready(function () {
-
-
         setTimeout(function() {
             var lang = {
                 downloadCSV: "{{ ('Download CSV'|trans)|raw }}",
@@ -14,6 +10,8 @@
                 downloadSVG: "{{ ('Download SVG vector image'|trans)|raw }}",
                 downloadXLS: "{{ ('Download XLS'|trans)|raw }}"
             };
+            $.handleSearch._uri = '{{ '/' ~ app.request.locale ~ '/statistiques/' }}';
+            $.handleSearch._trans = {{ transData|json_encode|raw }};
             $.handleSearch._g1 = jQuery.extend(true, {}, $.statCharts);
             $.handleSearch._g1._container = 'container-graphic';
             {#$.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';#}
