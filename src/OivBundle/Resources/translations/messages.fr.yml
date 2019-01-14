@@ -20,6 +20,7 @@ rin: Vin
 rfresh: Raisins frais
 rsec: Raisins secs
 area: Surface
+For last estimations: Pour les dernières estimations
 #Education
 formationTitle: Intitulé de la formation
 university: Établissement
@@ -32,10 +33,10 @@ hourCourses: Nombre d'heure de formation
 credits: Crédits ECTS
 prior: Pré-requis
 deadline: Deadline
-contact: Adresse et contact
+contact: Contact
 adress: Adresse
-lastDate: dernière date de mise à jour
-internetAdress: Adresse et contact
+lastDate: dernière MAJ
+internetAdress: Adresse internet
 #Appelation
 appellationCode: Code
 appellationName: IG/AO
@@ -43,8 +44,10 @@ parentCode: Code IG/AO supérieure
 parentName: Unité géographique supérieure
 typeNationalCode: Type d'indication national
 typeInternationalCode: Type d'indication international
-productCategoryName: Type de produit
-productType: Catégories de produits
+#productCategoryName: Type de produit
+productCategoryName: Produit
+#productType: Catégories de produits
+productType: Produits
 referenceName: Base reglementaire
 url: Lien sur base légale
 #Stat
@@ -73,10 +76,10 @@ Individual Consumption: Consommation Individuelle
 count variety: Nombre de cépage
 count education: Nombre de formation
 production: Production
-prod: Production
-consumption: Consommation
-import: Importation
-export: Exportation
+prod: Productions
+consumption: Consommations
+import: Importations
+export: Exportations
 indovcons: Consommation individuelle
 total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
@@ -100,7 +103,7 @@ Advanced search: Recherche avancée
 Year min: Année min
 Year max: Année max
 Search: Recherche
-Data provided by Membership: Données fournis par les Etats Membres
+Data provided by Membership: Données fournis par les états membres
 Data not available: Données non disponibles
 Click on a category or series: Cliquer sur une catégorie ou une série
 for details of the data: pour avoir le détail des données
@@ -197,6 +200,7 @@ Export type not available: Type d'export pas disponible
 Year Min must be less than Year Max: Année min doit être inferieure à l'année Max
 All: Tout
 remove all: supprimer tout
+select all: sélectionner tout
 Refine your search: Affiner votre recherche
 #########################
 # BackOffice

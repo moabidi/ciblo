@@ -63,6 +63,19 @@ class BaseRepository extends EntityRepository
         return $this->reformatArray($result);
     }
 
+
+    /**
+     * @param array $aCriteria
+     * @param int $offset
+     * @param int $limit
+     * @param null $sort
+     * @param null $order
+     */
+    public function getExportResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
+    {
+        return $this->getGlobalResult($aCriteria,$offset,$limit,$sort,$order);
+    }
+
     /**
      * @param array $aCriteria
      * @return int

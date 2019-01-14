@@ -38,6 +38,10 @@
 #page .btn {
     background: #FFFFFF;
 }
+#page #advancedSearch.btn, #advancedSearch.btn:hover {
+    background: #AE2B4A;
+    color: #ffffff;
+}
 #page a.stat-type.btn {
     color: #FFFFFF;
     background: #c1c1c1;
@@ -308,6 +312,10 @@ body .filter-search {
 }
 #page .fixed-table {
     table-layout: fixed;
+}
+#page .fiche-country table th:first-child, #page .fiche-country table td:first-child{
+    width: 140px;
+    max-width: 140px;
 }
 #page .fiche-country table th {
    width: 120px;

@@ -1,78 +1,14 @@
 <div class="page-sidebar-wrapper">
     <div class="page-sidebar navbar-collapse collapse">
-
         <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
             <li class="sidebar-toggler-wrapper">
                 <a class="text-center">{{ 'Refine your search'|trans }}</a>
             </li>
             {% include 'OivBundle:filters:countries.html.twig' with {'isAdvSearch':true} %}
-
-            <li class="db">
-                <a class="db-link filter-submit" data-dbType="naming" href="javascript:;">
-                    <i class="icon-magnifier"></i>
-                    <span class="title"><strong>{{ 'Naming'|trans }}</strong></span>
-                    <span class="selected"></span>
-                    <span class="arrow"></span>
-                </a>
-                <ul id="naming" class="sub-menu">
-                    {% include 'OivBundle:filters:appellations.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'naming'} %}
-                </ul>
-            </li>
-            <li class="db">
-                <a class="db-link filter-submit" data-dbType="variety" href="javascript:;">
-                    <i class="icon-magnifier"></i>
-                    <span class="title"><strong>{{ 'Varieties'|trans }}</strong></span>
-                    <span class="selected"></span>
-                    <span class="arrow"></span>
-                </a>
-                <ul id=variety"" class="sub-menu">
-                    {% include 'OivBundle:filters:cepage.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'variety'} %}
-                </ul>
-            </li>
-            <li class="db">
-                <a class="db-link filter-submit" data-dbType="education" href="javascript:;">
-                    <i class="icon-magnifier"></i>
-                    <span class="title"><strong>{{ 'Education'|trans }}</strong></span>
-                    <span class="selected"></span>
-                    <span class="arrow"></span>
-                </a>
-                <ul id="education" class="sub-menu">
-                    {% include 'OivBundle:filters:formation.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'education'} %}
-                </ul>
-            </li>
-            <li class="db active open">
-                <a class="db-link filter-submit" data-dbType="stat" href="javascript:;">
-                    <i class="icon-magnifier"></i>
-                    <span class="title"><strong>{{ 'Statistic'|trans }}</strong></span>
-                    <span class="selected"></span>
-                    <span class="arrow open"></span>
-                </a>
-                <ul id="stat" class="sub-menu">
-                    <li class="sidebar-search-wrapper">
-                        <a class="text-center">{{ 'Year min'|trans }}</a>
-                        <select id="yearMin" class="form-control select2me" data-live-search="true" name="yearMin">
-                            {% for year in ("now"|date('Y'))-2..1995 %}
-                                <option value="{{ year }}"  {% if year == selectedYear %}selected{% endif %}>{{ year }}</option>
-                            {% endfor %}
-
-                        </select>
-                    </li>
-                    <li class="sidebar-search-wrapper">
-                        <a class="text-center">{{ 'Year max'|trans }}</a>
-                        <select id="yearMax" class="form-control select2me" data-live-search="true" name="yearMax">
-                            {% for year in ("now"|date('Y'))-2..1995 %}
-                                <option value="{{ year }}" {% if year == selectedYear %}selected{% endif %}>{{ year }}</option>
-                            {% endfor %}
-
-                        </select>
-                    </li>
-                    {% include 'OivBundle:filters:statistique.html.twig' with {'isAdvSearch':true} %}
-                    {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':'stat'} %}
-                </ul>
-            </li>
+            {% include 'OivBundle:advancedSearch/blocks:filterDB.html.twig' with {'dbType':'education','dbName':'Education','tpl':'formation','isAdvSearch':true} %}
+            {% include 'OivBundle:advancedSearch/blocks:filterDB.html.twig' with {'dbType':'naming','dbName':'IG/AO','tpl':'appellations','isAdvSearch':true} %}
+            {% include 'OivBundle:advancedSearch/blocks:filterDB.html.twig' with {'dbType':'stat','dbName':'Statistic','tpl':'statistique','isAdvSearch':true,'active':true} %}
+            {% include 'OivBundle:advancedSearch/blocks:filterDB.html.twig' with {'dbType':'variety','dbName':'Varieties','tpl':'cepage','isAdvSearch':true} %}
         </ul>
     </div>
 </div>

@@ -70,7 +70,7 @@ class NamingDataRepository extends BaseRepository
         $this->_order = $order ? $order:$this->_order;
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $this->_queryBuilder->select('c.countryNameFr, o.id, o.countryCode, o.versioning,  o.appellationCode,o.appellationName, o.parentCode, o.parentName, o.typeNationalCode, o.typeInternationalCode,
-         count(distinct o.productCategoryName) as productCategoryName, count( distinct o.productType) as productType, count(distinct o.referenceName) as referenceName,
+         count(distinct o.productType) as productCategoryName, count( distinct o.productCategoryName) as productType, count(distinct o.referenceName) as referenceName,
             o.lastDate, o.url');
 
         $this->_queryBuilder->from($this->_entityName, 'o');
@@ -89,9 +89,31 @@ class NamingDataRepository extends BaseRepository
         }
         $result = $this->_queryBuilder->getQuery()->getArrayResult();
         return $this->reformatArray($result);
-
     }
 
+    public function getExportResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
+    {
+        $this->_sort = $sort ? 'o.'.$sort:'o.'.$this->_sort;
+        $this->_order = $order ? $order:$this->_order;
+        $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $this->_queryBuilder->select('c.countryNameFr, o');
+
+        $this->_queryBuilder->from($this->_entityName, 'o');
+        $this->addAllCriteria($aCriteria);
+        $this->_queryBuilder
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+        if ($sort) {
+            if ($this->_sort == 'o.countryCode') {
+                $this->_sort = 'c.countryNameFr';
+            }
+            $this->_queryBuilder->orderBy($this->_sort, $this->_order);
+        } else {
+            $this->addDefaultOrder();
+        }
+        $result = $this->_queryBuilder->getQuery()->getArrayResult();
+        return $this->reformatArray($result);
+    }
     /**
      * @param $appellationName
      * @param bool $isCtg

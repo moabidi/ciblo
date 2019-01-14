@@ -38,6 +38,7 @@
                             <td class="">
                                 <a class="product float-left-" data-graph="container-g5" href="javascript:;">
                                     {{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'aide superficie'|trans }}"></span>
+                                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques" style="color: #fff;background: #c1c1c1;padding: 4px;"></span>
                                 </a>
                             </td>
                             <td class="">
@@ -62,7 +63,7 @@
                             </thead>
                             <tbody>
                             {% for product in stats.products %}
-                                {% if product.name != 'rin' and product.name != 'area' %}
+                                {% if product.name not in ['rin','area','rfresh_indovcons','rin_indovcons','rtable_indovcons','rsec_indovcons'] %}
                                 <tr id="{{ product.name }}" data-measure="{{ product.measure|default() }}">
                                     <td>
                                         <a class="product" data-graph="container-g{{ loop.index }}" href="javascript:;">
@@ -70,46 +71,11 @@
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques" style="color: #fff;background: #c1c1c1;padding: 4px;"></span>
                                         </a>
                                     </td>
-                                    <td>
-                                        <div class="display-flex-">
-                                            <span class="float-right">{{ product.stat.prod is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.prod|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                            <a data-graph="container-g{{ loop.index }}" data-statType="prod" class="float-left stat-type btn btn-default btn-xs">
-                                                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td class="product" data-graph="container-g{{ loop.index }}">
-                                        <div class="display-flex-">
-                                            <span class="float-right">{{ product.stat.export is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.export|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                            <a data-graph="container-g{{ loop.index }}" data-statType="export" class="float-left stat-type btn btn-default btn-xs">
-                                                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td class="product" data-graph="container-g{{ loop.index }}">
-                                        <div class="display-flex-">
-                                            <span class="float-right">{{ product.stat.import is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.import|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                            <a data-graph="container-g{{ loop.index }}" data-statType="import" class="float-left stat-type btn btn-default btn-xs">
-                                                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td class="product" data-graph="container-g{{ loop.index }}">
-                                        <div class="display-flex-">
-                                            <span class="float-right">{{ product.stat.consumption is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.consumption|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                            <a data-graph="container-g{{ loop.index }}" data-statType="consumption" class="float-left stat-type btn btn-default btn-xs">
-                                                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td class="product" data-graph="container-g{{ loop.index }}">
-                                        <div class="display-flex-">
-                                            <span class="float-right">{{ product.stat.indovcons is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.indovcons|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                            <a data-graph="container-g{{ loop.index }}" data-statType="indovcons" class="float-left stat-type btn btn-default btn-xs">
-                                                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                            </a>
-                                        </div>
-                                    </td>
+                                    {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.prod, 'statType':'prod'} %}
+                                    {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.export, 'statType':'export'} %}
+                                    {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.import, 'statType':'import'} %}
+                                    {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.consumption, 'statType':'consumption'} %}
+                                    {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index + 5, 'value':product.stat.indovcons, 'statType':'indovcons'} %}
                                 </tr>
                                 {% endif %}
                             {% endfor %}
@@ -134,46 +100,11 @@
                                                 <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques" style="color: #fff;background: #c1c1c1;padding: 4px;"></span>
                                             </a>
                                         </td>
-                                        <td>
-                                            <div class="display-flex-">
-                                                <span class="float-right">{{ product.stat.prod is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.prod|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                                <a data-graph="container-g{{ loop.index }}" data-statType="prod" class="float-left stat-type btn btn-default btn-xs">
-                                                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td class="product" data-graph="container-g{{ loop.index }}">
-                                            <div class="display-flex-">
-                                                <span class="float-right">{{ product.stat.export is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.export|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                                <a data-graph="container-g{{ loop.index }}" data-statType="export" class="float-left stat-type btn btn-default btn-xs">
-                                                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td class="product" data-graph="container-g{{ loop.index }}">
-                                            <div class="display-flex-">
-                                                <span class="float-right">{{ product.stat.import is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.import|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                                <a data-graph="container-g{{ loop.index }}" data-statType="import" class="float-left stat-type btn btn-default btn-xs">
-                                                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td class="product" data-graph="container-g{{ loop.index }}">
-                                            <div class="display-flex-">
-                                                <span class="float-right">{{ product.stat.consumption is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.consumption|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                                <a data-graph="container-g{{ loop.index }}" data-statType="consumption" class="float-left stat-type btn btn-default btn-xs">
-                                                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td class="product" data-graph="container-g{{ loop.index }}">
-                                            <div class="display-flex-">
-                                                <span class="float-right">{{ product.stat.indovcons is null ? '<span class="valStatType">-</span>':('<span class="valStatType">'~ product.stat.indovcons|number_format(0, '.',' ') ~ '</span> ' )|raw }}</span>
-                                                <a data-graph="container-g{{ loop.index }}" data-statType="indovcons" class="float-left stat-type btn btn-default btn-xs">
-                                                    <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="voir statistiques"></span>
-                                                </a>
-                                            </div>
-                                        </td>
+                                        {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.prod, 'statType':'prod'} %}
+                                        {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.export, 'statType':'export'} %}
+                                        {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.import, 'statType':'import'} %}
+                                        {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.consumption, 'statType':'consumption'} %}
+                                        {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':9, 'value':product.stat.indovcons, 'statType':'indovcons'} %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -218,12 +149,15 @@
             </div>
         </div>
         <div id="container-graph" class="info col-sm-12 col-md-12">
-            <h2 class="text-center">{{ 'GRAPHIC'|trans }}</h2>
             <div id="container-g1" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g2" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g3" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g4" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             <div id="container-g5" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g6" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g7" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g8" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="container-g9" class="hide graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
             <script type="text/javascript">
                 $(document).ready(function () {
@@ -243,6 +177,10 @@
                         $.handleSearch._g3 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g4 = jQuery.extend(true, {}, $.statCharts);
                         $.handleSearch._g5 = jQuery.extend(true, {}, $.statCharts);
+                        $.handleSearch._g6 = jQuery.extend(true, {}, $.statCharts);
+                        $.handleSearch._g7 = jQuery.extend(true, {}, $.statCharts);
+                        $.handleSearch._g8 = jQuery.extend(true, {}, $.statCharts);
+                        $.handleSearch._g9 = jQuery.extend(true, {}, $.statCharts);
 
                         $.handleSearch._g1._container = 'container-g1';
                         $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
@@ -284,21 +222,51 @@
                         $.handleSearch._g5._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g5._data = {{ stats.graphProducts.yAxis.area|json_encode|raw }};
                         $.handleSearch._g5._title = {{ (stats.products.4.label|trans)|json_encode|raw  }};
-                        {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
                         $.handleSearch._g5._mesure = '1000 ha';
                         $.handleSearch._g5._lang =  lang;
                         $.handleSearch._g5._init();
+
+                        $.handleSearch._g6._container = 'container-g6';
+                        $.handleSearch._g6._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g6._data = {{ stats.graphProducts.yAxis.rfresh_indovcons|json_encode|raw }};
+                        $.handleSearch._g6._title = {{ (stats.products.5.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g6._mesure = 'kg/capita';
+                        $.handleSearch._g6._lang =  lang;
+                        $.handleSearch._g6._init();
+
+                        $.handleSearch._g7._container = 'container-g7';
+                        $.handleSearch._g7._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g7._data = {{ stats.graphProducts.yAxis.rin_indovcons|json_encode|raw }};
+                        $.handleSearch._g7._title = {{ (stats.products.6.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g7._mesure = 'kg/capita';
+                        $.handleSearch._g7._lang =  lang;
+                        $.handleSearch._g7._init();
+
+                        $.handleSearch._g8._container = 'container-g8';
+                        $.handleSearch._g8._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g8._data = {{ stats.graphProducts.yAxis.rtable_indovcons|json_encode|raw }};
+                        $.handleSearch._g8._title = {{ (stats.products.7.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g8._mesure = 'kg/capita';
+                        $.handleSearch._g8._lang =  lang;
+                        $.handleSearch._g8._init();
+
+                        $.handleSearch._g9._container = 'container-g9';
+                        $.handleSearch._g9._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
+                        $.handleSearch._g9._data = {{ stats.graphProducts.yAxis.rsec_indovcons|json_encode|raw }};
+                        $.handleSearch._g9._title = {{ (stats.products.8.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g9._mesure = 'l/capita +15';
+                        $.handleSearch._g9._lang =  lang;
+                        $.handleSearch._g9._init();
 
                     });
                 });
             </script>
         </div>
-        <p class="text-center">{{ 'Click on a category or series'|trans }} <a href="javascript:;" class="stat-type btn btn-default btn-xs">
-                <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip"></span>
-            </a> {{ 'for details of the data'|trans }}
+        <p class="text-center">
+            {{ 'For last estimations'|trans }} <a href="/fr/normes-et-documents-techniques/analyses-statistiques/analyse-conjoncturelle"> {{ 'click here'|trans }}</a>
         </p>
         <p class="text-center">
-            {{ 'To have an advanced search with a comparison of the statistics'|trans }} <a id="advancedSearch" href="/fr/statistiques/recherche?countryCode={{ countryCode }}&year={{ (("now"|date('Y'))-2) }}"> {{ 'click here'|trans }}</a>
+            <a id="advancedSearch" class="btn btn-warning btn-search" href="/fr/statistiques/recherche?countryCode={{ countryCode }}&year={{ (("now"|date('Y'))-2) }}" title="{{ 'Advanced search'|trans }}">{{ 'Advanced search'|trans }}</a>
         </p>
     </div>
 </div>

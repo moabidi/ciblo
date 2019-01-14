@@ -10,6 +10,10 @@ $(function($){
         this._g3;
         this._g4;
         this._g5;
+        this._g6;
+        this._g7;
+        this._g8;
+        this._g9;
 
         this._uri;
         this._dataSort = '';
@@ -247,7 +251,7 @@ $(function($){
                 var indexType = $.handleSearch._listType.indexOf($(this).attr('data-statType'));
                 $('.graph').removeClass('show').addClass('hide');
                 $('#'+containerGraph).addClass('show');
-                if (indexType != '-1') {
+                if (indexType != '-1' && $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item').length > 1) {
                     $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item').not('.highcharts-legend-item-hidden').trigger('click');
                     $('#' + containerGraph + ' .highcharts-legend .highcharts-legend-item:eq('+indexType+')').trigger('click');
                 }
@@ -287,25 +291,28 @@ $(function($){
                    $('#prevYear').attr('data-year',year-1);
                    $('.products tbody tr').each(function(){
                        var product = $(this).attr('id');
-                       //console.log(product);console.log( $('#'+product+' .stat-type'));
-                       var measure = $(this).attr('data-measure');
                        var data = {'prod':'','export':'','import':'','consumption':'','indovcons':''};
                        var indexYear = -1;
                        var dataProduct;
+                       var dataProductCapita;
 
                        switch (product) {
                            case 'rfresh':
                                indexYear = $.handleSearch._g1._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g1._data;break;
+                               dataProduct = $.handleSearch._g1._data;
+                               dataProductCapita = $.handleSearch._g6._data;break;
                            case 'rin':
                                indexYear = $.handleSearch._g2._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g2._data;break;
+                               dataProduct = $.handleSearch._g2._data;
+                               dataProductCapita = $.handleSearch._g7._data;break;
                            case 'rtable':
                                indexYear = $.handleSearch._g3._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g3._data;break;
+                               dataProduct = $.handleSearch._g3._data;
+                               dataProductCapita = $.handleSearch._g8._data;break;
                            case 'rsec':
                                indexYear = $.handleSearch._g4._xAxis.indexOf(year);
-                               dataProduct = $.handleSearch._g4._data;break;
+                               dataProduct = $.handleSearch._g4._data;
+                               dataProductCapita = $.handleSearch._g9._data;break;
                            case 'area':
                                indexYear = $.handleSearch._g5._xAxis.indexOf(year);
                                dataProduct = $.handleSearch._g5._data;break;
@@ -316,12 +323,17 @@ $(function($){
                            data.export = typeof dataProduct[1] != 'undefined' && typeof dataProduct[1].data[indexYear] != 'undefined' ? dataProduct[1].data[indexYear] : '0';
                            data.import = typeof dataProduct[2] != 'undefined' && typeof dataProduct[2].data[indexYear] != 'undefined' ? dataProduct[2].data[indexYear] : '0';
                            data.consumption = typeof dataProduct[3] != 'undefined' && typeof dataProduct[3].data[indexYear] != 'undefined' ? dataProduct[3].data[indexYear] : '0';
-                           data.indovcons = typeof dataProduct[4] != 'undefined' && typeof dataProduct[4].data[indexYear] != 'undefined' ? dataProduct[4].data[indexYear] : '0';
+                           data.indovcons = typeof dataProductCapita[0] != 'undefined' && typeof dataProductCapita[0].data[indexYear] != 'undefined' ? dataProductCapita[0].data[indexYear] : '0';
                        }
                        //console.log(data);
                        $('#'+product+' .stat-type').each(function () {
                            var statType = $(this).attr('data-statType');
-                            $(this).parent().find('.valStatType').parent().html('<span class="valStatType">'+ $.handleSearch._formatNumber(data[statType])+'</span> ' );
+                            $(this).parent().find('.valStatType').text($.handleSearch._formatNumber(data[statType]));
+                           if (data[statType]==0) {
+                               $(this).parent().addClass('hide');
+                           } else {
+                               $(this).parent().removeClass('hide');
+                           }
                        });
                    });
                }
@@ -347,7 +359,8 @@ $(function($){
          * @private
          */
         this._initRefreshFilter = function() {
-            $('#advancedSearch').on('click', function() {
+            $('#advancedSearch').on('click', function(e) {
+                e.preventDefault();
                 var countryCode = $('#country').val();
                 var year = $('#year').val();
                 var href = window.location.href.split('?');

@@ -77,18 +77,25 @@ class AdvancedSearchController extends BaseController
         if ($aDataSession = $request->getSession()->get($exportKey)) {
             $aCriteria = $aDataSession['criteria'];
             $table = $aDataSession['table'];
-            $results = $this->getResultGLobalSearch($table, $aCriteria, false,0,null);
+            $view = $table == 'StatData' ? 'export':'tab2';
+            if ($this->getUser()) {
+                $view = $table == 'StatData' ? 'exportBo':'tab3';
+            }
+            $results = $this->getExportGLobalSearch($table, $aCriteria, $view,0,null);
             $translator = $this->get('translator');
             $response = new StreamedResponse();
             $response->setCallback(function() use ($results, $translator) {
                 $handle = fopen('php://output', 'w+');
                 $header = [];
-                foreach(array_keys($results[0]) as $field) {
-                    $header[] = mb_convert_encoding($translator->trans($field), 'ISO-8859-1', 'UTF-8');;
-                }
-                fputcsv($handle, $header, ';');
-                foreach ($results as $row) {
-                    fputcsv($handle, $row, ';');
+                if($results) {
+                    foreach (array_keys($results[0]) as $field) {
+                        $header[] = mb_convert_encoding($translator->trans($field), 'ISO-8859-1', 'UTF-8');
+                    }
+                    fputcsv($handle, $header, ';');
+                    foreach ($results as $row) {
+                        $row = $this->encodeData($row);
+                        fputcsv($handle, $row, ';');
+                    }
                 }
                 fclose($handle);
             });
@@ -101,6 +108,14 @@ class AdvancedSearchController extends BaseController
             return $response;
         }
         return;
+    }
+
+    protected function encodeData($row)
+    {
+        foreach ($row as &$value) {
+            $value = strip_tags(mb_convert_encoding($value, 'ISO-8859-1', 'UTF-8'));
+        }
+        return $row;
     }
 
     /**

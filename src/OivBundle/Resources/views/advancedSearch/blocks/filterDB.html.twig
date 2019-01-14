@@ -1,0 +1,32 @@
+<li class="db {% if active|default(false) %}active open{% endif %}">
+    <a class="db-link filter-submit" data-dbType="{{ dbType }}" href="javascript:;">
+        <i class="icon-magnifier"></i>
+        <span class="title"><strong>{{ dbName|trans }}</strong></span>
+        <span class="selected"></span>
+        <span class="arrow"></span>
+    </a>
+    <ul id="{{ dbType }}" class="sub-menu">
+        {% if dbType == 'stat' %}
+            <li class="sidebar-search-wrapper">
+                <a class="text-center">{{ 'Year min'|trans }}</a>
+                <select id="yearMin" class="form-control select2me" data-live-search="true" name="yearMin">
+                    {% for year in ("now"|date('Y'))-2..1995 %}
+                        <option value="{{ year }}"  {% if year == selectedYear %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+
+                </select>
+            </li>
+            <li class="sidebar-search-wrapper">
+                <a class="text-center">{{ 'Year max'|trans }}</a>
+                <select id="yearMax" class="form-control select2me" data-live-search="true" name="yearMax">
+                    {% for year in ("now"|date('Y'))-2..1995 %}
+                        <option value="{{ year }}" {% if year == selectedYear %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+
+                </select>
+            </li>
+        {% endif %}
+        {% include 'OivBundle:filters:'~ tpl ~'.html.twig' with {'isAdvSearch':true} %}
+        {% include 'OivBundle:advancedSearch/blocks:btn-search-reset.html.twig' with {'dbType':dbType} %}
+    </ul>
+</li>

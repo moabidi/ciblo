@@ -102,9 +102,12 @@ class StatDataRepository extends BaseRepository
     public function getTotalResult($aCriteria = [])
     {
         $queryBuilder = $this->getQueryResult($aCriteria, true);
-        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        $zone = $this->getZone($aCriteria);
+        $result = $zone ? $queryBuilder->getQuery()->getResult():$queryBuilder->getQuery()->getOneOrNullResult();
         if (isset($result['total'])) {
             return (int)$result['total'];
+        }elseif(is_array($result)){
+            return count($result);
         }
         return null;
     }
@@ -112,11 +115,19 @@ class StatDataRepository extends BaseRepository
     public function getQueryResult($aCriteria = [], $count = false)
     {
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
-
+        $zone = $this->getZone($aCriteria);
         if ($count) {
-            $this->_queryBuilder->select(' count(o) as total');
+            if ($zone) {
+                $this->_queryBuilder->select('c.countryNameFr, SUM(o.value) as value');
+            } else {
+                $this->_queryBuilder->select(' count(o) as total');
+            }
         } else {
-            $this->_queryBuilder->select('c.countryNameFr, o');
+            if ($zone) {
+                $this->_queryBuilder->select('\''.$zone.'\' as countryNameFr, SUM(o.value) as value, o.id, o.countryCode, o.statType, o.measureType, o.metricCompType, o.year, o.infoSource, o.lastDate, o.grapesDestination');
+            } else {
+                $this->_queryBuilder->select('c.countryNameFr, o');
+            }
         }
 
         $this->_queryBuilder
@@ -127,6 +138,12 @@ class StatDataRepository extends BaseRepository
         $this->addCountryCriteria($aCriteria);
         $this->addYearCriteria($aCriteria);
         $this->addValueCriteria($aCriteria);
+
+        if ($zone) {
+            $this->_queryBuilder
+                ->groupBy('o.year')
+                ->addGroupBy('o.statType');
+        }
         return $this->_queryBuilder;
     }
 
@@ -145,6 +162,17 @@ class StatDataRepository extends BaseRepository
         }
     }
 
+    private function getZone($aCriteria)
+    {
+        $zone = $aCriteria['countryCode'] == 'oiv' ? 'World':'';
+        if(!$zone) {
+            $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
+            $aCountryCode = explode(',',$aCriteria['countryCode']);
+            $zone = count(array_intersect($aCountryCode, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']))>0 ? implode(' - ',$aCountryCode):'';
+        }
+        return $zone;
+    }
+
     /**
      * @return array
      */
@@ -152,17 +180,17 @@ class StatDataRepository extends BaseRepository
     {
         return [
             'id'=>['tab3'],
-            'countryNameFr' => ['tab1','tab2','tab3'],
+            'countryNameFr' => ['tab1','tab2','tab3','export','exportBo'],
             'versioning' => ['form'],
             'countryCode' => ['form'],
-            'statType' => ['form','filter','tab1','tab2','tab3'],
-            'metricCompType' => ['form','tab1','tab2','tab3'],
-            'year' => ['form','tab1','tab2','tab3'],
-            'measureType' => ['form','tab1','tab2','tab3'],
-            'value' => ['form','filter','tab1','tab2','tab3'],
+            'statType' => ['form','filter','tab1','tab2','tab3','export','exportBo'],
+            'metricCompType' => ['form','tab1','tab2','tab3','exportBo'],
+            'year' => ['form','tab1','tab2','tab3','export','exportBo'],
+            'measureType' => ['form','tab1','tab2','tab3','export','exportBo'],
+            'value' => ['form','filter','tab1','tab2','tab3','export','exportBo'],
             'grapesDestination'=>['form'],
             'infoSource'=> ['form'],
-            'lastDate'=>[],
+            'lastDate'=>['exportBo'],
             'usableData' => ['form'],
             'lastData' => [],
         ];

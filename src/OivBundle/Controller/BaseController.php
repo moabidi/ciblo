@@ -36,7 +36,35 @@ class BaseController extends Controller
     protected function getResultGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =200, $sort= null, $order = null)
     {
         $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria,$offset, $limit, $sort, $order);
-        if (in_array($view, ['tab1','tab2','tab3'])) {
+        if (in_array($view, ['tab1','tab2','tab3','export','exportBo'])) {
+            $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
+            $translator = $this->get('translator');
+            array_walk($result, function (&$v, $k) use ($selectedFields, $translator) {
+                $selectedData = [];
+                foreach ($selectedFields as $field) {
+                    $selectedData[$field] = $translator->trans($v[$field]);
+                }
+                $v = $selectedData;
+            });
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $table
+     * @param array $aCriteria
+     * @param bool $view
+     * @param int $offset
+     * @param int $limit
+     * @param $sort
+     * @param $order
+     * @return mixed
+     */
+    protected function getExportGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =200, $sort= null, $order = null)
+    {
+        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getExportResult($aCriteria,$offset, $limit, $sort, $order);
+        if (in_array($view, ['tab2','tab3','export','exportBo']) && $result) {
             $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
             $translator = $this->get('translator');
             array_walk($result, function (&$v, $k) use ($selectedFields, $translator) {
@@ -80,7 +108,11 @@ class BaseController extends Controller
         $minData = $minDate ? $minDate:'1995';
         $maxDate = $maxDate ? $maxDate:date('Y')-2;
         $allStats = $this->getStatProducts(array_merge($aCriteria, ['yearMin' => $minData, 'yearMax' => $maxDate]));
-        //var_dump($aCriteria,$repository->('A_SURFACE', $aCriteria));die;
+        foreach ($allStats as &$product) {
+            if (in_array($product['name'], ['rfresh','rin','rtable','rsec'])) {
+                unset($product['stat']['indovcons']);
+            }
+        }
         return [
             'products' => $this->getStatProducts($aCriteria,true),
             'graphProducts' => $this->formatDataGraph($allStats,$minData,$maxDate),
@@ -152,6 +184,38 @@ class BaseController extends Controller
                 'name' => 'area',
                 'stat' => [
                     'prod' => 'A_SURFACE',
+                ]
+
+            ],
+            [
+                'label' => $translator->trans('rfresh'),
+                'name' => 'rfresh_indovcons',
+                'stat' => [
+                    'indovcons' => '',
+                ]
+
+            ],
+            [
+                'label' => $translator->trans('rin'),
+                'name' => 'rin_indovcons',
+                'stat' => [
+                    'indovcons' => '',
+                ]
+
+            ],
+            [
+                'label' => $translator->trans('rtable'),
+                'name' => 'rtable_indovcons',
+                'stat' => [
+                    'indovcons' => '',
+                ]
+
+            ],
+            [
+                'label' => $translator->trans('rsec'),
+                'name' => 'rsec_indovcons',
+                'stat' => [
+                    'indovcons' => 'M_COMSUMPTION_CAPITA_GRP',
                 ]
 
             ],

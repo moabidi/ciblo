@@ -32,7 +32,7 @@ hourCourses: Number of hours of training
 credits: ECTS Credits
 prior: Prerequisites
 deadline: Deadline
-contact: Address and contact
+contact: Contact
 adress: Address
 lastDate: Last update date
 internetAdress: Link
@@ -43,8 +43,10 @@ parentCode: Upper GI / AO code
 parentName: Upper geographical unit
 typeNationalCode: National indication type
 typeInternationalCode: Type of international indication
-productCategoryName: Type of product
-productType: Categories of products
+#productCategoryName: Type of product
+productCategoryName: Product
+#productType: Categories of products
+productType: Produits
 referenceName: Regulatory basis
 url: Link
 #Stat
@@ -99,7 +101,7 @@ Advanced search: Advanced search
 Year min: Year min
 Year max: Year max
 Search: Search
-Data provided by Membership: Data provided by Membership
+Data provided by Membership: Data provided by membership
 Data not available: Data not available
 Click on a category or series: Click on a category or series
 for details of the data: for details of the data

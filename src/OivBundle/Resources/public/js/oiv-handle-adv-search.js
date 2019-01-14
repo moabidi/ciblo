@@ -104,7 +104,8 @@ $(function($){
                     html += '</p></a>';
                 } else {
                     $.each(response.data, function (key, items) {
-                        html += '<a href="'+items.url+'" target="_blank" class="list-group-item">';
+                        url = items.url ? items.url:'javascript:;';
+                        html += '<a href="'+url+'" target="_blank" class="list-group-item">';
                         html += '<h4 class="list-group-item-heading">' + items.referenceName + '</h4>';
                         html += '</a>';
                     });
@@ -161,7 +162,7 @@ $(function($){
                         if (key != 'id') {
                             if (key == 'productCategoryName' || key =='productType' || key=='referenceName') {
                                 val = '<a class="info-naming" data-appellationName="'+items.appellationName+'" data-fieldName="'+key+'">' + val + ' ' +content.textView +'</a>';
-                            } else if (key == 'url') {
+                            } else if (key == 'url' && val) {
                                 val = '<a target="_blank" href="'+val+'">'+content.textViewMore+'</a>';
                             }
                             body += '<td>' + val + '</td>';
@@ -194,11 +195,9 @@ $(function($){
                     $('#' + idTable + ' tbody').html(body);
                 }
             }else{
-                hearder = '<tr><th class="text-center">'+ $.handleSearch._trans.no_result_search+'</th></tr>';
-                body = '<tr><td></td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
                 $('#count-result').text(0);
-                $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
+                $('#'+idTable+' tbody').html('<tr><td colspan="4">'+$.handleSearch._trans.no_result_search+'</td></tr>');
             }
             $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');
             $('a[href="#tab_table"]').trigger('click');
@@ -492,6 +491,10 @@ $(function($){
                 $('body').find('#selected-statType button').removeClass('active');
                 $(this).addClass('active');
             });
+
+            $('#selectAllCountry').on('click', function() {
+                $('body').find('#ms-country .ms-optgroup-label').eq(2).trigger('click');
+            })
         };
 
         /**
@@ -573,6 +576,7 @@ $(function($){
         $.handleSearch._initGetInfoNaming();
         $.handleSearch._checkFilterYear();
         $('.multi-select').multiSelect({
+            selectableOptgroup: true,
             selectableHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder=''>",
             afterInit: function(ms){
                 var that = this,
@@ -592,7 +596,6 @@ $(function($){
             },
             afterDeselect: function(){
                 this.qs1.cache();
-                this.qs2.cache();
             }
         });
         $('.bs-select').selectpicker({
