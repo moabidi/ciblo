@@ -12,7 +12,9 @@ use Doctrine\ORM\QueryBuilder;
 
 class StatDataRepository extends BaseRepository
 {
+    protected $_defaultSort = 'countryCode';
     protected $_sort = 'countryCode';
+    protected $_defaultorder = 'ASC';
     protected $_order = 'ASC';
 
     /**
@@ -29,9 +31,7 @@ class StatDataRepository extends BaseRepository
         }
 
         $this->makeQuery(array_merge($aCriteria,['statType'=>$statType]));
-//        var_dump($this->_queryBuilder->getQuery()->getDQL());
-//        var_dump($this->_queryBuilder->getQuery()->getResult());die;
-        $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();//var_dump($this->_queryBuilder->getQuery()->getSQL());
+        $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();
         if (isset($result['value'])) {
             $val = intval($result['value']) ? intval($result['value']):'0';
             $measure = $result['measureType'];
@@ -79,10 +79,10 @@ class StatDataRepository extends BaseRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
+    public function getGlobalZoneResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
     {
-        $this->_sort = $sort ? 'o.'.$sort:'o.'.$this->_sort;
-        $this->_order = $order ? $order:$this->_order;
+        $this->_sort = $sort ? 'o.'.$sort:'o.'.$this->_defaultSort;
+        $this->_order = $order ? $order:$this->_defaultorder;
         $this->_queryBuilder = $this->getQueryResult($aCriteria);
         $this->_queryBuilder
                             ->setFirstResult($offset)
@@ -96,10 +96,39 @@ class StatDataRepository extends BaseRepository
     }
 
     /**
+     * SELECT * FROM oivdataw.stat_data where COUNTRY_CODE='FRA'  and  YEAR='2016'
+     * @param array $aCriteria
+     * @param int $offset
+     * @param int $limit
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getGlobalResult($aCriteria = [], $offset = 0, $limit = 100, $sort= null, $order = null)
+    {
+        $result = [];
+        $aBaseCriteria = $aCriteria;
+        if ( $listZone = $this->getZoneCriteria($aCriteria)) {
+            foreach($listZone as $zone) {
+                $aBaseCriteria['countryCode'] = $zone;
+                $resultZone =  $this->getGlobalZoneResult($aBaseCriteria, 0, null, $sort, $order);
+                $result = array_merge($result,$resultZone);
+            }
+        }
+        if ( $listCountries = $this->getCounriesCriteria($aCriteria)) {
+            $aBaseCriteria['countryCode'] = implode(',',$listCountries);
+            $resultZone = $this->getGlobalZoneResult($aBaseCriteria, 0, null, $sort, $order);
+            $result = array_merge($result,$resultZone);
+        }
+        $order = $this->_order == 'DESC'? SORT_DESC:SORT_ASC;
+        $result = $this->array_sort($result, substr($this->_sort,2), $order);
+        return array_slice($result,$offset,$limit);
+    }
+
+    /**
      * @param array $aCriteria
      * @return int
      */
-    public function getTotalResult($aCriteria = [])
+    public function getTotalZoneResult($aCriteria = [])
     {
         $queryBuilder = $this->getQueryResult($aCriteria, true);
         $zone = $this->getZone($aCriteria);
@@ -110,6 +139,43 @@ class StatDataRepository extends BaseRepository
             return count($result);
         }
         return null;
+    }
+
+    /**
+     * @param array $aCriteria
+     * @return int
+     */
+    public function getTotalResult($aCriteria = [])
+    {
+        $total = 0;
+        $aBaseCriteria = $aCriteria;
+        if ( $listZone = $this->getZoneCriteria($aCriteria)) {
+            foreach($listZone as $zone) {
+                $aBaseCriteria['countryCode'] = $zone;
+                $total += $this->getTotalZoneResult($aBaseCriteria);
+            }
+        }
+        if ( $listCountries = $this->getCounriesCriteria($aCriteria)) {
+            $aBaseCriteria['countryCode'] = implode(',',$listCountries);
+            $total += $this->getTotalZoneResult($aBaseCriteria);
+        }
+        return $total;
+    }
+
+    public function getZoneCriteria($aCriteria = [])
+    {
+        $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
+        $aCountryCode = explode(',',$aCriteria['countryCode']);
+        $result =  array_intersect($aCountryCode, ['oiv','AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']);
+        return $result;
+    }
+
+    public function getCounriesCriteria($aCriteria = [])
+    {
+        $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
+        $aCountryCode = explode(',',$aCriteria['countryCode']);
+        $result = array_diff($aCountryCode,['oiv','AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']);
+        return $result;
     }
 
     public function getQueryResult($aCriteria = [], $count = false)
@@ -173,6 +239,41 @@ class StatDataRepository extends BaseRepository
         return $zone;
     }
 
+    private function array_sort($array, $on, $order=SORT_ASC)
+    {
+        $new_array = array();
+        $sortable_array = array();
+
+        if (count($array) > 0) {
+            foreach ($array as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $k2 => $v2) {
+                        if ($k2 == $on) {
+                            $sortable_array[$k] = $v2;
+                        }
+                    }
+                } else {
+                    $sortable_array[$k] = $v;
+                }
+            }
+
+            switch ($order) {
+                case SORT_ASC:
+                    asort($sortable_array);
+                    break;
+                case SORT_DESC:
+                    arsort($sortable_array);
+                    break;
+            }
+
+            foreach ($sortable_array as $k => $v) {
+                $new_array[$k] = $array[$k];
+            }
+        }
+
+        return $new_array;
+    }
+
     /**
      * @return array
      */
@@ -189,7 +290,7 @@ class StatDataRepository extends BaseRepository
             'measureType' => ['form','tab1','tab2','tab3','export','exportBo'],
             'value' => ['form','filter','tab1','tab2','tab3','export','exportBo'],
             'grapesDestination'=>['form'],
-            'infoSource'=> ['form'],
+            'infoSource'=> ['form','exportBo'],
             'lastDate'=>['exportBo'],
             'usableData' => ['form'],
             'lastData' => [],

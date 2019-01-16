@@ -193,10 +193,9 @@ $(function($){
                 }
                 //$('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
             }else{
-                hearder = '<tr><th class="text-center">'+$.handleSearch._trans.no_result_search+'</th></tr>';
-                body = '<tr><td></td></tr>';
+                body = '<tr><td class="text-center">'+$.handleSearch._trans.no_result_search+'</td></tr>';
                 $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
-                $('#'+idTable).html('<thead>'+hearder+'</thead><tbody>'+body+'</tbody>');
+                $('#'+idTable+' tbody').html(body);
                 $('#total-result').addClass('hide');
             }
             $('#'+idTable).parents().eq(1).removeClass('hide').addClass('show');

@@ -103,7 +103,7 @@ Advanced search: Recherche avancée
 Year min: Année min
 Year max: Année max
 Search: Recherche
-Data provided by Membership: Données fournis par les états membres
+Data provided by Membership: Données fournies par les états membres
 Data not available: Données non disponibles
 Click on a category or series: Cliquer sur une catégorie ou une série
 for details of the data: pour avoir le détail des données
@@ -186,6 +186,8 @@ KG_CAPITA: kg/capita
 #########################
 # ADV SEARCH
 #########################
+Choose all continents: Sélectionner tous les continents
+Choose all countries: Sélectionner tous les pays
 Results: Résultats
 Home: Accueil
 Export to: Export en
@@ -201,6 +203,7 @@ Year Min must be less than Year Max: Année min doit être inferieure à l'anné
 All: Tout
 remove all: supprimer tout
 select all: sélectionner tout
+select all countries: sélectionner tous les pays
 Refine your search: Affiner votre recherche
 #########################
 # BackOffice

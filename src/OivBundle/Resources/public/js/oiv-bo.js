@@ -63,7 +63,7 @@ $(function($){
         this._handleSuccess = function(response, view, changeHeader) {
             switch (view) {
                 case 'global': $.handleSearch._refreshTableResult(response, 'datatable_orders',changeHeader);break;
-                case 'generate-export': $.handleSearch._refreshExport(response);break;
+                case 'backoffice/generate-export-bo': $.handleSearch._refreshExport(response);break;
                 case 'backoffice/import-data': $.handleSearch._refreshImport(response);break;
                 case 'backoffice/create-data': $.handleSearch._refreshCreate(response);break;
                 case 'backoffice/edit-data': $.handleSearch._refreshEdit(response);break;
@@ -135,8 +135,11 @@ $(function($){
                     html += '</p></a>';
                 } else {
                     $.each(response.data, function (key, items) {
-                        url = items.url ? items.url:'javascript:;';
-                        html += '<a href="'+url+'" target="_blank" class="list-group-item">';
+                        if(items.url) {
+                            html += '<a href="' + items.url + '" target="_blank" class="list-group-item">';
+                        } else {
+                            html += '<a href="javascript:;" class="list-group-item">';
+                        }
                         html += '<h4 class="list-group-item-heading">' + items.referenceName + '</h4>';
                         html += '</a>';
                     });
@@ -253,7 +256,7 @@ $(function($){
                 $('#count-result').text(content.count);
                 $('#count-page').text(content.total);
                 if (content.total < '2') {
-                    $('#pagination-result .pagination').removeClass('show').addClass('hide');
+                    $('#pagination-result .pagination.dataTables_paginate').removeClass('show').addClass('hide');
                 } else {
                     $('#pagination-result .pagination').removeClass('hide');
                     $('#prev-pg').removeClass('hide');
@@ -275,7 +278,7 @@ $(function($){
                     $('#' + idTable + ' tbody').html(body);
                 }
             }else{
-                $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
+                $('#'+idTable).parents().eq(1).find('.pagination.dataTables_paginate').removeClass('show').addClass('hide');
                 $('#count-result').text(0);
                 $('#'+idTable+' tbody').html('<tr><td colspan="4">'+$.handleSearch._trans.no_result_search+'</td></tr>');
             }
@@ -614,7 +617,7 @@ $(function($){
                 var exportType = $(this).attr('data-export');
                 if ( exportType == 'csv' || exportType =='pdf' ) {
                     var data = $.handleSearch._dataFilter + '&exportType='+exportType;
-                    $.handleSearch._sendRequest('generate-export', 'POST', data, false);
+                    $.handleSearch._sendRequest('backoffice/generate-export-bo', 'POST', data, false);
                 } else {
                     alert('Export type not available')
                 }

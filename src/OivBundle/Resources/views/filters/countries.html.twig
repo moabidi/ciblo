@@ -2,27 +2,38 @@
     <li class="sidebar-search-wrapper">
         <a class="text-center"><strong>{{ 'Country'|trans }}</strong></a>
         <select multiple id="country" class="multi-select hide" data-live-search="true" name="country">
+            <optgroup id="world" label="{{ 'Choose'|trans }} {{ 'World'|trans }}">
+                <option value="oiv" {% if countryCode == 'oiv' %}selected=""{% endif %}>{{ 'World'|trans }}</option>
+            </optgroup>
+            <optgroup id="zone" label="{{ 'Choose all continents'|trans }}">
+                {% for item in tradeBlocs %}
+                    <option value="{{ item.tradeBloc }}" {% if countryCode == item.tradeBloc %}selected=""{% endif %}>{{ item.tradeBloc|capitalize }}</option>
+                {% endfor %}
+            </optgroup>
+            <optgroup id="countries" label="{{ 'Choose all countries'|trans }}">
+                {% for country in countries %}
+                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
+                {% endfor %}
+            </optgroup>
+        </select>
+    </li>
 {% else %}
     <div class="col-md-4 col-sm-4 form-group">
         <label class="control-label">{{ 'Country'|trans }}</label>
         <select id="country" class="form-control selectpicker" data-live-search="true" name="country">
-{% endif %}
-        <optgroup id="world" label="{{ 'Choose'|trans }} {{ 'World'|trans }}">
-            <option value="oiv" {% if countryCode == 'oiv' %}selected=""{% endif %}>{{ 'World'|trans }}</option>
-        </optgroup>
-        <optgroup id="zone" label="{{ 'Choose'|trans }} {{ 'a continent'|trans }}">
-            {% for item in tradeBlocs %}
-                <option value="{{ item.tradeBloc }}" {% if countryCode == item.tradeBloc %}selected=""{% endif %}>{{ item.tradeBloc|capitalize }}</option>
-            {% endfor %}
-        </optgroup>
-        <optgroup id="countries" label="{{ 'Choose'|trans }} {{ 'a country'|trans }}">
-            {% for country in countries %}
-                <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
-            {% endfor %}
-        </optgroup>
-    </select>
-{% if isAdvSearch|default(false) %}
-    </li>
-{% else %}
+            <optgroup id="world" label="{{ 'Choose'|trans }} {{ 'World'|trans }}">
+                <option value="oiv" {% if countryCode == 'oiv' %}selected=""{% endif %}>{{ 'World'|trans }}</option>
+            </optgroup>
+            <optgroup id="zone" label="{{ 'Choose'|trans }} {{ 'a continent'|trans }}">
+                {% for item in tradeBlocs %}
+                    <option value="{{ item.tradeBloc }}" {% if countryCode == item.tradeBloc %}selected=""{% endif %}>{{ item.tradeBloc|capitalize }}</option>
+                {% endfor %}
+            </optgroup>
+            <optgroup id="countries" label="{{ 'Choose'|trans }} {{ 'a country'|trans }}">
+                {% for country in countries %}
+                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
+                {% endfor %}
+            </optgroup>
+        </select>
     </div>
 {% endif %}

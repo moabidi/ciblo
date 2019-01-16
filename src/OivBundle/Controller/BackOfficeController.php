@@ -238,6 +238,37 @@ class BackOfficeController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/backoffice/generate-export-bo",name="generate-export-bo-search")
+     */
+    public function saveCriteriaExportAction(Request $request)
+    {
+        return $this->saveCriteriaExport($request);
+    }
+
+    /**
+     * @param Request $request
+     * @param string $exportKey
+     * @Route("/backoffice/export-csv-bo/{exportKey}",name="export-csv-bo-search")
+     */
+    public function exportDataAction(Request $request, $exportKey)
+    {
+        return $this->getExportedCSVData($request->getSession()->get($exportKey));
+    }
+
+    /**
+     * @param Request $request
+     * @param string $exportKey
+     * @return Response
+     * @Route("/backoffice/export-pdf-bo/{exportKey}",name="export-pdf-bo-search")
+     */
+    public function exportPdfAction(Request $request, $exportKey)
+    {
+        return $this->getExportedPdfData($request->getSession()->get($exportKey));
+    }
+
+    /**
      * @param array $result
      * @param string $table
      * @param bool $save

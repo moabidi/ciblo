@@ -19,10 +19,6 @@ class BaseRepository extends EntityRepository
 
     public function getDistinctValueField($field)
     {
-//        if ( $this->getEntityName() == 'OivBundle\Entity\StatData' && $field == 'statType') {
-//            die('++');
-//
-//        }
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $this->_queryBuilder
             ->select('o.'.$field)
@@ -147,17 +143,21 @@ class BaseRepository extends EntityRepository
             array_walk($result, function(&$v,$k){
                 if( isset($v[0]) && is_array($v[0])) {
                     $s = $v[0];
-                    foreach ($s as &$f) {
+                    foreach ($s as $k => &$f) {
                         if ($f instanceof \DateTime) {
                             $f = $f->format('Y-m-d');
+                        } else if ( $k == 'value' && $f) {
+                            $f = round($f);
                         }
                     }
                     unset($v[0]);
                     $v = array_merge($v, $s);
                 }elseif(is_array($v)) {
-                    foreach ($v as &$f) {
+                    foreach ($v as $k => &$f) {
                         if ($f instanceof \DateTime) {
                             $f = $f->format('Y-m-d');
+                        } else if ( $k == 'value' && $f) {
+                            $f = round($f);
                         }
                     }
                 }

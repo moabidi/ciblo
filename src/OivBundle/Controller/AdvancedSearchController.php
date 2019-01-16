@@ -11,7 +11,6 @@ namespace OivBundle\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AdvancedSearchController extends BaseController
@@ -55,16 +54,7 @@ class AdvancedSearchController extends BaseController
      */
     public function saveCriteriaExportAction(Request $request)
     {
-        $aCriteria = $this->getCriteriaRequest($request);
-        $exportType = $request->request->get('exportType','csv');
-        $table = ucfirst($request->request->get('dbType')).'Data';
-        if (class_exists('OivBundle\\Entity\\'.$table) && in_array($exportType, ['csv','pdf'])) {
-            $exportKey = uniqid($table);
-            $request->getSession()->set($exportKey,['table'=>$table, 'criteria'=>$aCriteria]);
-            $route = $exportType == 'pdf' ? 'export-pdf-adv-search':'export-csv-adv-search';
-            return new JsonResponse(['href'=>$this->generateUrl($route, ['exportKey'=>$exportKey])]);
-        }
-        return new JsonResponse([]);
+        return $this->saveCriteriaExport($request);
     }
 
     /**
@@ -74,48 +64,7 @@ class AdvancedSearchController extends BaseController
      */
     public function exportDataAction(Request $request, $exportKey)
     {
-        if ($aDataSession = $request->getSession()->get($exportKey)) {
-            $aCriteria = $aDataSession['criteria'];
-            $table = $aDataSession['table'];
-            $view = $table == 'StatData' ? 'export':'tab2';
-            if ($this->getUser()) {
-                $view = $table == 'StatData' ? 'exportBo':'tab3';
-            }
-            $results = $this->getExportGLobalSearch($table, $aCriteria, $view,0,null);
-            $translator = $this->get('translator');
-            $response = new StreamedResponse();
-            $response->setCallback(function() use ($results, $translator) {
-                $handle = fopen('php://output', 'w+');
-                $header = [];
-                if($results) {
-                    foreach (array_keys($results[0]) as $field) {
-                        $header[] = mb_convert_encoding($translator->trans($field), 'ISO-8859-1', 'UTF-8');
-                    }
-                    fputcsv($handle, $header, ';');
-                    foreach ($results as $row) {
-                        $row = $this->encodeData($row);
-                        fputcsv($handle, $row, ';');
-                    }
-                }
-                fclose($handle);
-            });
-
-            $response->setStatusCode(200);
-            $response->headers->set('Content-Encoding', ' ISO-8859-1');
-            $response->headers->set('Content-Type', 'text/csv; charset=ISO-8859-1');
-            $response->headers->set('Content-Disposition','attachment; filename="export-'.date('Ymd-his').'.csv"');
-
-            return $response;
-        }
-        return;
-    }
-
-    protected function encodeData($row)
-    {
-        foreach ($row as &$value) {
-            $value = strip_tags(mb_convert_encoding($value, 'ISO-8859-1', 'UTF-8'));
-        }
-        return $row;
+        return $this->getExportedCSVData($request->getSession()->get($exportKey));
     }
 
     /**
@@ -126,22 +75,7 @@ class AdvancedSearchController extends BaseController
      */
     public function exportPdfAction(Request $request, $exportKey)
     {
-        if ($aDataSession = $request->getSession()->get($exportKey)) {
-            $aCriteria = $aDataSession['criteria'];
-            $table = $aDataSession['table'];
-            $aParams['globalResult'] = $this->getResultGLobalSearch($table, $aCriteria, false,0,null);
-            $html = $this->renderView('OivBundle:advancedSearch:print.html.twig', $aParams);
-            $pdfGenerator = $this->get('spraed.pdf.generator');
-
-            return new Response($pdfGenerator->generatePDF($html),
-                200,
-                array(
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="out.pdf"'
-                )
-            );
-        }
-        return;
+        return $this->getExportedPdfData($request->getSession()->get($exportKey));
     }
 
     /**

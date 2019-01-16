@@ -104,8 +104,11 @@ $(function($){
                     html += '</p></a>';
                 } else {
                     $.each(response.data, function (key, items) {
-                        url = items.url ? items.url:'javascript:;';
-                        html += '<a href="'+url+'" target="_blank" class="list-group-item">';
+                        if(items.url) {
+                            html += '<a href="' + items.url + '" target="_blank" class="list-group-item">';
+                        } else {
+                            html += '<a href="javascript:;" class="list-group-item">';
+                        }
                         html += '<h4 class="list-group-item-heading">' + items.referenceName + '</h4>';
                         html += '</a>';
                     });
@@ -173,7 +176,7 @@ $(function($){
                 $('#count-result').text(content.count);
                 $('#count-page').text(content.total);
                 if (content.total < '2') {
-                    $('#pagination-result .pagination').removeClass('show').addClass('hide');
+                    $('#pagination-result .pagination.dataTables_paginate').removeClass('show').addClass('hide');
                 } else {
                     $('#pagination-result .pagination').removeClass('hide');
                     $('#prev-pg').removeClass('hide');
@@ -195,7 +198,7 @@ $(function($){
                     $('#' + idTable + ' tbody').html(body);
                 }
             }else{
-                $('#'+idTable).parents().eq(1).find('.pagination').removeClass('show').addClass('hide');
+                $('#'+idTable).parents().eq(1).find('.pagination.dataTables_paginate').removeClass('show').addClass('hide');
                 $('#count-result').text(0);
                 $('#'+idTable+' tbody').html('<tr><td colspan="4">'+$.handleSearch._trans.no_result_search+'</td></tr>');
             }

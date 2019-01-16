@@ -160,7 +160,7 @@ class NamingDataRepository extends BaseRepository
             'typeNationalCode' => ['form','filter', 'tab1', 'tab2','tab3'],
             'typeInternationalCode' => ['form','filter', 'tab1', 'tab2','tab3'],
             'productType' => ['form','filter','tab2','tab3'],
-            'productCategoryName' => ['form','tab3'],
+            'productCategoryName' => ['form','filter','tab3'],
             'referenceName' => ['form','tab2','tab3'],
             'lastDate' => ['tab2','tab3'],
             'url' => ['form'],
