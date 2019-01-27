@@ -1,6 +1,7 @@
 #########################
 # SIMPLE SEARCH
 #########################
+oiv: Monde
 Country Plug: Fiche Pays
 Advanced Search on DataBase: Recherche Avancée sur la Base des Données
 Choose: Sélectionner
@@ -20,8 +21,13 @@ rin: Vin
 rfresh: Raisins frais
 rsec: Raisins secs
 area: Surface
-For last estimations: Pour les dernières estimations
+For last statistic estimations: Pour les dernières estimations statistiques
+show graphic: afficher le graphique
+help area: Superficie du vignoble (en production et non encore en production) destiné à la production de raisins de cuve, de table ou à sécher
+help win: Raisins destinés à toutes les utilisations (pressurage, consommation humaine directe, séchage)
+help rin: Tous vins, y compris les vins mousseux et spéciaux, à l’exclusion des jus et moûts
 #Education
+city: Ville
 formationTitle: Intitulé de la formation
 university: Établissement
 tutelle: Tutelle
@@ -46,8 +52,8 @@ typeNationalCode: Type d'indication national
 typeInternationalCode: Type d'indication international
 #productCategoryName: Type de produit
 productCategoryName: Produit
-#productType: Catégories de produits
-productType: Produits
+productType: Catégories de produits
+#productType: Produits
 referenceName: Base reglementaire
 url: Lien sur base légale
 #Stat
@@ -77,9 +83,9 @@ count variety: Nombre de cépage
 count education: Nombre de formation
 production: Production
 prod: Productions
-consumption: Consommations
-import: Importations
-export: Exportations
+consumption: Consommation
+import: Importation
+export: Exportation
 indovcons: Consommation individuelle
 total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
@@ -178,11 +184,13 @@ U1_STOCK_WINE: Stocks de vin
 MILLE_HL: 1000 hl
 #MILLE_QX: 1000 qx
 MILLE_QX: tonnes
-MILLE_HA: 1000 ha
-HA: 1000 ha
+1000 QX: tonnes
+MILLE_HA: ha
+HA: ha
 TONNES: tonnes
 #KG_CAPITA: 1000 kg
 KG_CAPITA: kg/capita
+MILLE_S: l/capita +15
 #########################
 # ADV SEARCH
 #########################
@@ -205,6 +213,7 @@ remove all: supprimer tout
 select all: sélectionner tout
 select all countries: sélectionner tous les pays
 Refine your search: Affiner votre recherche
+Membre OIV: Membre OIV
 #########################
 # BackOffice
 #########################

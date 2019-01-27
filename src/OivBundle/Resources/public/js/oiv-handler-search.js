@@ -277,6 +277,9 @@ $(function($){
                if ( $(this).attr('data-year')) {
                    var year = parseInt($(this).attr('data-year'));
                    var currentYear = (new Date()).getFullYear();
+                   if ((new Date()).getMonth()< 8) {
+                       currentYear = currentYear - 1;
+                   }
                    if (year > (currentYear-2) || year < 1995) {
                        alert ($.handleSearch._trans.data_not_available);
                        return false;

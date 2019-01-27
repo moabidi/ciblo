@@ -469,16 +469,16 @@ $(function($){
          */
         this._initShowSelectedStatType = function() {
             $('#StatData-statType').on('change', function(){
-                $('#selected-statType p.list-stat').html('');
+                $('#selected-statType p.list-product span.list-stat').html('');
                 $('#selected-statType p.list-product').removeClass('show').addClass('hide');
                 if ($(this).val()) {
                     $.each($(this).val(), function (k, v) {
                         var statType = $('#StatData-statType option[value="'+v+'"]');
                         var product = $('#StatData-statType option[value="'+v+'"]').parent();
                         var selectedProduct = $('#selected-statType').find('#product-'+$(product).attr('id'))[0];
-                        $(selectedProduct).removeClass('hide').addClass('show');
-                        $(selectedProduct).next().removeClass('hide').addClass('show');
-                        $(selectedProduct).next().append(
+                        $(selectedProduct).removeClass('hide');
+                        $(selectedProduct).find('span.list-stat').removeClass('hide');
+                        $(selectedProduct).find('span.list-stat').append(
                             '<button data-dbType="stat" value="' + v + '" class="btn btn-sm yellow table-group-action-submit">' +
                             '<i class="fa fa-check"></i>' + $(statType).text() +
                             '</button>'
@@ -565,7 +565,7 @@ $(function($){
         QuickSidebar.init(); // init quick sidebar
 
         $.handleSearch._initSearchButton('.filter-submit','global');
-        $.handleSearch._initSearchButton('#selected-statType p.list-stat button','stattype-countries');
+        $.handleSearch._initSearchButton('#selected-statType span.list-stat button','stattype-countries');
         $.handleSearch._initExportButton();
         $.handleSearch._changeYearStat();
         $.handleSearch._initKeypSearch();

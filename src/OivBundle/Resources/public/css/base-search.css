@@ -125,7 +125,8 @@ body .filter-search {
     background: #FFFFFF;
 }
 #page .filter-search .bootstrap-select .dropdown-menu li span{
-    font-size: 16px;
+    font-size: 14px;
+    font-family: 'latolight', 'roboto-light', courier new, sans-serif;
 }
 
 #page .filter-search .btn.btn-search {

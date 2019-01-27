@@ -20,7 +20,7 @@
                     {% for productName, product in filter.values %}
                         <optgroup data-optgroup={{ loop.index }} id="{{ productName|replace({' ':''}) }}" label="{{ productName|replace({' ':''})|trans }}">
                         {% for value in product %}
-                        <option value="{{ value['indicator'] }}">{{ value['statType']|trans|upper }}</option>
+                        <option value="{{ value['indicator'] }}">{{ value['statType']|trans|capitalize }}</option>
                         {% endfor %}
                         </optgroup>
                     {% endfor %}
@@ -29,7 +29,7 @@
                 <select class="form-control select2me" data-view="stat" data-view="education" id="{{ 'StatData-' ~ fieldName }}" data-live-search="true" name="{{ fieldName }}">
                     <option value="">{{ 'Choose'|trans }}</option>
                     {% for value in filter.values %}
-                        <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags('<br>')|trans }}</option>
+                        <option value="{{ value[fieldName] }}">{{ value[fieldName]|replace({'<br/>':' - '})|replace({'<br>':' - '})|striptags('<br>')|trans|capitalize }}</option>
                     {% endfor %}
                 </select>
                 {% endif %}

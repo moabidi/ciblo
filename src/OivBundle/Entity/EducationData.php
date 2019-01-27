@@ -122,6 +122,13 @@ class EducationData
     /**
      * @var string
      *
+     * @ORM\Column(name="CITY", type="string", length=255, nullable=false)
+     */
+    private $city;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="ADRESS", type="string", length=4000, nullable=true)
      */
     private $adress;
@@ -384,6 +391,22 @@ class EducationData
     public function setContact($contact)
     {
         $this->contact = $contact;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $city
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
     }
 
     /**

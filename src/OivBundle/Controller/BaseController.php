@@ -73,7 +73,11 @@ class BaseController extends Controller
             array_walk($result, function (&$v, $k) use ($selectedFields, $translator) {
                 $selectedData = [];
                 foreach ($selectedFields as $field) {
-                    $selectedData[$field] = $translator->trans($v[$field]);
+                    if (in_array($field, ['statType','measureType','productCategoryName','productType','typeInternationalCode'])) {
+                        $selectedData[$field] = $translator->trans($v[$field]);
+                    } else {
+                        $selectedData[$field] = $v[$field];
+                    }
                 }
                 $v = $selectedData;
             });
@@ -112,9 +116,9 @@ class BaseController extends Controller
         if ($aDataSession) {
             $aCriteria = $aDataSession['criteria'];
             $table = $aDataSession['table'];
-            $view = $table == 'StatData' ? 'export':'tab2';
+            $view = 'export';
             if ($this->getUser()) {
-                $view = $table == 'StatData' ? 'exportBo':'tab3';
+                $view = 'exportBo';
             }
             $results = $this->getExportGLobalSearch($table, $aCriteria, $view,0,null);
             $translator = $this->get('translator');
@@ -124,22 +128,29 @@ class BaseController extends Controller
                 $header = [];
                 if($results) {
                     foreach (array_keys($results[0]) as $field) {
-                        $header[] = mb_convert_encoding($translator->trans($field), 'ISO-8859-1', 'UTF-8');
+                        //$header[] = mb_convert_encoding($translator->trans($field), 'ISO-8859-1', 'UTF-8');
+                        $header[] = $translator->trans($field);
                     }
                     fputcsv($handle, $header, ';');
+                    $count = 1;
                     foreach ($results as $row) {
-                        $row = $this->encodeData($row);
+                        //$row = $this->encodeData($row);
                         fputcsv($handle, $row, ';');
+                        if($count%100 ==0 ){
+                            fclose($handle);
+                            $handle = fopen('php://output', 'w+');
+                            $count++;
+                        }
                     }
                 }
                 fclose($handle);
             });
 
             $response->setStatusCode(200);
-            $response->headers->set('Content-Encoding', ' ISO-8859-1');
-            $response->headers->set('Content-Type', 'text/csv; charset=ISO-8859-1');
+            $response->headers->set('Content-Encoding', ' UTF-8');
+            $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
             $response->headers->set('Content-Disposition','attachment; filename="export-'.date('Ymd-his').'.csv"');
-
+            echo "\xEF\xBB\xBF"; // UTF-8 BOM
             return $response;
         }
         return;
@@ -180,7 +191,9 @@ class BaseController extends Controller
     protected function encodeData($row)
     {
         foreach ($row as &$value) {
-            $value = strip_tags(mb_convert_encoding($value, 'ISO-8859-1', 'UTF-8'));
+            //$value = htmlspecialchars($value);
+            //$value = html_entity_decode($value,ENT_QUOTES,'ISO-8859-1');
+            //$value = strip_tags(mb_convert_encoding($value, 'ISO-8859-5', 'UTF-8'));
         }
         return $row;
     }
@@ -213,6 +226,9 @@ class BaseController extends Controller
         $repository = $this->get('oiv.stat_repository');
         $minData = $minDate ? $minDate:'1995';
         $maxDate = $maxDate ? $maxDate:date('Y')-2;
+        if (date('Y') - $maxDate < 3) {
+            $maxDate = date('n')>8 ? date('Y')-2:date('Y')-3;
+        }
         $allStats = $this->getStatProducts(array_merge($aCriteria, ['yearMin' => $minData, 'yearMax' => $maxDate]));
         foreach ($allStats as &$product) {
             if (in_array($product['name'], ['rfresh','rin','rtable','rsec'])) {
@@ -360,13 +376,13 @@ class BaseController extends Controller
         for($y = $minDate; $y<=$maxDate; $y++) {
             $formattedData['xAxis'][]= $y;
         }
-        $mesure = '1000 QX';
+        $mesure = 'tonnes';
         foreach ($aData as $product) {
             $productName = $product['name'];
             $formattedData['yAxis'][$productName] = [];
             array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $translator, $mesure) {
                 $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($key,$value, $formattedData['xAxis'],$translator,$mesure);
-                $formattedData['mesure'] = $mesure;
+                $formattedData['mesure'] = $translator->trans($mesure);
             });
             //var_dump($formattedData );die;
         }
@@ -376,7 +392,7 @@ class BaseController extends Controller
     protected function getDataProductGraph($productName,$aListData, $aListYears,$translator,&$mesure)
     {
         $formattedData['data'] = [];
-        $formattedData['name'] = $translator->trans($productName);
+        $formattedData['name'] = ucfirst(strtolower($translator->trans($productName)));
         foreach ($aListYears as $year) {
             $formattedData['data'][$year] = '';
         }
@@ -389,7 +405,7 @@ class BaseController extends Controller
             }
             if ($mesure) {
                 $mesure = $translator->trans($mesure);
-                $formattedData['name'] = $translator->trans($productName) . ' ('.$mesure.')';
+                $formattedData['name'] = ucfirst(strtolower($translator->trans($productName))) . ' ('.$mesure.')';
             }
         }
         $formattedData['data'] = array_values($formattedData['data']);
@@ -532,5 +548,13 @@ class BaseController extends Controller
 
         return new Serializer($normalizers, $encoders);
 
+    }
+
+    protected function getMaxYear($maxYear)
+    {
+        if (date('Y') - $maxYear < 3) {
+            $maxYear = date('n')>8 ? date('Y')-2:date('Y')-3;
+        }
+        return $maxYear;
     }
 }

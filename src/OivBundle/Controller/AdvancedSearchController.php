@@ -23,6 +23,7 @@ class AdvancedSearchController extends BaseController
     {
         $selectedCountryCode = $request->query->get('countryCode','oiv');
         $selectedYear = $request->query->get('year',date('Y')-2);
+        $selectedYear = $this->getMaxYear($selectedYear);
         $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear];
         $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
@@ -108,7 +109,7 @@ class AdvancedSearchController extends BaseController
             }
             array_walk($aResults, function ($value, $countryCode) use (&$formattedData, $statType, $translator, $mesure) {
                 $formattedData['yAxis'][$statType][] = $this->getDataProductGraph($countryCode,$value, $formattedData['xAxis'],$translator,$mesure);
-                $formattedData['mesure'] = $mesure;
+                $formattedData['mesure'] = $translator->trans($mesure);
             });
 //            var_dump($formattedData );die;
             return new JsonResponse($formattedData);

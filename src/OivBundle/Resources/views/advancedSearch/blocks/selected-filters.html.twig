@@ -1,9 +1,9 @@
 <div class="col-md-3">
     <span class="caption-subject font-red-sunglo bold" style="font-size: 15px;">{{ 'Countries'|trans }}</span>
-    <a id="selectAllCountry" href="javascript:;">{{ 'select all countries'|trans }}</a>
+    {#<a id="selectAllCountry" href="javascript:;">{{ 'select all countries'|trans }}</a>#}
     <div class="ms-selection"></div>
 </div>
-<div id="selected-year" class="note col-md-2">
+<div id="selected-year" class="note col-md-2 hide">
     <p>
         <span class="caption-subject font-red-sunglo bold">{{ 'year'|trans|capitalize }}</span>
     </p>
@@ -11,14 +11,18 @@
         <span class="label label-md label-warning">{{ selectedYear }}</span>
     </p>
 </div>
-<div id="selected-statType" class="note col-md-7">
+<div id="selected-statType" class="note col-md-9">
     <p>
-        <span class="caption-subject font-red-sunglo bold">{{ 'list'|trans|capitalize }}</span>
-        <a data-action="deselectAll" href="javascript:;">{{ 'remove all'|trans }}</a>
+        <span class="caption-subject font-red-sunglo bold">{{ 'list'|trans|capitalize }}*</span>
+        <a data-action="deselectAll" href="javascript:;">{{ 'remove all'|trans }}</a><br>
+        <span>*Après la sélection des séries, cliquez sur les sélections ci-dessous pour afficher le graphique </span>
     </p>
     {% for productName, product in filters.StatData.statType.values %}
-    <p id="product-{{ productName|replace({' ':''}) }}" class="list-product hide"><span class="label label-md label-text">{{ productName|trans }}</span></p>
-    <p class="list-stat"></p>
+    <p id="product-{{ productName|replace({' ':''}) }}" class="list-product hide">
+        <span class="label label-md label-text">{{ productName|trans }}</span>
+        <span class="list-stat"></span>
+    </p>
+    {#<p class="list-stat"></p>#}
     {% endfor %}
 </div>
 <div id="selected-filters" class="note col-md-7 hide">

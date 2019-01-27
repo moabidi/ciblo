@@ -21,7 +21,7 @@ class OivController extends BaseController
      */
     public function resultSearchAction(Request $request)
     {
-        $selectedYear = date('Y')-2;
+        $selectedYear = $this->getMaxYear(date('Y')-2);
         $selectedCountryCode = $request->query->get('countryCode','oiv');
         $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear];
         $aParams['stats'] = $this->getStatsCountry($aCriteria);
@@ -48,6 +48,11 @@ class OivController extends BaseController
             'error_response'=> $oTranslator->trans('error response'),
 
         ];
+        $host = $request->getScheme().'://'. $request->getHttpHost().'/'.$request->getLocale();
+        $aParams['header'] = file_get_contents($host.'/header');
+        $aParams['footer'] = file_get_contents($host.'/footer');
+        $aParams['navMobile'] = file_get_contents($host.'/nav-mobile');
+        $aParams['popupCookies'] = file_get_contents($host.'/popup-cookies');
         return $this->render('OivBundle:search:result.html.twig', $aParams);
     }
 

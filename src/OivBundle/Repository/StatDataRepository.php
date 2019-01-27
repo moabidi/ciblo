@@ -31,7 +31,17 @@ class StatDataRepository extends BaseRepository
         }
 
         $this->makeQuery(array_merge($aCriteria,['statType'=>$statType]));
-        $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();
+//        $result =  $this->_queryBuilder->getQuery()->getOneOrNullResult();
+        $result =  $this->_queryBuilder->getQuery()->getArrayResult();
+        if(count($result) == 1 && isset($result[0])){
+            $result = $result[0];
+        } elseif(count($result) > 1) {
+            foreach($result as $item) {
+                if (isset($item['measureType']) && $item['measureType'] == 'tonnes') {
+                    $result = $item; break;
+                }
+            }
+        }
         if (isset($result['value'])) {
             $val = intval($result['value']) ? intval($result['value']):'0';
             $measure = $result['measureType'];
@@ -285,7 +295,7 @@ class StatDataRepository extends BaseRepository
             'versioning' => ['form'],
             'countryCode' => ['form'],
             'statType' => ['form','filter','tab1','tab2','tab3','export','exportBo'],
-            'metricCompType' => ['form','tab1','tab2','tab3','exportBo'],
+            'metricCompType' => ['form','tab1','tab3','exportBo'],
             'year' => ['form','tab1','tab2','tab3','export','exportBo'],
             'measureType' => ['form','tab1','tab2','tab3','export','exportBo'],
             'value' => ['form','filter','tab1','tab2','tab3','export','exportBo'],

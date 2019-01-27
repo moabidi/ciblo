@@ -3,7 +3,7 @@ oiv:
     type:     annotation
     prefix:   /{_locale}/statistiques
     requirements:
-            _locale: 'fr|en'
+            _locale: 'fr|en|es|de|it'
 
 oiv_logout:
     path: /fr/statistiques/backoffice/logout

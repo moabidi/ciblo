@@ -4,17 +4,7 @@
 
 <body class="body-front  card card-inverse card-danger text-xs-center ">
 
-<div id="popup-cookie" class="shown">
-    <div class="popup-cookie-content">
-        <p class="popup-text">
-            Ce site utilise des traceurs pour vous offrir une meilleure experience sur notre site.			<a href="/fr/mentions-legales" class="popup-lnk">En savoir plus</a>
-        </p>
-    </div>
-    <div class="popup-cookie-content">
-        <button class="Button Button_blanc Button_blanc-rose">OK</button>
-    </div>
-
-</div>
+{{ popupCookies|raw }}
 
 {% include 'OivBundle:blocks:nav_mobile.html.twig'%}
 
@@ -22,10 +12,10 @@
 
     {% include 'OivBundle:blocks:header.html.twig' %}
     <div class="full-search ">
-    {% include 'OivBundle:blocks:filter_search.html.twig' %}
-    {#{% include 'OivBundle:blocks:result_search.html.twig' %}#}
-    {% include 'OivBundle:blocks:fiche_country.html.twig' %}
-    {% include 'OivBundle:blocks:result_stats_country.html.twig' %}
+        {% include 'OivBundle:blocks:filter_search.html.twig' %}
+        {#{% include 'OivBundle:blocks:result_search.html.twig' %}#}
+        {% include 'OivBundle:blocks:fiche_country.html.twig' %}
+        {% include 'OivBundle:blocks:result_stats_country.html.twig' %}
     </div>
     <div class="bandeau-bottom Bg-noise">
         <div class="Content_center">
@@ -41,15 +31,15 @@
     var isMobile = '';
     var isTablet = '';
     var isIos    = '';
-    var host     = 'www.oiv.int';
+    var host     = 'oiv-prod.abidi';
 </script>
-<script src="http://www.oiv.int/js/lib/pdfjs/build/pdf.js"></script>
-<script src="http://www.oiv.int/js/lib/jQuery/jquery-2.1.4.min.js"></script>
-<script src="http://www.oiv.int/js/frontend/lib/jquery.colorbox.min.js"></script>
-<script src="http://www.oiv.int/js/lib/jQuery/chosen.jquery.min.js"></script>
-<script src="http://www.oiv.int/js/frontend/lib/Chart.min.js"></script>
-<script src="http://www.oiv.int/js/frontend/main.min.js"></script>
-<script src="http://www.oiv.int/citrus-debug/js/debug.js"></script>
+<script src="/js/lib/pdfjs/build/pdf.js"></script>
+<script src="/js/lib/jQuery/jquery-2.1.4.min.js"></script>
+<script src="/js/frontend/lib/jquery.colorbox.min.js"></script>
+<script src="/js/lib/jQuery/chosen.jquery.min.js"></script>
+{#<script src="/frontend/lib/Chart.min.js"></script>#}
+<script src="/js/frontend/main.min.js"></script>
+<script src="/citrus-debug/js/debug.js"></script>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>

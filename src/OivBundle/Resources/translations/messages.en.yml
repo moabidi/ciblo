@@ -1,6 +1,7 @@
 #########################
 # SIMPLE SEARCH
 #########################
+oiv: World
 Country Plug: Country Plug
 Advanced Search on DataBase: Advanced Search on DataBase
 Choose: Choose
@@ -20,7 +21,11 @@ rin: Wine
 rfresh: Fresh grapes
 rsec: Raisins
 area: Area
+help area: Vineyard area (in production and not yet in production) intended for the production of wine grapes, table grapes or to dry
+help win: Grapes for all uses (pressing, direct human consumption, drying)
+help rin: All wines, including sparkling and special wines, excluding juices and musts
 #Education
+city: City
 formationTitle: Title of the training
 university: Establishment
 tutelle: Guardianship
@@ -45,8 +50,8 @@ typeNationalCode: National indication type
 typeInternationalCode: Type of international indication
 #productCategoryName: Type of product
 productCategoryName: Product
-#productType: Categories of products
-productType: Produits
+productType: Categories of products
+#productType: Produits
 referenceName: Regulatory basis
 url: Link
 #Stat
@@ -175,8 +180,8 @@ U1_STOCK_WINE: Wine stocks
 MILLE_HL: 1000 hl
 #MILLE_QX: 1000 qx
 MILLE_QX: tonnes
-MILLE_HA: 1000 ha
-HA: 1000 ha
+MILLE_HA: ha
+HA: ha
 TONNES: tonnes
 #KG_CAPITA: 1000 kg
 KG_CAPITA: kg/capita

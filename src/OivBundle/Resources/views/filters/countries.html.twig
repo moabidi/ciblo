@@ -12,7 +12,7 @@
             </optgroup>
             <optgroup id="countries" label="{{ 'Choose all countries'|trans }}">
                 {% for country in countries %}
-                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
+                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr()|capitalize }}</option>
                 {% endfor %}
             </optgroup>
         </select>
