@@ -31,7 +31,12 @@
                 <div class="caption">
                     <table id="products" class="products table block-table fixed-table">
                         <thead>
-                            <th colspan="6" class="text-center"><span>{{ 'area'|trans }}</span> <span class="mesure"> ha</span></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"><span>{{ 'area rin'|trans }}</span> <span class="mesure"> ha</span></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
                         </thead>
                         <tbody class="bg-wihte">
                         <tr id="area" data-measure="ha">
@@ -47,7 +52,10 @@
                                 </a>
                                 <span class="float-right"><span class="valStatType">{% if stats.globalArea.val|default(0) %}{{ (stats.globalArea.val)|number_format(0, '.',' ') }} {% else %} - {% endif %}</span></span>
                             </td>
-                            <td colspan="4"></td>
+                            <td colspan=""></td>
+                            <td colspan=""></td>
+                            <td colspan=""></td>
+                            <td colspan=""></td>
                         </tr>
                         </tbody>
                     </table>
@@ -186,7 +194,7 @@
                         $.handleSearch._g1._container = 'container-g1';
                         $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g1._data = {{ stats.graphProducts.yAxis.rfresh|json_encode|raw }};
-                        $.handleSearch._g1._title = {{ (stats.products.0.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g1._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.0.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';#}
                         $.handleSearch._g1._mesure = 'tonnes';
                         $.handleSearch._g1._lang =  lang;
@@ -195,7 +203,7 @@
                         $.handleSearch._g2._container = 'container-g2';
                         $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g2._data = {{ stats.graphProducts.yAxis.rin|json_encode|raw }};
-                        $.handleSearch._g2._title = {{ (stats.products.1.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g2._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.1.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g2._mesure = '{{ stats.products.1.measure |raw }}';#}
                         $.handleSearch._g2._mesure = '1000 hl';
                         $.handleSearch._g2._lang =  lang;
@@ -204,7 +212,7 @@
                         $.handleSearch._g3._container = 'container-g3';
                         $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g3._data = {{ stats.graphProducts.yAxis.rtable|json_encode|raw }};
-                        $.handleSearch._g3._title = {{ (stats.products.2.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g3._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.2.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g3._mesure = '{{ stats.products.2.measure |raw }}';#}
                         $.handleSearch._g3._mesure = 'tonnes';
                         $.handleSearch._g3._lang =  lang;
@@ -213,7 +221,7 @@
                         $.handleSearch._g4._container = 'container-g4';
                         $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g4._data = {{ stats.graphProducts.yAxis.rsec|json_encode|raw }};
-                        $.handleSearch._g4._title = {{ (stats.products.3.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g4._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.3.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
                         $.handleSearch._g4._mesure = 'tonnes';
                         $.handleSearch._g4._lang =  lang;
@@ -222,7 +230,7 @@
                         $.handleSearch._g5._container = 'container-g5';
                         $.handleSearch._g5._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g5._data = {{ stats.graphProducts.yAxis.area|json_encode|raw }};
-                        $.handleSearch._g5._title = {{ (stats.products.4.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g5._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.4.label|trans))|json_encode|raw  }};
                         $.handleSearch._g5._mesure = 'ha';
                         $.handleSearch._g5._lang =  lang;
                         $.handleSearch._g5._init();
@@ -230,7 +238,7 @@
                         $.handleSearch._g6._container = 'container-g6';
                         $.handleSearch._g6._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g6._data = {{ stats.graphProducts.yAxis.rfresh_indovcons|json_encode|raw }};
-                        $.handleSearch._g6._title = {{ (stats.products.5.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g6._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.5.label|trans))|json_encode|raw  }};
                         $.handleSearch._g6._mesure = 'kg/capita';
                         $.handleSearch._g6._lang =  lang;
                         $.handleSearch._g6._init();
@@ -238,7 +246,7 @@
                         $.handleSearch._g7._container = 'container-g7';
                         $.handleSearch._g7._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g7._data = {{ stats.graphProducts.yAxis.rin_indovcons|json_encode|raw }};
-                        $.handleSearch._g7._title = {{ (stats.products.6.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g7._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.6.label|trans))|json_encode|raw  }};
                         $.handleSearch._g7._mesure = 'kg/capita';
                         $.handleSearch._g7._lang =  lang;
                         $.handleSearch._g7._init();
@@ -246,7 +254,7 @@
                         $.handleSearch._g8._container = 'container-g8';
                         $.handleSearch._g8._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g8._data = {{ stats.graphProducts.yAxis.rtable_indovcons|json_encode|raw }};
-                        $.handleSearch._g8._title = {{ (stats.products.7.label|trans)|json_encode|raw  }};
+                        $.handleSearch._g8._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.7.label|trans))|json_encode|raw  }};
                         $.handleSearch._g8._mesure = 'kg/capita';
                         $.handleSearch._g8._lang =  lang;
                         $.handleSearch._g8._init();
@@ -254,8 +262,8 @@
                         $.handleSearch._g9._container = 'container-g9';
                         $.handleSearch._g9._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g9._data = {{ stats.graphProducts.yAxis.rsec_indovcons|json_encode|raw }};
-                        $.handleSearch._g9._title = {{ (stats.products.8.label|trans)|json_encode|raw  }};
-                        $.handleSearch._g9._mesure = 'l/capita +15';
+                        $.handleSearch._g9._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~ (stats.products.8.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g9._mesure = 'kg/capita';
                         $.handleSearch._g9._lang =  lang;
                         $.handleSearch._g9._init();
 

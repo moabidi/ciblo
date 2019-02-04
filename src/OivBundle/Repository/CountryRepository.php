@@ -54,4 +54,16 @@ class CountryRepository extends BaseRepository
             ->setParameter('countryCode', $countryCode);
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
+
+    public function getCountries()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select('m.oivMembership, o.countryNameFr, o.countryNameEn, o.countryNameIt, o.countryNameEs, o.countryNameDe, o.tradeBloc, o.iso2, o.iso3')
+            ->from($this->_entityName, 'o')
+            ->leftJoin('OivBundle:OivMemberShip', 'm', 'WITH', 'm.iso3 = o.iso3 AND m.year = '.date('Y'))
+            ->orderBy('o.countryNameFr', 'ASC');
+
+        return $queryBuilder->getQuery()->getArrayResult();
+    }
 }

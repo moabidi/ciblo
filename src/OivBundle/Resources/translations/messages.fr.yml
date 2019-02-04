@@ -20,7 +20,8 @@ rtable: Raisins de table
 rin: Vin
 rfresh: Raisins frais
 rsec: Raisins secs
-area: Surface
+area: Vignoble
+area rin: Surface
 For last statistic estimations: Pour les dernières estimations statistiques
 show graphic: afficher le graphique
 help area: Superficie du vignoble (en production et non encore en production) destiné à la production de raisins de cuve, de table ou à sécher
@@ -82,10 +83,10 @@ Individual Consumption: Consommation Individuelle
 count variety: Nombre de cépage
 count education: Nombre de formation
 production: Production
-prod: Productions
+prod: Production
 consumption: Consommation
-import: Importation
-export: Exportation
+import: Importations
+export: Exportations
 indovcons: Consommation individuelle
 total count variety: Nombre total de cépage
 total count education: Nombre total  de formation
@@ -127,7 +128,7 @@ MISTELLE: MISTELLE
 NONE: Non classé
 SPECIAL_WINE: SPECIAL WINE
 SPIRITUOUS_BEVERAGE: SPIRITUOUS BEVERAGE
-WINE: WINE
+#WINE: WINE
 WINE_VINEGAR: WINE VINEGAR
 #APPELATION Type d'indication type 2
 GI: GI
@@ -150,10 +151,10 @@ POPULATION: Population
 #Statistiques categorie des statistiques
 CONSUMPTION: CONSOMMATION
 PRODUCTION: PRODUCTION
-IMPORTATION: IMPORTATION
-EXPORTATION: EXPORTATION
+IMPORTATION: IMPORTATIONS
+EXPORTATION: EXPORTATIONS
 TOTAL_AREA: SUPERFICIE TOTALE
-CONSUMPTION_CAPITA: CONSOMMATION KAPITA
+CONSUMPTION_CAPITA: Consommation per capita
 #Statistiques indicator des statistiques
 A_SURFACE: Superficie du vignoble
 CONSUMPTION_PRODUCT_GRAPES: CONSUMPTION_PRODUCT_GRAPES
@@ -180,6 +181,7 @@ S_CONSUMPTION_WINE: Consommation de vin
 TOTAL_AGRI_AREA: TOTAL_AGRI_AREA
 TOTAL_POPULATION: Population
 U1_STOCK_WINE: Stocks de vin
+CONSUMPTION_CAPITA_15: Consommation per capita (+15)
 #Unite
 MILLE_HL: 1000 hl
 #MILLE_QX: 1000 qx

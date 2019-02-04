@@ -1,4 +1,7 @@
 {% if isAdvSearch|default(false) %}
+    {% if isBo|default(false) %}
+        <input data-view="naming" type="hidden" name="bo" value="1">
+    {% endif %}
     {% for fieldName, filter in filters.NamingData %}
             {% if filter.values|length %}
                 {% if fieldName == 'value' %}

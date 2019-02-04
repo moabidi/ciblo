@@ -113,7 +113,8 @@ class BackOfficeController extends BaseController
         $selectedCountryCode = $request->query->get('countryCode','oiv');
         $selectedYear = $request->query->get('year',date('Y')-2);
         $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear];
-        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
+        //$aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
+        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountries();
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled('private');
         $aParams['forms'] = $this->getFiledForms();

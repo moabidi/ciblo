@@ -1,21 +1,21 @@
 /*
-* MultiSelect v0.9.11
-* Copyright (c) 2012 Louis Cuny
-*
-* This program is free software. It comes without any warranty, to
-* the extent permitted by applicable law. You can redistribute it
-* and/or modify it under the terms of the Do What The Fuck You Want
-* To Public License, Version 2, as published by Sam Hocevar. See
-* http://sam.zoy.org/wtfpl/COPYING for more details.
-*/
+ * MultiSelect v0.9.11
+ * Copyright (c) 2012 Louis Cuny
+ *
+ * This program is free software. It comes without any warranty, to
+ * the extent permitted by applicable law. You can redistribute it
+ * and/or modify it under the terms of the Do What The Fuck You Want
+ * To Public License, Version 2, as published by Sam Hocevar. See
+ * http://sam.zoy.org/wtfpl/COPYING for more details.
+ */
 
 !function ($) {
 
   "use strict";
 
 
- /* MULTISELECT CLASS DEFINITION
-  * ====================== */
+  /* MULTISELECT CLASS DEFINITION
+   * ====================== */
 
   var MultiSelect = function (element, options) {
     this.options = options;
@@ -115,15 +115,15 @@
           elementId = that.sanitize(value);
 
       selectableLi
-        .data('ms-value', value)
-        .addClass('ms-elem-selectable')
-        .attr('id', elementId+'-selectable');
+          .data('ms-value', value)
+          .addClass('ms-elem-selectable')
+          .attr('id', elementId+'-selectable');
 
       selectedLi
-        .data('ms-value', value)
-        .addClass('ms-elem-selection')
-        .attr('id', elementId+'-selection')
-        .hide();
+          .data('ms-value', value)
+          .addClass('ms-elem-selection')
+          .attr('id', elementId+'-selection')
+          .hide();
 
       if ($option.prop('disabled') || ms.prop('disabled')){
         selectedLi.addClass(that.options.disabledClass);
@@ -151,11 +151,20 @@
           if (that.options.selectableOptgroup){
             $selectableOptgroup.find('.ms-optgroup-label').on('click', function(){
               var values = $optgroup.children(':not(:selected, :disabled)').map(function(){ return $(this).val() }).get();
+              if ($(this).parents().eq(2).children().length == 4 && $(this).parents().eq(1).index() == 2) {
+                $optgroup = $(ms).find('#countries');
+                values = $optgroup.children(':not(:selected, :disabled)').map(function(){ return ($(this).attr('data-member') == '1' && $(this).val()!='') ? $(this).val():''; }).get();
+              }
               that.select(values);
             });
             $selectionOptgroup.find('.ms-optgroup-label').on('click', function(){
               var values = $optgroup.children(':selected:not(:disabled)').map(function(){ return $(this).val() }).get();
               that.deselect(values);
+              if ($(this).parents().eq(2).children().length == 4 && $(this).parents().eq(1).index() == 2) {
+                $(this).hide();
+                that.deselect(['']);
+                $selectableOptgroup.find('.ms-optgroup-label').show();
+              }
             });
           }
           that.$selectableUl.append($selectableOptgroup);
@@ -196,45 +205,45 @@
       var that = this;
 
       $list.on('focus', function(){
-        $(this).addClass('ms-focus');
-      })
-      .on('blur', function(){
-        $(this).removeClass('ms-focus');
-      })
-      .on('keydown', function(e){
-        switch (e.which) {
-          case 40:
-          case 38:
-            e.preventDefault();
-            e.stopPropagation();
-            that.moveHighlight($(this), (e.which === 38) ? -1 : 1);
-            return;
-          case 37:
-          case 39:
-            e.preventDefault();
-            e.stopPropagation();
-            that.switchList($list);
-            return;
-          case 9:
-            if(that.$element.is('[tabindex]')){
-              e.preventDefault();
-              var tabindex = parseInt(that.$element.attr('tabindex'), 10);
-              tabindex = (e.shiftKey) ? tabindex-1 : tabindex+1;
-              $('[tabindex="'+(tabindex)+'"]').focus();
-              return;
-            }else{
-              if(e.shiftKey){
-                that.$element.trigger('focus');
-              }
+            $(this).addClass('ms-focus');
+          })
+          .on('blur', function(){
+            $(this).removeClass('ms-focus');
+          })
+          .on('keydown', function(e){
+            switch (e.which) {
+              case 40:
+              case 38:
+                e.preventDefault();
+                e.stopPropagation();
+                that.moveHighlight($(this), (e.which === 38) ? -1 : 1);
+                return;
+              case 37:
+              case 39:
+                e.preventDefault();
+                e.stopPropagation();
+                that.switchList($list);
+                return;
+              case 9:
+                if(that.$element.is('[tabindex]')){
+                  e.preventDefault();
+                  var tabindex = parseInt(that.$element.attr('tabindex'), 10);
+                  tabindex = (e.shiftKey) ? tabindex-1 : tabindex+1;
+                  $('[tabindex="'+(tabindex)+'"]').focus();
+                  return;
+                }else{
+                  if(e.shiftKey){
+                    that.$element.trigger('focus');
+                  }
+                }
             }
-        }
-        if($.inArray(e.which, that.options.keySelect) > -1){
-          e.preventDefault();
-          e.stopPropagation();
-          that.selectHighlighted($list);
-          return;
-        }
-      });
+            if($.inArray(e.which, that.options.keySelect) > -1){
+              e.preventDefault();
+              e.stopPropagation();
+              that.selectHighlighted($list);
+              return;
+            }
+          });
     },
 
     'moveHighlight': function($list, direction){
@@ -287,8 +296,8 @@
       }
       if ($nextElem.length > 0){
         $nextElem.addClass('ms-hover');
-        var scrollTo = $list.scrollTop() + $nextElem.position().top - 
-                       containerHeight / 2 + elemHeight / 2;
+        var scrollTo = $list.scrollTop() + $nextElem.position().top -
+            containerHeight / 2 + elemHeight / 2;
 
         $list.scrollTop(scrollTo);
       }
@@ -328,8 +337,8 @@
       });
 
       $('body').on('mouseleave', that.elemsSelector, function () {
-          $(this).parents('.ms-container').find(that.elemsSelector).removeClass('ms-hover');
-          $(this).parents().eq(3).find('.ms-hover').removeClass('ms-hover');
+        $(this).parents('.ms-container').find(that.elemsSelector).removeClass('ms-hover');
+        $(this).parents().eq(3).find('.ms-hover').removeClass('ms-hover');
       });
     },
 
@@ -356,7 +365,7 @@
 
       if (method === 'init'){
         selectables = this.$selectableUl.find('#' + msIds.join('-selectable, #')+'-selectable'),
-        selections = this.$selectionUl.find('#' + msIds.join('-selection, #') + '-selection');
+            selections = this.$selectionUl.find('#' + msIds.join('-selection, #') + '-selection');
       }
 
       if (selectables.length > 0){
@@ -381,6 +390,9 @@
             var selectionsLi = $(this).find('.ms-elem-selection');
             if (selectionsLi.filter('.ms-selected').length > 0){
               $(this).find('.ms-optgroup-label').show();
+              if(selectionOptgroups.length == 4 && $(this).index() == 3 && selectionOptgroups.eq(2).find('.ms-optgroup-label').css('display') != 'none'){
+                $(this).find('.ms-optgroup-label').hide();
+              }
               $(this).find('.ms-optgroup-label').each(function(){
                 var text = $(this).find('span').text();
                 $(this).find('span').text(text.replace('Sélectionner','Désélectionner'));
@@ -534,6 +546,6 @@
         $parent.children().eq(index - 1).after(this);
       }
     });
-}
+  }
 
 }(window.jQuery);

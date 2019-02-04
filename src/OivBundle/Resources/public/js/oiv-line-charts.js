@@ -40,7 +40,7 @@ $(function ($) {
                 xAxis: {
                     categories: this._xAxis,
                     title: {
-                        text: 'Années'
+                        text: ''
                     }
                 },
                 yAxis: {

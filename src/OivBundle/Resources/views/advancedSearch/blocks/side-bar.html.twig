@@ -2,7 +2,7 @@
     <div class="page-sidebar navbar-collapse collapse">
         <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
             <li class="sidebar-toggler-wrapper">
-                <a class="text-center">{{ 'Refine your search'|trans }}</a>
+                <a class="text-center" style="cursor: default;">{{ 'Refine your search'|trans }}</a>
             </li>
             {% include 'OivBundle:filters:countries.html.twig' with {'isAdvSearch':true} %}
             {% include 'OivBundle:advancedSearch/blocks:filterDB.html.twig' with {'dbType':'education','dbName':'Education','tpl':'formation','isAdvSearch':true} %}

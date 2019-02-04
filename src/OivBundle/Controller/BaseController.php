@@ -12,6 +12,7 @@ namespace OivBundle\Controller;
 use Monolog\Logger;
 use OivBundle\Entity\Country;
 use OivBundle\Repository\StatDataRepository;
+use Spraed\PDFGeneratorBundle\PDFGenerator\PDFGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -171,6 +172,7 @@ class BaseController extends Controller
             }
             $aParams['globalResult'] = $this->getResultGLobalSearch($table, $aCriteria, $view,0,null);
             $html = $this->renderView('OivBundle:advancedSearch:print.html.twig', $aParams);
+            /**@var PDFGenerator $pdfGenerator */
             $pdfGenerator = $this->get('spraed.pdf.generator');
 
             return new Response($pdfGenerator->generatePDF($html),
@@ -239,7 +241,7 @@ class BaseController extends Controller
             'products' => $this->getStatProducts($aCriteria,true),
             'graphProducts' => $this->formatDataGraph($allStats,$minData,$maxDate),
             'globalArea' => $repository->getSingleValueStatType('A_SURFACE', $aCriteria),
-            'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria),
+            'nbVariety' => $this->get('oiv.variety_repository')->getCountVariety($aCriteria+['isMainVariety' => '1']),
             'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria),
             'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
         ];
@@ -367,7 +369,7 @@ class BaseController extends Controller
      * @param $aData
      * @param $minDate
      * @param $maxDate
-     * @return array ['xAxis' => ['p1' => ['y1','Yn']], 'p1'=>['d1','dn'], 'pn'=>['d1','dm']]
+     * @return array ['yAxis' => ['p1' => ['y1','Yn']], 'p1'=>['d1','dn'], 'pn'=>['d1','dm']]
      */
     protected function formatDataGraph($aData, $minDate, $maxDate)
     {
@@ -381,7 +383,11 @@ class BaseController extends Controller
             $productName = $product['name'];
             $formattedData['yAxis'][$productName] = [];
             array_walk($product['stat'], function ($value, $key) use (&$formattedData, $productName, $translator, $mesure) {
-                $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($key,$value, $formattedData['xAxis'],$translator,$mesure);
+                if ($key == 'prod' && $productName == 'area') {
+                    $key = 'area rin';
+                }
+                $statType = ucfirst(strtolower($translator->trans($key)));
+                $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($statType,$value, $formattedData['xAxis'],$translator,$mesure,$productName);
                 $formattedData['mesure'] = $translator->trans($mesure);
             });
             //var_dump($formattedData );die;
@@ -389,10 +395,10 @@ class BaseController extends Controller
         return $formattedData;
     }
 
-    protected function getDataProductGraph($productName,$aListData, $aListYears,$translator,&$mesure)
+    protected function getDataProductGraph($productName,$aListData, $aListYears,$translator,&$mesure, $parentProductName=null)
     {
         $formattedData['data'] = [];
-        $formattedData['name'] = ucfirst(strtolower($translator->trans($productName)));
+        $formattedData['name'] = $productName;
         foreach ($aListYears as $year) {
             $formattedData['data'][$year] = '';
         }
@@ -405,7 +411,7 @@ class BaseController extends Controller
             }
             if ($mesure) {
                 $mesure = $translator->trans($mesure);
-                $formattedData['name'] = ucfirst(strtolower($translator->trans($productName))) . ' ('.$mesure.')';
+                $formattedData['name'] = $productName . ' ('.$mesure.')';
             }
         }
         $formattedData['data'] = array_values($formattedData['data']);
@@ -445,6 +451,7 @@ class BaseController extends Controller
         $table = ucfirst($request->request->get('dbType')).'Data';
         if ($request->request->has('countryCode')) {
             $aCriteria['countryCode'] = $request->request->get('countryCode');
+
         }
         if ($request->request->has('year')) {
             $aCriteria['yearMax'] = $request->request->get('year');
@@ -486,6 +493,22 @@ class BaseController extends Controller
                     }
                 }
             }
+        }
+        if(isset($aCriteria['countryCode'])) {
+            $aCriteria['countryCode'] = explode(',', $aCriteria['countryCode']);
+            $index = array_search('', $aCriteria['countryCode']);
+            if($index !== false) {
+                unset($aCriteria['countryCode'][$index]);
+            }
+            $aCriteria['countryCode'] = implode(',', $aCriteria['countryCode']);
+        }
+
+        if($request->request->get('memberShip')) {
+            $aCountries = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->getMemberCountries($aCriteria);
+            array_walk($aCountries, function(&$v,$k){
+                $v = $v['iso3'];
+            });
+            $aCriteria['countryCode'] = implode(',',$aCountries);
         }
         return $aCriteria;
     }

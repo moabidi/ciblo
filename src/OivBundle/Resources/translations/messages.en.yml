@@ -20,7 +20,8 @@ rtable: Table grapes
 rin: Wine
 rfresh: Fresh grapes
 rsec: Raisins
-area: Area
+area: Vignoble
+area rin: Area
 help area: Vineyard area (in production and not yet in production) intended for the production of wine grapes, table grapes or to dry
 help win: Grapes for all uses (pressing, direct human consumption, drying)
 help rin: All wines, including sparkling and special wines, excluding juices and musts

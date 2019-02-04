@@ -23,7 +23,20 @@ class VarietyDataRepository extends BaseRepository
      */
     public function getCountVariety($aCriteria = [])
     {
-        return parent::getCountDB($aCriteria);
+        $this->getQueryResult($aCriteria,true);
+        $result = $this->_queryBuilder->getQuery()->getOneOrNullResult();
+        if (isset($result['total'])) {
+            return $result['total'];
+        }
+    }
+
+    /**
+     * @param array $aCriteria
+     * @return int
+     */
+    public function getTotalResult($aCriteria = [])
+    {
+        return $this->getCountVariety($aCriteria);
     }
 
     /**
@@ -36,13 +49,19 @@ class VarietyDataRepository extends BaseRepository
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         if ($count) {
             $this->_queryBuilder->select('count(o) as total');
-            $this->_queryBuilder->select('count(distinct(o.grapeVarietyName)) as total');
         } else {
             $this->_queryBuilder->select('c.tradeBloc, c.countryNameFr, o');
-            $this->_queryBuilder->addGroupBy('o.grapeVarietyName');
+            if(!isset($aCriteria['bo'])) {
+                $this->_queryBuilder->addGroupBy('o.grapeVarietyName');
+                $this->_queryBuilder->addGroupBy('o.countryCode');
+                $this->_queryBuilder->addGroupBy('o.versioning');
+            }
         }
         $this->_queryBuilder->from($this->_entityName, 'o');
         $this->addAllCriteria($aCriteria);
+        if (isset($aCriteria['isMainVariety'])) {
+            $this->_queryBuilder->andWhere('o.isMainVariety = \'1\'');
+        }
 
     }
 

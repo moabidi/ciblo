@@ -1,6 +1,6 @@
 {% if isAdvSearch|default(false) %}
     <li class="sidebar-search-wrapper">
-        <a class="text-center"><strong>{{ 'Country'|trans }}</strong></a>
+        <a class="text-center" style="cursor: default;"><strong>{{ 'Country'|trans }}</strong></a>
         <select multiple id="country" class="multi-select hide" data-live-search="true" name="country">
             <optgroup id="world" label="{{ 'Choose'|trans }} {{ 'World'|trans }}">
                 <option value="oiv" {% if countryCode == 'oiv' %}selected=""{% endif %}>{{ 'World'|trans }}</option>
@@ -10,9 +10,14 @@
                     <option value="{{ item.tradeBloc }}" {% if countryCode == item.tradeBloc %}selected=""{% endif %}>{{ item.tradeBloc|capitalize }}</option>
                 {% endfor %}
             </optgroup>
+            {% if isBo|default(false) == true %}
+            <optgroup id="countries-members" label="{{ 'Choose all member countries'|trans }}">
+                <option></option>
+            </optgroup>
+            {% endif %}
             <optgroup id="countries" label="{{ 'Choose all countries'|trans }}">
                 {% for country in countries %}
-                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr()|capitalize }}</option>
+                    <option data-member="{{ country.oivMembership }}" value="{{ country.iso3 }}" data-flag="{{ country.iso2|lower }}" {% if countryCode == country.iso3 %}selected=""{% endif %}>{{ country.countryNameFr|capitalize }}</option>
                 {% endfor %}
             </optgroup>
         </select>

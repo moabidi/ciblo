@@ -85,10 +85,13 @@ class OivController extends BaseController
             $view  =  $request->request->get('view');
 
             $aCriteria = $this->getCriteriaRequest($request);
+            if($request->request->has('bo')){
+                $aCriteria['bo'] = 1;
+            }else{
+                $aCriteria['isMainVariety'] = 1;
+            }
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
-            //var_dump($offset,$limit,$count);die();
             if ($count  && ($count>$offset)) {
-                //$result['last'] = floor($count/$limit)*$limit;
                 $result = $this->getResultGLobalSearch($table, $aCriteria, $view, $offset, $limit,$sort,$order);
                 $result = $this->formatDataTable($result);
                 $result = $this->getParamsPagination($result, $count, $offset, $limit);
@@ -110,6 +113,7 @@ class OivController extends BaseController
     {
         $result = [];
         $aCriteria = $this->getCriteriaRequest($request);
+        $aCriteria['isMainVariety'] = 1;
         $table = ucfirst($request->request->get('dbType')).'Data';
         if (class_exists('OivBundle\\Entity\\'.$table)) {
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);

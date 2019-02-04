@@ -24,8 +24,18 @@ class AdvancedSearchController extends BaseController
         $selectedCountryCode = $request->query->get('countryCode','oiv');
         $selectedYear = $request->query->get('year',date('Y')-2);
         $selectedYear = $this->getMaxYear($selectedYear);
-        $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear];
-        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
+        $aStatType  = $this->getDoctrine()->getRepository('OivBundle:StatDataParameter')->getListProduct('public');
+        array_walk($aStatType, function(&$v, $k){
+            $list = [];
+            foreach($v as $row){
+                $list[] = $row['indicator'];
+            }
+            $v = implode(',',$list);
+        });
+        $aStatType = implode(',',$aStatType);// var_dump($aStatType);die;
+        $aCriteria  = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear, 'statType'=>$aStatType];
+        //$aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
+        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountries();
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
         $aParams['countResult'] = $this->getDoctrine()->getRepository('OivBundle:StatData')->getTotalResult($aCriteria);
@@ -108,13 +118,14 @@ class AdvancedSearchController extends BaseController
                 $formattedData['xAxis'][]= $y;
             }
             array_walk($aResults, function ($value, $countryCode) use (&$formattedData, $statType, $translator, $mesure) {
+                if( in_array($countryCode,['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE','oiv'])){
+                    $countryCode = ucfirst(strtolower($translator->trans($countryCode)));
+                }
                 $formattedData['yAxis'][$statType][] = $this->getDataProductGraph($countryCode,$value, $formattedData['xAxis'],$translator,$mesure);
                 $formattedData['mesure'] = $translator->trans($mesure);
             });
-//            var_dump($formattedData );die;
             return new JsonResponse($formattedData);
         }
-        //var_dump($aProducts);die;
         return new JsonResponse([]);
     }
 }

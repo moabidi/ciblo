@@ -172,6 +172,10 @@ class StatDataRepository extends BaseRepository
         return $total;
     }
 
+    /**
+     * @param array $aCriteria
+     * @return array
+     */
     public function getZoneCriteria($aCriteria = [])
     {
         $aCriteria['countryCode'] = trim($aCriteria['countryCode']);
@@ -233,11 +237,15 @@ class StatDataRepository extends BaseRepository
                     ->setParameter('statType', $aStatType[0]);
             } else {
                 $this->_queryBuilder
-                    ->where('o.statType IN (\''. implode('\',\'',$aStatType) .'\')');
+                    ->andWhere('o.statType IN (\''. implode('\',\'',$aStatType) .'\')');
             }
         }
     }
 
+    /**
+     * @param $aCriteria
+     * @return string
+     */
     private function getZone($aCriteria)
     {
         $zone = $aCriteria['countryCode'] == 'oiv' ? 'World':'';

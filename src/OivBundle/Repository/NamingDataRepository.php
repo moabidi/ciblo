@@ -24,7 +24,8 @@ class NamingDataRepository extends BaseRepository
      */
     public function getCountNaming($aCriteria = [])
     {
-        return parent::getCountDB($aCriteria);
+        //return parent::getCountDB($aCriteria);
+        return $this->getTotalResult($aCriteria);
     }
 
     /**
@@ -46,12 +47,17 @@ class NamingDataRepository extends BaseRepository
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $this->_queryBuilder
             ->select('count(o) as total')
-            ->from($this->_entityName, 'o')
-            ->addGroupBy('o.appellationName');
+            ->from($this->_entityName, 'o');
         $this->addAllCriteria($aCriteria);
-        $result = $this->_queryBuilder->getQuery()->getArrayResult();
-        if (count($result)) {
-            return count($result);
+        if(!isset($aCriteria['bo'])) {
+            $this->_queryBuilder->addGroupBy('o.appellationCode');
+            $result = $this->_queryBuilder->getQuery()->getArrayResult();
+            if (count($result)) {
+                return count($result);
+            }
+        } else{
+            $result = $this->_queryBuilder->getQuery()->getOneOrNullResult();
+            return $result['total'];
         }
         return null;
     }
@@ -75,7 +81,13 @@ class NamingDataRepository extends BaseRepository
 
         $this->_queryBuilder->from($this->_entityName, 'o');
         $this->addAllCriteria($aCriteria);
-        $this->_queryBuilder->addGroupBy('o.appellationName');
+        if(!isset($aCriteria['bo'])) {
+            $this->_queryBuilder->addGroupBy('o.appellationCode');
+        } else {
+            $this->_queryBuilder->select('c.countryNameFr, o.id, o.countryCode, o.versioning,  o.appellationCode,o.appellationName, o.parentCode, o.parentName, o.typeNationalCode, o.typeInternationalCode,
+         o.productType as productCategoryName, o.productCategoryName as productType, o.referenceName as referenceName,
+            o.lastDate, o.url');
+        }
         $this->_queryBuilder
             ->setFirstResult($offset)
             ->setMaxResults($limit);
@@ -127,8 +139,8 @@ class NamingDataRepository extends BaseRepository
                 ->select('o.productCategoryName, o.productType')
                 ->addGroupBy('o.productCategoryName')
                 ->andWhere('o.productCategoryName is not null')
-                ->orderBy('o.productCategoryName','ASC')
-                ->addOrderBy('o.productType','ASC');
+                ->orderBy('o.productType','ASC')
+                ->addOrderBy('o.productCategoryName','ASC');
         } else {
             $this->_queryBuilder
                 ->select('o.referenceName, o.url')
@@ -162,8 +174,8 @@ class NamingDataRepository extends BaseRepository
             'productType' => ['form','filter','tab2','tab3','export','exportBo'],
             'productCategoryName' => ['form','filter','tab3','export','exportBo'],
             'referenceName' => ['form','tab2','tab3','export','exportBo'],
+            'url' => ['form','tab3','export','exportBo'],
             'lastDate' => ['tab2','tab3'],
-            'url' => ['form','export','exportBo'],
             'usableData' => ['form'],
             'lastData' => [],
         ];

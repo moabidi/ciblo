@@ -183,7 +183,7 @@ li.sidebar-search-wrapper a {
 /** End popup Naming **/
 @media (min-width: 992px) {
     #advSearch .page-sidebar-menu {
-        margin-top: 67px;
+        margin-top: 10px;
     }
 }
 @media (max-width: 991px) {

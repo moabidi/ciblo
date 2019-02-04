@@ -9,7 +9,7 @@
                         {% if fieldName == 'countryCode' %}
                             <select name="{{ fieldName }}" class="db-field form-control selectpicker" data-live-search="true">
                                 {% for country in countries %}
-                                    <option value="{{ country.getIso3 }}" data-flag="{{ country.getIso2()|lower }}" {% if countryCode == country.getIso3 %}selected=""{% endif %}>{{ country.getCountryNameFr() }}</option>
+                                    <option value="{{ country.iso3 }}" data-flag="{{ country.iso2|lower }}" {% if countryCode == country.iso3 %}selected=""{% endif %}>{{ country.countryNameFr }}</option>
                                 {% endfor %}
                             </select>
                         {% elseif fieldName == 'year'  %}

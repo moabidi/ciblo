@@ -175,7 +175,9 @@ $(function($){
                 });
                 $('#count-result').text(content.count);
                 $('#count-page').text(content.total);
+                $('#pagination-result #info-pg').removeClass('hide');
                 if (content.total < '2') {
+                    $('#pagination-result .pagination.dataTables_length').removeClass('hide');
                     $('#pagination-result .pagination.dataTables_paginate').removeClass('show').addClass('hide');
                 } else {
                     $('#pagination-result .pagination').removeClass('hide');
@@ -238,6 +240,10 @@ $(function($){
                         $('#selected-filters').removeClass('show').addClass('hide');
                         $('#selected-statType').removeClass('hide').addClass('show');
                         $('a[href=#tab_graph]').removeClass('hide').addClass('show');
+                        if (!$('#StatData-statType').val()) {
+                            alert('Veuillez sélectionner au moin une série');
+                            return false;
+                        }
                     } else {
                         $('#selected-statType').removeClass('show').addClass('hide');
                         $('#selected-filters').removeClass('hide').addClass('show');
@@ -278,10 +284,10 @@ $(function($){
             if(db == 'stat') {
                 data += '&yearMin='+ $('#yearMin').val();
                 data += '&yearMax='+ $('#yearMax').val();
+                if ($('#memberShip:checked').length) {
+                    data += '&memberShip=1';
+                }
             }
-            //else{
-            //    data += '&year='+ $('#year').val();
-            //}
             if (view == 'stattype-countries') {
                 data += '&statType='+$(btn).val();
             } else if (view == 'global') {
@@ -459,7 +465,15 @@ $(function($){
         this._initHandleResetFilters = function() {
           $('.reset-filter').on('click', function(){
             $(this).parents().eq(1).find('select, input').val('');
+            if ($(this).parents().eq(1).find('select#yearMin').length) {
+                $(this).parents().eq(1).find('select#yearMin').val($('select#yearMin option:nth-child(1)').val());
+                $(this).parents().eq(1).find('select#yearMax').val($('select#yearMin option:nth-child(1)').val());
+            }
             $(this).parents().eq(1).find('select').trigger('change');
+            $(this).parents().eq(1).find('select.bs-select').selectpicker('refresh');
+            $('#datatable_orders tbody').html('');
+            $('#pagination-result .pagination').addClass('hide');
+            $('#pagination-result #info-pg').addClass('hide');
           });
         };
 
@@ -606,7 +620,9 @@ $(function($){
             tickIcon: 'fa-check'
         });
         $('.bs-select').selectpicker('refresh');
-
+        setTimeout(function() {
+            $('#StatData-statType').trigger('change');
+        },500);
         $('.select2me').select2({
             placeholder: "Select",
             allowClear: true

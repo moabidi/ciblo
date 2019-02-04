@@ -3,7 +3,7 @@
     {#<a id="selectAllCountry" href="javascript:;">{{ 'select all countries'|trans }}</a>#}
     <div class="ms-selection"></div>
 </div>
-<div id="selected-year" class="note col-md-2 hide">
+<div id="selected-year" class="note col-md-2">
     <p>
         <span class="caption-subject font-red-sunglo bold">{{ 'year'|trans|capitalize }}</span>
     </p>
@@ -11,11 +11,11 @@
         <span class="label label-md label-warning">{{ selectedYear }}</span>
     </p>
 </div>
-<div id="selected-statType" class="note col-md-9">
+<div id="selected-statType" class="note col-md-7">
     <p>
         <span class="caption-subject font-red-sunglo bold">{{ 'list'|trans|capitalize }}*</span>
-        <a data-action="deselectAll" href="javascript:;">{{ 'remove all'|trans }}</a><br>
-        <span>*Après la sélection des séries, cliquez sur les sélections ci-dessous pour afficher le graphique </span>
+        {#<a data-action="deselectAll" href="javascript:;">{{ 'remove all'|trans }}</a><br>#}
+        <br><span>*Après la sélection des séries, cliquez sur les sélections ci-dessous pour afficher le graphique</span>
     </p>
     {% for productName, product in filters.StatData.statType.values %}
     <p id="product-{{ productName|replace({' ':''}) }}" class="list-product hide">

@@ -180,9 +180,7 @@ class BaseRepository extends EntityRepository
         //var_dump($aCriteria);die;
         $queryBuilder = $this->_queryBuilder;
         array_walk($aCriteria, function($val, $field) use($queryBuilder){
-            if($val) {
-                //var_dump($field,$val);
-                //$cond = 'o.'.$field.' = :'+$field;
+            if (property_exists($this->_entityName, $field) && $val) {
                 $this->_queryBuilder
                     ->andWhere(sprintf('o.%s like :%s',$field,$field))
                     ->setParameter(sprintf('%s',$field),'%'.$val.'%');

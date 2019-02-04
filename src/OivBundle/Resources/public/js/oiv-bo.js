@@ -242,9 +242,7 @@ $(function($){
                     body += '<tr role="row '+classCSS+'">';
                     $.each(items, function (key, val) {
                         if (key != 'id') {
-                            if (key == 'productCategoryName' || key =='productType' || key=='referenceName') {
-                                val = '<a class="info-naming" data-appellationName="'+items.appellationName+'" data-fieldName="'+key+'">' + val + ' ' +content.textView +'</a>';
-                            } else if (key == 'url' || key == 'internetAdress') {
+                            if (key == 'url' || key == 'internetAdress') {
                                 val = '<a target="_blank" href="'+val+'">'+content.textViewMore+'</a>';
                             }
                             body += '<td>' + val + '</td>';
@@ -255,7 +253,9 @@ $(function($){
                 });
                 $('#count-result').text(content.count);
                 $('#count-page').text(content.total);
+                $('#pagination-result #info-pg').removeClass('hide');
                 if (content.total < '2') {
+                    $('#pagination-result .pagination.dataTables_length').removeClass('hide');
                     $('#pagination-result .pagination.dataTables_paginate').removeClass('show').addClass('hide');
                 } else {
                     $('#pagination-result .pagination').removeClass('hide');
@@ -442,10 +442,10 @@ $(function($){
             if(db == 'stat') {
                 data += '&yearMin='+ $('#yearMin').val();
                 data += '&yearMax='+ $('#yearMax').val();
+                if ($('#memberShip:checked').length) {
+                    data += '&memberShip=1';
+                }
             }
-            //else{
-            //    data += '&year='+ $('#year').val();
-            //}
             if (view == 'stattype-countries') {
                 data += '&statType='+$(btn).val();
             } else if (view == 'global') {
@@ -629,16 +629,24 @@ $(function($){
          * @private
          */
         this._initHandleResetFilters = function() {
-          $('.reset-filter').on('click', function(){
-            $(this).parents().eq(1).find('select, input').val('');
-            $(this).parents().eq(1).find('select').trigger('change');
-          });
+            $('.reset-filter').on('click', function(){
+                $(this).parents().eq(1).find('select, input').val('');
+                if ($(this).parents().eq(1).find('select#yearMin').length) {
+                    $(this).parents().eq(1).find('select#yearMin').val($('select#yearMin option:nth-child(1)').val());
+                    $(this).parents().eq(1).find('select#yearMax').val($('select#yearMin option:nth-child(1)').val());
+                }
+                $(this).parents().eq(1).find('select').trigger('change');
+                $(this).parents().eq(1).find('select.bs-select').selectpicker('refresh');
+                $('#datatable_orders tbody').html('');
+                $('#pagination-result .pagination').addClass('hide');
+                $('#pagination-result #info-pg').addClass('hide');
+            });
             $('.reset-form').on('click', function(){
-            $(this).parents().eq(3).find('select, input[type=text],input[type=hidden]').val('');
-            $(this).parents().eq(3).find('select').trigger('change');
-            $(this).parents().eq(3).find('input[type=checkbox]').prop('checked', false);
-            $(this).parents().eq(3).find('input[type=checkbox]').uniform('update');
-          });
+                $(this).parents().eq(3).find('select, input[type=text],input[type=hidden]').val('');
+                $(this).parents().eq(3).find('select').trigger('change');
+                $(this).parents().eq(3).find('input[type=checkbox]').prop('checked', false);
+                $(this).parents().eq(3).find('input[type=checkbox]').uniform('update');
+            });
         };
 
         /**
@@ -787,6 +795,9 @@ $(function($){
             iconBase: 'fa',
             tickIcon: 'fa-check'
         });
+        setTimeout(function() {
+            $('#StatData-statType').trigger('change');
+        },500);
         $('.select2me').select2({
             placeholder: "Select",
             allowClear: true

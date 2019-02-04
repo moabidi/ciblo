@@ -8,15 +8,17 @@
     <ul id="{{ dbType }}" class="sub-menu">
         {% include 'OivBundle:filters:'~ tpl ~'.html.twig' with {'isAdvSearch':true} %}
         {% if dbType == 'stat' %}
+            {% if isBo|default(false) %}
             <li class="sidebar-search-wrapper">
                 <a class="text-center">{{ 'Membre OIV'|trans }}
                     <div class="checkbox-list" style="float: right;">
                         <label class="checkbox-inline" style="vertical-align: top;">
-                            <input name="membreShip" class="db-field" type="checkbox" value="1" style="float: right;">
+                            <input id="memberShip" name="memberShip" class="db-field" type="checkbox" value="1" style="float: right;">
                         </label>
                     </div>
                 </a>
             </li>
+            {% endif %}
             <li class="sidebar-search-wrapper">
                 <a class="text-center">{{ 'Year min'|trans }}</a>
                 <select id="yearMin" class="form-control select2me" data-live-search="true" name="yearMin">
