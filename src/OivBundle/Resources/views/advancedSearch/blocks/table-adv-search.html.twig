@@ -1,38 +1,43 @@
 {% block dataTable %}
-<div class="table-scrollable" style="height: 700px;overflow-y: auto;">
-    <table id="datatable_orders" class="table table-striped table-bordered table-hover dataTable no-footer"
-            aria-describedby="datatable_orders_info" role="grid">
-        {% if globalResult|length %}
-            <thead style="top: 0;position: sticky;">
-                <tr role="row" class="heading">
-                {% for fieldName, value in globalResult.0 %}
-                    <th data-sort="{% if fieldName in ['countryNameFr','countryNameEn','countryNameIt','countryNameEs'] %}countryCode{% else %}{{ fieldName }}{% endif %}" class="{% if fieldName == 'countryCode' %}sorting_asc{% else %}sorting{% endif %}" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1">
-                        {{ fieldName|trans }}
-                    </th>
-                {% endfor %}
-                </tr>
-                <tr role="row" class="filter">
-                {% for fieldName, value in globalResult.0 %}
-                    <td rowspan="1" colspan="1" style="background-color: #DDD;">
-                        <a>
-                        <input type="text" class="form-control form-filter input-sm" name="{% if fieldName in ['countryNameFr','countryNameEn','countryNameIt','countryNameEs'] %}countryCode{% else %}{{ fieldName }}{% endif %}">
-                            <i class="fa fa-remove"></i>
-                            <i class="icon-magnifier"></i>
-                        </a>
-                    </td>
-                {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-            {% for row in globalResult %}
-                <tr role="row" class="{{ loop.index0 % 2 ? 'odd':'even'}}">
-                    {% for fieldName, value in row %}
-                        <td>{{ value|raw }}</td>
+<div class="portlet box purple">
+    {% include 'OivBundle:backOffice/blocks:caption-panel.html.twig' %}
+    <div class="portlet-body form">
+        <div id="container_scroll" class="table-scrollable" style="height: 700px;overflow-y: auto;overflow-x: auto;">
+            <table id="datatable_orders" class="table table-striped table-bordered table-hover dataTable no-footer"
+                    aria-describedby="datatable_orders_info" role="grid">
+                {% if globalResult|length %}
+                    <thead style="top: 0;position: sticky;">
+                        <tr role="row" class="heading">
+                        {% for fieldName, value in globalResult.0 %}
+                            <th data-sort="{% if fieldName in ['countryNameFr','countryNameEn','countryNameIt','countryNameEs'] %}countryCode{% else %}{{ fieldName }}{% endif %}" class="{% if fieldName == 'countryCode' %}sorting_asc{% else %}sorting{% endif %}" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1">
+                                {{ fieldName|trans }}
+                            </th>
+                        {% endfor %}
+                        </tr>
+                        <tr role="row" class="filter">
+                        {% for fieldName, value in globalResult.0 %}
+                            <td rowspan="1" colspan="1" style="background-color: #DDD;">
+                                <a>
+                                <input type="text" class="form-control form-filter input-sm" name="{% if fieldName in ['countryNameFr','countryNameEn','countryNameIt','countryNameEs'] %}countryCode{% else %}{{ fieldName }}{% endif %}">
+                                    <i class="fa fa-remove"></i>
+                                    <i class="icon-magnifier"></i>
+                                </a>
+                            </td>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in globalResult %}
+                        <tr role="row" class="{{ loop.index0 % 2 ? 'odd':'even'}}">
+                            {% for fieldName, value in row %}
+                                <td>{{ value|raw }}</td>
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        {% endif %}
-    </table>
+                    </tbody>
+                {% endif %}
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,25 +1,37 @@
-<form id="form-{{ dbType|default('stat') }}" name="stat" role="form" class="form-horizontal {{ display|default('hide') }}">
+<form id="form-{% if isEdit|default(false) %}edit-{% endif %}{{ dbType|default('stat') }}" name="stat" role="form" class="form-horizontal {{ display|default('hide') }}">
     <div class="form-body">
         <input class="db-field" type="hidden" value="" name="id">
         {% for fieldName, filter in fieldsForm %}
+            {% set isNotEditable = isEdit|default(false) and (not editableFields[dbType][fieldName]|default(false)) %}
+            {% set isRequired = requiredFields[dbType][fieldName]|default(false) ? 'required':'' %}
+            {% set idErrorField = isEdit|default(false) ? 'error-form-edit-'~dbType~'-'~fieldName:'error-form-'~dbType~'-'~fieldName %}
             <div class="form-group">
-                <label class="col-md-4 control-label">{{ fieldName|trans }}</label>
+                <label class="col-md-4 control-label">{{ fieldName|trans }}{% if isRequired %}<span class="required" aria-required="true">* </span>{% endif %}</label>
                 <div class="col-md-8">
                     <div class="input-icon right">
                         {% if fieldName == 'countryCode' %}
-                            <select name="{{ fieldName }}" class="db-field form-control selectpicker" data-live-search="true">
+                            <select name="{{ fieldName }}" class="db-field form-control {{ isRequired }} {% if not isNotEditable %}selectpicker{% endif %}" {% if isNotEditable %} disabled {% else %}data-live-search="true"{% endif %}>
                                 {% for country in countries %}
                                     <option value="{{ country.iso3 }}" data-flag="{{ country.iso2|lower }}" {% if countryCode == country.iso3 %}selected=""{% endif %}>{{ country.countryNameFr }}</option>
                                 {% endfor %}
                             </select>
                         {% elseif fieldName == 'year'  %}
-                            <select name="{{ fieldName }}" class="db-field form-control selectpicker" data-live-search="true">
+                            <select name="{{ fieldName }}" class="db-field form-control {{ isRequired }} {% if not isNotEditable %}selectpicker{% endif %}" {% if isNotEditable %} disabled {% else %}data-live-search="true"{% endif %}>
                                 {% for year in ("now"|date('Y'))..1995 %}
                                     <option value="{{ year }}" name="year" >{{ year }}</option>
                                 {% endfor %}
                             </select>
+                        {% elseif fieldName == 'measureType'  %}
+                            <select name="{{ fieldName }}" class="db-field form-control {{ isRequired }} {% if not isNotEditable %}selectpicker{% endif %}" {% if isNotEditable %} disabled {% else %}data-live-search="true"{% endif %}>
+                                    <option value="HA" name="year" >{{ 'HA'|trans() }}</option>
+                                    <option value="TONNES" name="year" >{{ 'TONNES'|trans() }}</option>
+                                    <option value="MILLE_S" name="year" >{{ 'MILLE_S' }}</option>
+                                    <option value="MILLE_HL" name="year" >{{ 'MILLE_HL'|trans() }}</option>
+                                    <option value="KG_CAPITA}" name="year" >{{ 'KG_CAPITA'|trans() }}</option>
+                                    <option value="L_PER_CAPITA_15" name="year" >{{ 'L_PER_CAPITA_15'|trans() }}</option>
+                            </select>
                         {% elseif fieldName in ['statType']  %}
-                            <select title="{{ 'Choose'|trans }}" class="form-control bs-select" data-live-search="true" name="{{ fieldName }}">
+                            <select name="{{ fieldName }}" title="{{ 'Choose'|trans }}" class="db-field form-control {{ isRequired }} {% if not isNotEditable %}bs-select{% endif %}" {% if isNotEditable %} disabled {% else %}data-live-search="true"{% endif %} >
                                 {% for productName, product in filter.values %}
                                     <optgroup label="{{ productName|trans }}">
                                         {% for value in product %}
@@ -28,25 +40,133 @@
                                     </optgroup>
                                 {% endfor %}
                             </select>
-                        {% elseif fieldName in ['productType']  %}
-                            <select title="{{ 'Choose'|trans }}" class="form-control bs-select" data-live-search="true" name="{{ fieldName }}">
+                        {% elseif fieldName in ['appellationName']  %}
+                            <select data-val="" name="{{ fieldName }}" title="{{ 'Choose'|trans }}" class="db-field form-control {{ isRequired }} {% if not isNotEditable %}bs-select{% endif %}" {% if isNotEditable %} disabled {% else %}data-live-search="true"{% endif %} data-add-new-option="true">
                                 {% for value in filter.values %}
                                     <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
                                 {% endfor %}
                             </select>
-                        {% elseif fieldName in ['isMainVariety', 'usableData']%}
+                        {% elseif fieldName in ['parentName']  %}
+                            <select data-val="" name="{{ fieldName }}" title="{{ 'Choose'|trans }}" class="db-field  form-control {{ isRequired }} {% if not isNotEditable %}bs-select{% endif %}" {% if isNotEditable %} disabled {% else %}data-live-search="true"{% endif %}>
+                                {% for value in filters.NamingData[fieldName].values %}
+                                    <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
+                                {% endfor %}
+                            </select>
+                        {% elseif fieldName in ['typeNationalCode','typeInternationalCode']  %}
+                            <select data-val="" name="{{ fieldName }}" title="{{ 'Choose'|trans }}" class="db-field  form-control {{ isRequired }} {% if not isNotEditable %}bs-select{% endif %}" {% if isNotEditable %} disabled {% else %}data-live-search="true"{% endif %} data-add-new-option="true">
+                                {% for value in filters.NamingData[fieldName].values %}
+                                    <option value="{{ value[fieldName] }}">{{ value[fieldName]|trans }}</option>
+                                {% endfor %}
+                            </select>
+                        {% elseif fieldName in ['isMainVariety']%}
                             <div class="checkbox-list">
                                 <label class="checkbox-inline">
-                                    <input name="{{ fieldName }}" class="db-field" type="checkbox" value="1">
+                                    <input name="{{ fieldName }}" class="db-field {{ isRequired }}" type="checkbox" value="1" {% if isNotEditable %} readonly {% endif %} >
                                 </label>
                             </div>
+                        {% elseif fieldName == 'usableData' %}
+                            <div class="checkbox-list">
+                                <label class="checkbox-inline">
+                                    <input name="{{ fieldName }}" class="db-field {{ isRequired }}" type="checkbox" value="1" {% if isNotEditable %} onclick="$(this).unbind('click')" {% endif %} {% if not isEdit|default(false) %}checked onclick="$(this).unbind('click')"{% endif %}>
+                                </label>
+                            </div>
+                        {% elseif fieldName == 'versioning' %}
+                        <input type="text" class="db-field form-control" name="{{ fieldName }}" data-version={{ versioning[dbType] }} value="{{ versioning[dbType] }}" readonly>
+                        {% elseif fieldName == 'lastDate' %}
+                        <input type="text" class="db-field form-control" name="{{ fieldName }}" readonly>
                         {% else %}
-                        <input type="text" class="db-field form-control" name="{{ fieldName }}">
+                        <input type="text" class="db-field form-control {{ isRequired }}" name="{{ fieldName }}" {% if isNotEditable or fieldName in ['appellationCode','parentCode']%} readonly {% endif %} >
                         {% endif %}
                     </div>
+                    <div id="{{ idErrorField }}" class="help-block"></div>
                 </div>
             </div>
         {% endfor %}
+        {% if dbType|default() == 'naming' %}
+            <div id="naming-products{% if isEdit|default(false) %}-edit{% endif %}" class="row fileupload-buttonbar" style="margin: 0px;">
+                <div class="col-md-offset-4 col-md-8">
+                    <button id="add-product{% if isEdit|default(false) %}-edit{% endif %}" type="button" class="btn blue start">
+                        <i class="fa fa-plus"></i>
+                        <span>Ajouter un type de produit</span>
+                    </button>
+                </div>
+                <table role="presentation" class="table table-striped clearfix">
+                    <tbody class="files">
+                    <tr class="template-upload fade in">
+                        <td>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Catégorie de produit <span class="required" aria-required="true">* </span></label>
+                                <div class="col-md-8">
+                                    <div class="right">
+                                        <select class="db-field form-control required bs-select" name="categories[]" data-val="" data-live-search="true" data-add-new-option="true">
+                                        </select>
+                                    </div>
+                                    <div id="error-form-edit-education-adress" class="help-block"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Type de produit</label>
+                                <div class="col-md-8">
+                                    <div class="input-icon right">
+                                        <input type="text" class="db-field form-control " name="products[]">
+                                    </div>
+                                    <div id="error-form-edit-education-adress" class="help-block"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="remove-product btn red cancel" type="button">
+                                <i class="fa fa-ban"></i>
+                                <span>Supprimer</span>
+                            </button>
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <div id="naming-references{% if isEdit|default(false) %}-edit{% endif %}" class="row fileupload-buttonbar" style="margin: 0px;">
+                <div class="col-md-offset-4 col-md-8">
+                    <button id="add-reference{% if isEdit|default(false) %}-edit{% endif %}" type="button" class="btn blue start">
+                        <i class="fa fa-plus"></i>
+                        <span>Ajouter une base légale</span>
+                    </button>
+                </div>
+                <table role="presentation" class="table table-striped clearfix">
+                    <tbody class="files">
+                    <tr class="template-upload fade in">
+                        <td>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Base légale <span class="required" aria-required="true">* </span></label>
+                                <div class="col-md-8">
+                                    <div class="input-icon right">
+                                        <input type="text" class="db-field form-control required" name="references[]">
+                                    </div>
+                                    <div id="error-form-edit-education-adress" class="help-block"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Url</label>
+                                <div class="col-md-8">
+                                    <div class="input-icon right">
+                                        <input type="text" class="db-field form-control " name="urls[]">
+                                    </div>
+                                    <div id="error-form-edit-education-adress" class="help-block"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="remove-reference btn red cancel" type="button">
+                                <i class="fa fa-ban"></i>
+                                <span>Supprimer</span>
+                            </button>
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+        {% endif %}
     </div>
     <div class="form-actions">
         <div class="row">

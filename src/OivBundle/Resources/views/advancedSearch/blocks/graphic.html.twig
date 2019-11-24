@@ -1,5 +1,5 @@
 <div id="container-graphic">
-    <span>*Après la sélection des séries, cliquez sur les sélections ci-dessous pour afficher le graphique </span>
+    <span>{{ 'clic stats'|trans }}. </span>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -12,6 +12,7 @@
                 downloadSVG: "{{ ('Download SVG vector image'|trans)|raw }}",
                 downloadXLS: "{{ ('Download XLS'|trans)|raw }}"
             };
+            $.handleSearch._lastStatYear = {{ lastStatYear }};
             $.handleSearch._uri = '{{ '/' ~ app.request.locale ~ '/statistiques/' }}';
             $.handleSearch._trans = {{ transData|json_encode|raw }};
             $.handleSearch._g1 = jQuery.extend(true, {}, $.statCharts);

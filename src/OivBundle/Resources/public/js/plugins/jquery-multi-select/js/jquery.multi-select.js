@@ -395,7 +395,12 @@
               }
               $(this).find('.ms-optgroup-label').each(function(){
                 var text = $(this).find('span').text();
-                $(this).find('span').text(text.replace('Sélectionner','Désélectionner'));
+                text = text.replace('Auswählen','Deaktivieren')
+                    .replace('Seleccionar','Deseleccionar')
+                    .replace('Select','Deselect')
+                    .replace('Selezionare','Deselezionare')
+                    .replace('Sélectionner','Désélectionner');
+                $(this).find('span').text(text);
               });
             }
           });

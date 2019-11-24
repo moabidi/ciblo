@@ -1303,6 +1303,9 @@ Page sidebar
   .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed > li > .sub-menu {
     display: none !important;
   }
+  .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed > li:hover > .sub-menu {
+    display: none !important;
+  }
   .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed > li:hover {
     width: 256px !important;
     position: relative !important;
@@ -1333,20 +1336,20 @@ Page sidebar
     width: 45px !important;
     box-shadow: none;
   }
-  .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed > li:hover > .sub-menu {
-    width: 210px;
-    position: absolute;
-    z-index: 2000;
-    left: 46px;
-    margin-top: 0;
-    top: 100%;
-    display: block !important;
-    -webkit-border-radius: 0 0 4px 4px;
-    -moz-border-radius: 0 0 4px 4px;
-    -ms-border-radius: 0 0 4px 4px;
-    -o-border-radius: 0 0 4px 4px;
-    border-radius: 0 0 4px 4px;
-  }
+  /*.page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed > li:hover > .sub-menu {*/
+    /*width: 210px;*/
+    /*position: absolute;*/
+    /*z-index: 2000;*/
+    /*left: 46px;*/
+    /*margin-top: 0;*/
+    /*top: 100%;*/
+    /*display: block !important;*/
+    /*-webkit-border-radius: 0 0 4px 4px;*/
+    /*-moz-border-radius: 0 0 4px 4px;*/
+    /*-ms-border-radius: 0 0 4px 4px;*/
+    /*-o-border-radius: 0 0 4px 4px;*/
+    /*border-radius: 0 0 4px 4px;*/
+  /*}*/
   .page-sidebar-closed .page-sidebar .page-sidebar-menu.page-sidebar-menu-closed > li:hover > .sub-menu > li > a {
     padding-left: 15px !important;
   }

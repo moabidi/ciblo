@@ -180,6 +180,29 @@ li.sidebar-search-wrapper a {
 .bootstrap-select.bs-select li.dropdown-header{
     cursor: pointer;
 }
+#container_scroll{
+    overflow: hidden;
+}
+#datatable_orders {
+    width: fit-content;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+table.table-bordered tbody th, table.table-bordered tbody td {
+    word-break: break-all;
+}
+span#attach {
+    padding-left: 10px;
+}
+span#attach.active {
+    color: #5b9bd1;
+}
+.pointer {
+    cursor: pointer
+}
+
 /** End popup Naming **/
 @media (min-width: 992px) {
     #advSearch .page-sidebar-menu {

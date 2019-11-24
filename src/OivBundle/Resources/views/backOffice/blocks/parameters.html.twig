@@ -1,0 +1,32 @@
+<div class="portlet box purple">
+    {% include 'OivBundle:backOffice/blocks:caption-panel.html.twig' %}
+    <div class="portlet-body form">
+        <form id="form-parameters" name="parameters" role="form" class="form-horizontal">
+            <div class="form-body">
+                {% for parameterName, parameterValue in parameters %}
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{ parameterName }} <span class="required" aria-required="true">* </span></label>
+                    <div class="col-md-4">
+                    {% if parameterName == 'LAST_STAT_YEAR' %}
+                        <select name="LAST_STAT_YEAR" class="db-field form-control required selectpicker" data-live-search="true">
+                            {% for year in ("now"|date('Y'))..("now"|date('Y'))-5 %}
+                                <option value="{{ year }}" name="year" {% if lastStatYear == year %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <input class="db-field form-control" type="text" name="{{ parameterName }}" value={{ parameterValue }}>
+                    {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-4 col-md-8">
+                        <button type="submit" class="btn yellow btn-edit-parameters" >{{ 'Submit'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

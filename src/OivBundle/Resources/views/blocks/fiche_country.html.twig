@@ -1,3 +1,4 @@
+{% set langs = {'de':'countryNameDe','en':'countryNameEn', 'es':'countryNameES', 'fr':'countryNameFr', 'it':'countryNameIt'} %}
 <div class="fiche-country container ">
     <div class="row">
         <div class="info col-sm-12 col-md-12">
@@ -12,7 +13,7 @@
                     <li class="centred">
                         <img src="{% if selectedCountry.iso2|default() %}{{ asset('/bundles/oiv/css/flags-32/blank.gif') }}{% else %}{{ asset('/bundles/oiv/img/frontend/logo-small.png ')}}{% endif %}" class="flag flag-{{ selectedCountry.iso2|default('oiv')|lower }}"
                              alt="France"/>
-                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3|default('oiv') }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry.countryNameFr|default('World'|trans) }}</span>
+                        <span id="country-name" data-statCountry="{{ selectedCountry.iso3|default('oiv') }}" data-statYear="{{ selectedYear }}" class="country">{{ selectedCountry[langs[app.request.locale]]|default('World'|trans) }}</span>
                         {#{% if isMemberShip %}#}
                         <span id="currentYear" class="country">{{ selectedYear }}</span>
                         {#{% endif %}#}
@@ -30,10 +31,10 @@
                 <!--<img src="..." alt="...">-->
                 <div class="caption">
                     <table id="products" class="products table block-table fixed-table">
-                        <thead>
-                        <th class="text-center"></th>
+                        <thead class="area">
                         <th class="text-center"></th>
                         <th class="text-center"><span>{{ 'area rin'|trans }}</span> <span class="mesure"> ha</span></th>
+                        <th class="text-center"></th>
                         <th class="text-center"></th>
                         <th class="text-center"></th>
                         <th class="text-center"></th>
@@ -42,7 +43,7 @@
                         <tr id="area" data-measure="ha">
                             <td class="">
                                 <a class="product float-left-" data-graph="container-g5" href="javascript:;">
-                                    {{ 'Vignoble'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'help area'|trans }}"></span>
+                                    {{ 'area'|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'help area'|trans }}"></span>
                                     <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="{{ 'show graphic'|trans }}" style="color: #fff;background: #c1c1c1;padding: 4px;"></span>
                                 </a>
                             </td>
@@ -75,7 +76,7 @@
                                 <tr id="{{ product.name }}" data-measure="{{ product.measure|default() }}">
                                     <td>
                                         <a class="product" data-graph="container-g{{ loop.index }}" href="javascript:;">
-                                            {{ product.label|trans }} <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ 'help win'|trans }}"></span>
+                                            {{ product.label|trans }} {#% if product.name != 'rsec' %#}<span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="{{ ('help '~product.name)|trans }}"></span>{#% endif %#}
                                             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="{{ 'show graphic'|trans }}" style="color: #fff;background: #c1c1c1;padding: 4px;"></span>
                                         </a>
                                     </td>
@@ -83,7 +84,7 @@
                                     {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.export, 'statType':'export'} %}
                                     {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.import, 'statType':'import'} %}
                                     {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.consumption, 'statType':'consumption'} %}
-                                    {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index + 5, 'value':product.stat.indovcons, 'statType':'indovcons'} %}
+                                    {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index + 5, 'value':product.stat.indovcons, 'statType':'indovcons','dec':true} %}
                                 </tr>
                                 {% endif %}
                             {% endfor %}
@@ -112,7 +113,7 @@
                                         {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.export, 'statType':'export'} %}
                                         {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.import, 'statType':'import'} %}
                                         {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index, 'value':product.stat.consumption, 'statType':'consumption'} %}
-                                        {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':9, 'value':product.stat.indovcons, 'statType':'indovcons'} %}
+                                        {% include 'OivBundle:blocks:stat-type-value.html.twig' with {'index':loop.index + 5, 'value':product.stat.indovcons, 'statType':'indovcons','dec':true} %}
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -121,32 +122,32 @@
                     </div>
                     <table class="table block-table">
                         <thead>
-                            <th class="text-center">
+                            <th colspan="2" class="text-center">
                                 {{ 'Varieties'|trans }}
                                 {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'Data provided by Membership'|trans }}"></span>#}
                             </th>
-                            <th class="text-center">
+                            <th colspan="2" class="text-center">
                                 IG/AO
                                 {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'Data provided by Membership'|trans }}"></span>#}
                             </th>
-                            <th class="text-center">
+                            <th colspan="2" class="text-center">
                                 {{ 'Education'|trans }}
                                 {#<span class="glyphicon glyphicon-info-sign" aria-hidden="false" data-toggle="tooltip" title="{{ 'Data provided by Membership'|trans }}"></span>#}
                             </th>
                         </thead>
                         <tbody class="bg-wihte">
                         <tr>
-                            <td class="text-center">
+                            <td colspan="2" class="text-center">
                                 <a title="{{ 'Data provided by Membership'|trans }}" class="btn-global-country-search" data-dbType="variety" href="javascript:;">
                                     {{ stats.nbVariety|number_format(0, '.',' ') }} <i class="glyphicon glyphicon-search"></i>
                                 </a>
                             </td>
-                            <td class="text-center">
+                            <td colspan="2" class="text-center">
                                 <a title="{{ 'Data provided by Membership'|trans }}" class="btn-global-country-search" data-dbType="naming" href="javascript:;">
                                     {{ stats.nbNaming|number_format(0, '.',' ') }} <i class="glyphicon glyphicon-search"></i>
                                 </a>
                             </td>
-                            <td class="text-center">
+                            <td colspan="2" class="text-center">
                                 <a title="{{ 'Data provided by Membership'|trans }}" class="btn-global-country-search" data-dbType="education" href="javascript:;">
                                     {{ stats.nbEducation|number_format(0, '.',' ') }} <i class="glyphicon glyphicon-search"></i>
                                 </a>
@@ -179,6 +180,7 @@
                             downloadSVG: "{{ ('Download SVG vector image'|trans)|raw }}",
                             downloadXLS: "{{ ('Download XLS'|trans)|raw }}"
                         };
+                        $.handleSearch._lastStatYear = {{ lastStatYear }};
                         $.handleSearch._uri = '{{ '/' ~ app.request.locale ~ '/statistiques/' }}';
                         $.handleSearch._trans = {{ transData|json_encode|raw }};
                         $.handleSearch._g1 = jQuery.extend(true, {}, $.statCharts);
@@ -194,16 +196,16 @@
                         $.handleSearch._g1._container = 'container-g1';
                         $.handleSearch._g1._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g1._data = {{ stats.graphProducts.yAxis.rfresh|json_encode|raw }};
-                        $.handleSearch._g1._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.0.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g1._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.0.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g1._mesure = '{{ stats.products.0.measure |raw }}';#}
-                        $.handleSearch._g1._mesure = 'tonnes';
+                        $.handleSearch._g1._mesure = '{{ 'tonnes'|trans|raw }}';
                         $.handleSearch._g1._lang =  lang;
                         $.handleSearch._g1._init();
 
                         $.handleSearch._g2._container = 'container-g2';
                         $.handleSearch._g2._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g2._data = {{ stats.graphProducts.yAxis.rin|json_encode|raw }};
-                        $.handleSearch._g2._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.1.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g2._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.1.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g2._mesure = '{{ stats.products.1.measure |raw }}';#}
                         $.handleSearch._g2._mesure = '1000 hl';
                         $.handleSearch._g2._lang =  lang;
@@ -212,25 +214,25 @@
                         $.handleSearch._g3._container = 'container-g3';
                         $.handleSearch._g3._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g3._data = {{ stats.graphProducts.yAxis.rtable|json_encode|raw }};
-                        $.handleSearch._g3._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.2.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g3._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.2.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g3._mesure = '{{ stats.products.2.measure |raw }}';#}
-                        $.handleSearch._g3._mesure = 'tonnes';
+                        $.handleSearch._g3._mesure = '{{ 'tonnes'|trans|raw }}';
                         $.handleSearch._g3._lang =  lang;
                         $.handleSearch._g3._init();
 
                         $.handleSearch._g4._container = 'container-g4';
                         $.handleSearch._g4._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g4._data = {{ stats.graphProducts.yAxis.rsec|json_encode|raw }};
-                        $.handleSearch._g4._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.3.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g4._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.3.label|trans))|json_encode|raw  }};
                         {#$.handleSearch._g4._mesure = '{{ stats.products.3.measure |raw }}';#}
-                        $.handleSearch._g4._mesure = 'tonnes';
+                        $.handleSearch._g4._mesure = '{{ 'tonnes'|trans|raw }}';
                         $.handleSearch._g4._lang =  lang;
                         $.handleSearch._g4._init();
 
                         $.handleSearch._g5._container = 'container-g5';
                         $.handleSearch._g5._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g5._data = {{ stats.graphProducts.yAxis.area|json_encode|raw }};
-                        $.handleSearch._g5._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.4.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g5._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.4.label|trans))|json_encode|raw  }};
                         $.handleSearch._g5._mesure = 'ha';
                         $.handleSearch._g5._lang =  lang;
                         $.handleSearch._g5._init();
@@ -238,7 +240,7 @@
                         $.handleSearch._g6._container = 'container-g6';
                         $.handleSearch._g6._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g6._data = {{ stats.graphProducts.yAxis.rfresh_indovcons|json_encode|raw }};
-                        $.handleSearch._g6._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.5.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g6._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.5.label|trans))|json_encode|raw  }};
                         $.handleSearch._g6._mesure = 'kg/capita';
                         $.handleSearch._g6._lang =  lang;
                         $.handleSearch._g6._init();
@@ -246,15 +248,15 @@
                         $.handleSearch._g7._container = 'container-g7';
                         $.handleSearch._g7._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g7._data = {{ stats.graphProducts.yAxis.rin_indovcons|json_encode|raw }};
-                        $.handleSearch._g7._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.6.label|trans))|json_encode|raw  }};
-                        $.handleSearch._g7._mesure = 'kg/capita';
+                        $.handleSearch._g7._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.6.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g7._mesure = 'l/capita +15';
                         $.handleSearch._g7._lang =  lang;
                         $.handleSearch._g7._init();
 
                         $.handleSearch._g8._container = 'container-g8';
                         $.handleSearch._g8._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g8._data = {{ stats.graphProducts.yAxis.rtable_indovcons|json_encode|raw }};
-                        $.handleSearch._g8._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~(stats.products.7.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g8._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~(stats.products.7.label|trans))|json_encode|raw  }};
                         $.handleSearch._g8._mesure = 'kg/capita';
                         $.handleSearch._g8._lang =  lang;
                         $.handleSearch._g8._init();
@@ -262,7 +264,7 @@
                         $.handleSearch._g9._container = 'container-g9';
                         $.handleSearch._g9._xAxis = {{ stats.graphProducts.xAxis|json_encode|raw }};
                         $.handleSearch._g9._data = {{ stats.graphProducts.yAxis.rsec_indovcons|json_encode|raw }};
-                        $.handleSearch._g9._title = {{ (selectedCountry.countryNameFr|default('World'|trans) ~' - '~ (stats.products.8.label|trans))|json_encode|raw  }};
+                        $.handleSearch._g9._title = {{ (selectedCountry[langs[app.request.locale]]|default('World'|trans) ~' - '~ (stats.products.8.label|trans))|json_encode|raw  }};
                         $.handleSearch._g9._mesure = 'kg/capita';
                         $.handleSearch._g9._lang =  lang;
                         $.handleSearch._g9._init();

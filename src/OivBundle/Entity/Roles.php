@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Roles
  *
  * @ORM\Table(name="roles", uniqueConstraints={@ORM\UniqueConstraint(name="NAME", columns={"NAME"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="OivBundle\Repository\RolesRepository")
  */
 class Roles
 {
@@ -24,7 +24,7 @@ class Roles
     /**
      * @var string
      *
-     * @ORM\Column(name="NAME", type="string", length=30, nullable=false)
+     * @ORM\Column(name="NAME", type="string", length=30, nullable=false, unique=true)
      */
     private $name;
 
@@ -34,6 +34,38 @@ class Roles
      * @ORM\Column(name="VERSIONING", type="bigint", nullable=true)
      */
     private $versioning = '1';
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersioning()
+    {
+        return $this->versioning;
+    }
+
+    /**
+     * @param int $versioning
+     */
+    public function setVersioning($versioning)
+    {
+        $this->versioning = $versioning;
+    }
 
 
 }

@@ -31,7 +31,7 @@ class StatDataParameterRepository extends BaseRepository
         }else{
             $queryBuilder->where('o.printableDataBackoffice = \'Y\'');
         }
-        $result = $queryBuilder->getQuery()->getArrayResult();
+        $result = $queryBuilder->getQuery()->useResultCache(true)->setResultCacheLifetime(3600)->getArrayResult();
         $aListProduct = [];
         foreach ($result as $row) {
             $product = $row['product'];
@@ -40,7 +40,49 @@ class StatDataParameterRepository extends BaseRepository
             }
             $aListProduct[$product][] = $row;
         }
-        //var_dump($aListProduct);die;
         return $aListProduct;
+    }
+
+    /**
+     * @param string $view
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getListStatType($view = 'public')
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select('o.indicator')
+            ->from($this->_entityName, 'o')
+            ->distinct('o.indicator')
+            ->orderBy('o.productPriority')
+            ->addOrderBy('o.priority');
+        if ($view == 'public') {
+            $queryBuilder->where('o.printableDataPublic = \'Y\'');
+        }else{
+            $queryBuilder->where('o.printableDataBackoffice = \'Y\'');
+        }
+        return $queryBuilder->getQuery()->useResultCache(true)->setResultCacheLifetime(3600)->getArrayResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getNotCalculatedStatType()
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder
+            ->select('o.indicator')
+            ->from($this->_entityName, 'o')
+            ->distinct('o.indicator')
+            ->orderBy('o.productPriority')
+            ->addOrderBy('o.priority')
+            ->where('o.indicator NOT LIKE \'%COMPUTED%\' ');
+        $result = $queryBuilder->getQuery()->useResultCache(true)->setResultCacheLifetime(3600)->getArrayResult();
+        array_walk($result, function(&$v){
+            $v = $v['indicator'];
+        });
+        return $result;
     }
 }

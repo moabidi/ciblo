@@ -25,7 +25,7 @@ class Users implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="LOGIN", type="string", length=30, nullable=false)
+     * @ORM\Column(name="LOGIN", type="string", length=30, nullable=false, unique=true)
      */
     private $username;
 
@@ -52,6 +52,16 @@ class Users implements UserInterface, \Serializable
 
 
     private $isActive = '1';
+
+    /*
+     * @var \OivBundle\Entity\Roles
+     *
+     * @ORM\ManyToOne(targetEntity="OivBundle\Entity\Roles")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ROLE", referencedColumnName="NAME")
+     * })
+     */
+    //private $role;
 
     public function __construct()
     {
@@ -90,6 +100,22 @@ class Users implements UserInterface, \Serializable
     {
         $this->name = $name;
     }
+
+    /**
+     * @return int
+     */
+    /*public function getRole()
+    {
+        return $this->role;
+    }*/
+
+    /**
+     * @param int $role
+     */
+    /*public function setRole($role)
+    {
+        $this->role = $role;
+    }*/
 
     /**
      * @return string

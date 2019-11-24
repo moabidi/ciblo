@@ -1,6 +1,6 @@
 <td>
     <div class="display-flex-{% if value is null %} hide {% endif %}" >
-        <span class="float-right"><span class="valStatType">{{ value is null ? '-':value|number_format(0, '.',' ')}}</span></span>
+        <span class="float-right"><span class="valStatType">{{ value is null ? '-':(dec|default(false) ? value|number_format(1, '.',' '):value|number_format(0, '.',' '))}}</span></span>
         <a data-graph="container-g{{ index }}" data-statType="{{ statType }}" class="float-left stat-type btn btn-default btn-xs">
             <span class="glyphicon glyphicon-stats" aria-hidden="false" data-toggle="tooltip" title="{{ 'show graphic'|trans }}"></span>
         </a>

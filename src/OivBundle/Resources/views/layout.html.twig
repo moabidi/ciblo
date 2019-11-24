@@ -19,7 +19,7 @@
     </div>
     <div class="bandeau-bottom Bg-noise">
         <div class="Content_center">
-            <a href="/fr/" class="bandeau-bottom-lnk Content_center">Retour à la page d'accueil</a>
+            <a href="/{{ app.request.locale }}/" class="bandeau-bottom-lnk Content_center">{{ 'go to home'|trans }}</a>
         </div>
     </div>
     {% include 'OivBundle:blocks:footer.html.twig' %}

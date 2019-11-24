@@ -20,7 +20,7 @@
                     {% for productName, product in filter.values %}
                         <optgroup data-optgroup={{ loop.index }} id="{{ productName|replace({' ':''}) }}" label="{{ productName|replace({' ':''})|trans }}">
                         {% for value in product %}
-                        <option value="{{ value['indicator'] }}" selected>{{ value['statType']|trans|capitalize }}</option>
+                        <option value="{{ value['indicator'] }}" selected>{{ value['statType']|trans }}</option>
                         {% endfor %}
                         </optgroup>
                     {% endfor %}

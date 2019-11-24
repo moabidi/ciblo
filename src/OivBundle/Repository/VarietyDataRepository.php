@@ -24,7 +24,7 @@ class VarietyDataRepository extends BaseRepository
     public function getCountVariety($aCriteria = [])
     {
         $this->getQueryResult($aCriteria,true);
-        $result = $this->_queryBuilder->getQuery()->getOneOrNullResult();
+        $result = $this->_queryBuilder->getQuery()->useResultCache(true)->setResultCacheLifetime(3600)->getOneOrNullResult();
         if (isset($result['total'])) {
             return $result['total'];
         }
@@ -46,18 +46,26 @@ class VarietyDataRepository extends BaseRepository
      */
     protected function getQueryResult($aCriteria = [], $count = false)
     {
+        if (!isset($aCriteria['countryName'])) {
+            $aCriteria['countryName'] = 'countryNameFr';
+        }
+        $this->_defaultCountryLan = $aCriteria['countryName'];
+
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         if ($count) {
             $this->_queryBuilder->select('count(o) as total');
         } else {
-            $this->_queryBuilder->select('c.tradeBloc, c.countryNameFr, o');
+            $this->_queryBuilder->select('c.tradeBloc, c.'.$this->_defaultCountryLan.' as countryNameFr, o');
             if(!isset($aCriteria['bo'])) {
                 $this->_queryBuilder->addGroupBy('o.grapeVarietyName');
                 $this->_queryBuilder->addGroupBy('o.countryCode');
                 $this->_queryBuilder->addGroupBy('o.versioning');
             }
         }
-        $this->_queryBuilder->from($this->_entityName, 'o');
+        $this->_queryBuilder
+            ->from($this->_entityName, 'o')
+            ->andWhere('o.usableData = :usableData')
+            ->setParameter('usableData','1');
         $this->addAllCriteria($aCriteria);
         if (isset($aCriteria['isMainVariety'])) {
             $this->_queryBuilder->andWhere('o.isMainVariety = \'1\'');
@@ -70,32 +78,7 @@ class VarietyDataRepository extends BaseRepository
      */
     protected function addDefaultOrder()
     {
-        $this->_queryBuilder->orderBy('c.countryNameFr','ASC');
+        $this->_queryBuilder->orderBy('c.'.$this->_defaultCountryLan,'ASC');
         $this->_queryBuilder->addOrderBy('o.codeVivc','ASC');
-    }
-
-    /**
-     * @return array
-     */
-    public static function getConfigFields() {
-        return [
-            'id'=>['tab3'],
-            'countryNameFr' => ['tab1','tab2','tab3','export','exportBo'],
-            'versioning' => [],
-            'countryCode' => ['form'],
-            'isMainVariety' => ['form'],
-            'areaCultivated' => ['form'],
-            'areaYear' => ['form'],
-            'grapeVarietyName' => ['form','filter','tab1','tab2','tab3','export','exportBo'],
-            'synonym'=>['form','filter','tab2','tab3','export','exportBo'],
-            'codeVivc' => ['form','tab1','tab2','tab3','export','exportBo'],
-            'varietyNationalNameVivc'=> ['form'],
-            'nationalVarietyId'=>['form'],
-            'grapeColor'=>['form'],
-            'lastDate'=>['tab2','tab3','export','exportBo'],
-            'internetAdress'=>['form'],
-            'usableData' => ['form'],
-            'lastData' => [],
-        ];
     }
 }

@@ -15,6 +15,8 @@ $(function ($) {
         this._chart = {};
 
         this._init = function () {
+            var axisName = this._axisName;
+            var mesure = this._mesure;
             Highcharts.setOptions({
                 lang: this._lang
             });
@@ -27,7 +29,18 @@ $(function ($) {
                 exporting: {
                     buttons: {
                         contextButton: {
-                            menuItems: ["downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG","downloadCSV","downloadXLS"]
+                            menuItems: ["downloadPNG", "downloadJPEG", "downloadPDF"]
+                        }
+                    },
+                    csv: {
+                        columnHeaderFormatter: function(item, key, keyLength) {
+                            if (item.coll == 'xAxis') {
+                                return axisName;
+                            }else if(item.name) {
+                                return item.name + ' ('+mesure+')';
+                            } else {
+                                return false;
+                            }
                         }
                     }
                 },

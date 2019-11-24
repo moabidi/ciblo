@@ -1,25 +1,25 @@
 {% extends 'OivBundle:advancedSearch:layout.html.twig' %}
 {% block menu_user %}
     <li class="dropdown dropdown-user">
-        <a href="/fr/statistiques">{{ 'Country Plug'|trans }}</a>
+        <a href="/{{ app.request.locale|default('fr') }}/statistiques">{{ 'Country Plug'|trans }}</a>
     </li>
     <li class="dropdown dropdown-user">
         <a href="{{ path('oiv_login') }}">
-            Connexion
+            {{ 'Login'|trans }}
         </a>
     </li>
-    {% set langs = {'de':'Deutsch','en':'English', 'es':'Español', 'fr':'Français', 'it':'Italian'} %}
+    {% set langs = {'de':'Deutsch','en':'English', 'es':'Español', 'fr':'Français', 'it':'Italiano'} %}
     <li class="dropdown dropdown-user">
         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
             <span class="username username-hide-on-mobile"> {{ langs[app.request.locale] }} </span>
             <i class="fa fa-angle-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-default">
-            <li><a href="/fr/statistiques/recherche">Deutsch</a></li>
+            <li><a href="/de/statistiques/recherche">Deutsch</a></li>
             <li><a href="/en/statistiques/recherche">English</a></li>
-            <li><a href="/fr/statistiques/recherche">Español</a></li>
+            <li><a href="/es/statistiques/recherche">Español</a></li>
             <li><a href="/fr/statistiques/recherche">Français</a></li>
-            <li><a href="/fr/statistiques/recherche">Italian</a></li>
+            <li><a href="/it/statistiques/recherche">Italiano</a></li>
         </ul>
     </li>
 {% endblock %}
@@ -33,16 +33,16 @@
         <div class="btn-group">
             <a  class="btn default yellow-stripe dropdown-toggle" href="javascript:;" data-toggle="dropdown">
                 <i class="fa fa-share"></i>
-                <span class="hidden-480"> Export </span>
+                <span class="hidden-480"> {{ 'Export'|trans }} </span>
                 <i class="fa fa-angle-down"></i>
             </a>
             <ul class="dropdown-menu pull-right">
                 <li>
                     <a class="export-btn" data-export="csv" href="javascript:;"> {{ 'Export to'|trans }} CSV</a>
                 </li>
-                <li>
-                    <a class="export-btn" data-export="pdf" href="javascript:;"> {{ 'Export to'|trans }} PDF</a>
-                </li>
+                {#<li>#}
+                    {#<a class="export-btn" data-export="pdf" href="javascript:;"> {{ 'Export to'|trans }} PDF</a>#}
+                {#</li>#}
                 {#<li>#}
                     {#<a id="export-point" href="javascript:;"> {{ 'Export to power point'|trans }} </a>#}
                 {#</li>#}
@@ -84,5 +84,6 @@
 {% endblock %}
 {% block load_js %}
         {% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
+        <script src=" {{ asset('/bundles/oiv/js/kinetic.js') }}"></script>
         <script src=" {{ asset('/bundles/oiv/js/oiv-handle-adv-search.js') }}"></script>
 {% endblock load_js %}

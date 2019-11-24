@@ -35,6 +35,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ path('manager_users') }}">
+                    <i class="icon-user"></i> {{ 'Gestion des utilisateurs'|trans }}
+                </a>
+            </li>
+            <li>
                 <a href="{{ path('oiv_logout') }}">
                     <i class="icon-lock"></i> {{ 'Log Out'|trans }}
                 </a>
@@ -54,9 +59,9 @@
                 <li>
                     <a class="export-btn" data-export="csv" href="javascript:;"> {{ 'Export to'|trans }} CSV</a>
                 </li>
-                <li>
-                    <a class="export-btn" data-export="pdf" href="javascript:;"> {{ 'Export to'|trans }} PDF</a>
-                </li>
+                {#<li>#}
+                    {#<a class="export-btn" data-export="pdf" href="javascript:;"> {{ 'Export to'|trans }} PDF</a>#}
+                {#</li>#}
                 {#<li>#}
                 {#<a id="export-point" href="javascript:;"> {{ 'Export to power point'|trans }} </a>#}
                 {#</li>#}
@@ -78,6 +83,11 @@
                 </a>
             </li>
             <li>
+                <a href="#tab_edit" data-toggle="tab" aria-expanded="true">
+                    {{ 'Edit data'|trans }}
+                </a>
+            </li>
+            <li>
                 <a href="#tab_add" data-toggle="tab" aria-expanded="true">
                     {{ 'Add data'|trans }}
                 </a>
@@ -85,6 +95,16 @@
             <li>
                 <a href="#tab_import" data-toggle="tab" aria-expanded="true">
                     {{ 'Import data'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="#tab_caluclatedstat" data-toggle="tab" aria-expanded="true">
+                    {{ 'calculated stat'|trans }}
+                </a>
+            </li>
+            <li>
+                <a href="#tab_parameter" data-toggle="tab" aria-expanded="true">
+                    {{ 'Parameters'|trans }}
                 </a>
             </li>
         </ul>
@@ -102,17 +122,27 @@
             <div class="tab-pane" id="tab_graph">
                 {% include 'OivBundle:advancedSearch/blocks:graphic.html.twig' %}
             </div>
+            <div class="tab-pane" id="tab_edit">
+                {% include 'OivBundle:backOffice/blocks:create.html.twig' with {'isEdit': true}%}
+            </div>
             <div class="tab-pane" id="tab_add">
                 {% include 'OivBundle:backOffice/blocks:create.html.twig' %}
             </div>
             <div class="tab-pane" id="tab_import">
                 {% include 'OivBundle:backOffice/blocks:import.html.twig' %}
             </div>
+            <div class="tab-pane" id="tab_caluclatedstat">
+                {% include 'OivBundle:backOffice/blocks:calculated_stat.html.twig' %}
+            </div>
+            <div class="tab-pane" id="tab_parameter">
+                {% include 'OivBundle:backOffice/blocks:parameters.html.twig' %}
+            </div>
         </div>
     </div>
 {% endblock %}
 {% block load_js %}
     {% include 'OivBundle:advancedSearch/blocks:load_js.html.twig' %}
+    <script src=" {{ asset('/bundles/oiv/js/kinetic.js') }}"></script>
     <script src=" {{ asset('/bundles/oiv/js/plugins/uniform/jquery.uniform.min.js') }}"></script>
     <script src=" {{ asset('/bundles/oiv/js/oiv-bo.js') }}"></script>
 {% endblock load_js %}

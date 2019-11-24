@@ -16,7 +16,7 @@
             <div class="col-md-4 col-sm-4 form-group" >
                 <label class="control-label">{{ 'year'|trans }}</label>
                 <select id="year" class="form-control selectpicker" data-live-search="true" name="year">
-                    {% for year in selectedYear..1995 %}
+                    {% for year in lastStatYear..1995 %}
                     <option value="{{ year }}" name="year" >{{ year }}</option>
                     {% endfor %}
 

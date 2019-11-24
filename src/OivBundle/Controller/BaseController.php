@@ -11,6 +11,10 @@ namespace OivBundle\Controller;
 
 use Monolog\Logger;
 use OivBundle\Entity\Country;
+use OivBundle\Entity\NamingData;
+use OivBundle\Entity\StatData;
+use OivBundle\Entity\VarietyData;
+use OivBundle\Entity\EducationData;
 use OivBundle\Repository\StatDataRepository;
 use Spraed\PDFGeneratorBundle\PDFGenerator\PDFGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,13 +44,25 @@ class BaseController extends Controller
     protected function getResultGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =200, $sort= null, $order = null)
     {
         $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getGlobalResult($aCriteria,$offset, $limit, $sort, $order);
-        if (in_array($view, ['tab1','tab2','tab3','export','exportBo'])) {
-            $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
+        if (in_array($view, ['tab1','tab2','tab3','export','exportBo','importBo'])) {
+            $selectedFields = $this->getTaggedFields($table, $view);
             $translator = $this->get('translator');
             array_walk($result, function (&$v, $k) use ($selectedFields, $translator) {
                 $selectedData = [];
                 foreach ($selectedFields as $field) {
-                    $selectedData[$field] = $translator->trans($v[$field]);
+                    if (in_array($field,['statType','metricCompType','measureType','productType','productCategoryName','typeInternationalCode',''])) {
+                        $selectedData[$field] = $translator->trans($v[$field]);
+                    } elseif($field == 'tradeBloc' || $field == 'countryNameFr') {
+                        if (in_array($v[$field], ['World','oiv','AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANIE'])) {
+                            $v[$field] = $v[$field] == 'oiv' ? $translator->trans($v[$field]):$translator->trans(ucfirst(strtolower($v[$field])));
+                            if (isset($v['tradeBloc'])) {
+                                $selectedData['tradeBloc'] = $v[$field];
+                            }
+                        }
+                        $selectedData[$field] = ucwords(strtolower($v[$field]));
+                    }else {
+                        $selectedData[$field] = $v[$field];
+                    }
                 }
                 $v = $selectedData;
             });
@@ -67,15 +83,27 @@ class BaseController extends Controller
      */
     protected function getExportGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =200, $sort= null, $order = null)
     {
-        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getExportResult($aCriteria,$offset, $limit, $sort, $order);
-        if (in_array($view, ['tab2','tab3','export','exportBo']) && $result) {
-            $selectedFields = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTaggedFields($view);
+        $groupBy = $view == 'importBo' && $table == 'NamingData' ? 'appellationCode':null;
+        $groupBy = $view == 'importBoNamingProduct' && $table == 'NamingData' ? 'productCategoryName':$groupBy;
+        $groupBy = $view == 'importBoNamingReference' && $table == 'NamingData' ? 'referenceName':$groupBy;
+        $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getExportResult($aCriteria,$offset, $limit, $sort, $order,$groupBy);
+        //var_dump($view,in_array($view, ['tab2','tab3','export','exportBo','importBo','importBoNamingProduct','importBoNamingReference']),$result);die;
+        if (in_array($view, ['tab2','tab3','export','exportBo','importBo','importBoNamingProduct','importBoNamingReference']) && $result) {
+            $selectedFields = $this->getTaggedFields($table,$view);
             $translator = $this->get('translator');
             array_walk($result, function (&$v, $k) use ($selectedFields, $translator) {
                 $selectedData = [];
                 foreach ($selectedFields as $field) {
                     if (in_array($field, ['statType','measureType','productCategoryName','productType','typeInternationalCode'])) {
                         $selectedData[$field] = $translator->trans($v[$field]);
+                    } elseif($field == 'tradeBloc' || $field == 'countryNameFr') {
+                        if (in_array($v[$field], ['World','oiv','AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANIE'])) {
+                            $v[$field] = $v[$field] == 'oiv' ? $translator->trans($v[$field]):$translator->trans(ucfirst(strtolower($v[$field])));
+                            if (isset($v['tradeBloc'])) {
+                                $selectedData['tradeBloc'] = $v[$field];
+                            }
+                        }
+                        $selectedData[$field] = ucwords(strtolower($v[$field]));
                     } else {
                         $selectedData[$field] = $v[$field];
                     }
@@ -94,6 +122,7 @@ class BaseController extends Controller
     public function saveCriteriaExport(Request $request)
     {
         $aCriteria = $this->getCriteriaRequest($request);
+        $aCriteria['countryName'] = 'countryName'.ucfirst($this->get('translator')->getLocale());
         $exportType = $request->request->get('exportType','csv');
         $table = ucfirst($request->request->get('dbType')).'Data';
         if (class_exists('OivBundle\\Entity\\'.$table) && in_array($exportType, ['csv','pdf'])) {
@@ -110,37 +139,73 @@ class BaseController extends Controller
 
     /**
      * @param $aDataSession
+     * @param $view
+     * @param $sort
      * @return StreamedResponse|void
      */
-    protected function getExportedCSVData($aDataSession)
+    protected function getExportedCSVData($aDataSession,$view = 'export',$sort=null)
     {
         if ($aDataSession) {
             $aCriteria = $aDataSession['criteria'];
             $table = $aDataSession['table'];
-            $view = 'export';
-            if ($this->getUser()) {
+            if ($this->getUser() && !in_array($view,['importBo','importBoNamingProduct','importBoNamingReference']) ) {
                 $view = 'exportBo';
             }
-            $results = $this->getExportGLobalSearch($table, $aCriteria, $view,0,null);
+            $results = $this->getExportGLobalSearch($table, $aCriteria, $view,0,null,$sort);
+            if (in_array($view, ['importBoNamingProduct','importBoNamingReference']) && isset($aCriteria['appellationName']) && count($aCriteria['appellationName'])) {
+                /** add new code to the result to be exported on file */
+                array_walk($results, function ($row) use (&$aCriteria) {
+                    if (isset($aCriteria['appellationName'][$row['appellationCode']])) {
+                        unset($aCriteria['appellationName'][$row['appellationCode']]);
+                    }
+                });
+                if (count($aCriteria['appellationName'])) {
+                    array_walk($aCriteria['appellationName'], function ($name,$code) use (&$results) {
+                        $results[] = [$name,$code,'',''];
+                    });
+                }
+            }
             $translator = $this->get('translator');
             $response = new StreamedResponse();
-            $response->setCallback(function() use ($results, $translator) {
+            $response->setCallback(function() use ($results, $translator, $table) {
                 $handle = fopen('php://output', 'w+');
                 $header = [];
                 if($results) {
                     foreach (array_keys($results[0]) as $field) {
-                        //$header[] = mb_convert_encoding($translator->trans($field), 'ISO-8859-1', 'UTF-8');
+                        if ($field == 'countryNameFr') {
+                            $field = 'Country';
+                        }
                         $header[] = $translator->trans($field);
                     }
                     fputcsv($handle, $header, ';');
                     $count = 1;
-                    foreach ($results as $row) {
-                        //$row = $this->encodeData($row);
-                        fputcsv($handle, $row, ';');
-                        if($count%100 ==0 ){
-                            fclose($handle);
-                            $handle = fopen('php://output', 'w+');
-                            $count++;
+                    if ($table == 'StatData') {
+                        foreach ($results as $row) {
+
+                            if ($row['value'] !== null) {
+                                $row['value'] = in_array($row['measureType'], ['kg/capita','l/capita (+15)']) ? number_format($row['value'], 2, '.', ' '):intval($row['value']);
+                            }
+                            $row = array_map(function($v){
+                                return trim(strtolower($v)) == 'null' ? '':$v;
+                            },$row);
+                            fputcsv($handle, $row, ';');
+                            if ($count % 100 == 0) {
+                                fclose($handle);
+                                $handle = fopen('php://output', 'w+');
+                                $count++;
+                            }
+                        }
+                    } else {
+                        foreach ($results as $row) {
+                            $row = array_map(function($v){
+                                return trim(strtolower($v)) == 'null' ? '':$v;
+                            },$row);
+                            fputcsv($handle, $row, ';');
+                            if ($count % 100 == 0) {
+                                fclose($handle);
+                                $handle = fopen('php://output', 'w+');
+                                $count++;
+                            }
                         }
                     }
                 }
@@ -150,7 +215,7 @@ class BaseController extends Controller
             $response->setStatusCode(200);
             $response->headers->set('Content-Encoding', ' UTF-8');
             $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
-            $response->headers->set('Content-Disposition','attachment; filename="export-'.date('Ymd-his').'.csv"');
+            $response->headers->set('Content-Disposition','attachment; filename="'.$view.'-'.$table.'-'.date('Y-m-d-H-i-s').'.csv"');
             echo "\xEF\xBB\xBF"; // UTF-8 BOM
             return $response;
         }
@@ -166,57 +231,35 @@ class BaseController extends Controller
         if ($aDataSession) {
             $aCriteria = $aDataSession['criteria'];
             $table = $aDataSession['table'];
-            $view = $table == 'StatData' ? 'export':'tab2';
+            //$view = $table == 'StatData' ? 'export':'tab2';
+            $view = 'export';
             if ($this->getUser()) {
                 $view = $table == 'StatData' ? 'exportBo':'tab3';
             }
-            $aParams['globalResult'] = $this->getResultGLobalSearch($table, $aCriteria, $view,0,null);
+            $aParams['globalResult'] = $this->getExportGLobalSearch($table, $aCriteria, $view,0,null);
             $html = $this->renderView('OivBundle:advancedSearch:print.html.twig', $aParams);
             /**@var PDFGenerator $pdfGenerator */
             $pdfGenerator = $this->get('spraed.pdf.generator');
-
+            $fileName = 'export-'.$table.'-'.date('Ymd-his').'.pdf';
             return new Response($pdfGenerator->generatePDF($html),
                 200,
                 array(
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="out.pdf"'
+                    'Content-Disposition' => 'inline; filename="'.$fileName.'"'
                 )
             );
+//            /**@var Pdf $pdfGenerator */
+//            $pdfGenerator = $this->get('knp_snappy.pdf');
+//            $stream = $pdfGenerator->getOutputFromHtml($html,['page-size'=>'A3']);
+//            return new Response($stream,
+//                200,
+//                array(
+//                    'Content-Type' => 'application/pdf; charset=UTF-8',
+//                    'Content-Disposition' => 'inline; filename="out.pdf"'
+//                )
+//            );
         }
         return;
-    }
-
-    /**
-     * @param $row
-     * @return mixed
-     */
-    protected function encodeData($row)
-    {
-        foreach ($row as &$value) {
-            //$value = htmlspecialchars($value);
-            //$value = html_entity_decode($value,ENT_QUOTES,'ISO-8859-1');
-            //$value = strip_tags(mb_convert_encoding($value, 'ISO-8859-5', 'UTF-8'));
-        }
-        return $row;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getFiltredFiled($view = 'public')
-    {
-        foreach ($this->_aTableType as $table) {
-            $repository = $this->getDoctrine()->getRepository('OivBundle:' . $table);
-            $aFiltredFields[$table] = $repository->getTaggedFields('filter');
-            foreach ($aFiltredFields[$table] as $field => &$field) {
-                $aValues = $repository->getDistinctValueField($field);
-                $field = ['label' => $field, 'values' => $aValues];
-            }
-        }
-        if (isset($aFiltredFields['StatData']['statType'])) {
-            $aFiltredFields['StatData']['statType']['values'] = $this->getDoctrine()->getRepository('OivBundle:StatDataParameter')->getListProduct($view);
-        }
-        return $aFiltredFields;
     }
 
     /**
@@ -227,14 +270,11 @@ class BaseController extends Controller
     {
         $repository = $this->get('oiv.stat_repository');
         $minData = $minDate ? $minDate:'1995';
-        $maxDate = $maxDate ? $maxDate:date('Y')-2;
-        if (date('Y') - $maxDate < 3) {
-            $maxDate = date('n')>8 ? date('Y')-2:date('Y')-3;
-        }
+        $maxDate = $this->getMaxYear($maxDate);
         $allStats = $this->getStatProducts(array_merge($aCriteria, ['yearMin' => $minData, 'yearMax' => $maxDate]));
         foreach ($allStats as &$product) {
             if (in_array($product['name'], ['rfresh','rin','rtable','rsec'])) {
-                unset($product['stat']['indovcons']);
+                //unset($product['stat']['indovcons']);
             }
         }
         return [
@@ -245,6 +285,25 @@ class BaseController extends Controller
             'nbNaming' => $this->get('oiv.naming_repository')->getCountNaming($aCriteria),
             'nbEducation' => $this->get('oiv.education_repository')->getCountEducation($aCriteria),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFiltredFiled($view = 'public')
+    {
+        $aFiltredFields = [];
+        foreach ($this->_aTableType as $table) {
+            $aFiltredFields[$table] = $this->getTaggedFields($table,'filter');
+            foreach ($aFiltredFields[$table] as $field => &$field) {
+                $aValues = $this->getDoctrine()->getRepository('OivBundle:'.$table)->getDistinctValueField($field);
+                $field = ['label' => $field, 'values' => $aValues];
+            }
+        }
+        if (isset($aFiltredFields['StatData']['statType'])) {
+            $aFiltredFields['StatData']['statType']['values'] = $this->getDoctrine()->getRepository('OivBundle:StatDataParameter')->getListProduct($view);
+        }
+        return $aFiltredFields;
     }
 
     /**
@@ -275,7 +334,7 @@ class BaseController extends Controller
                     'export' => 'R_EXPORT_WINE',
                     'import' => 'Q_IMPORT_WINE',
                     'consumption' => 'S_CONSUMPTION_WINE',
-                    'indovcons' => '',
+                    'indovcons' => 'CONSUMPTION_WINE_CAPITA_COMPUTED',
                 ]
 
             ],
@@ -287,7 +346,7 @@ class BaseController extends Controller
                     'export' => '',
                     'import' => '',
                     'consumption' => 'L_COMSUMPTION_TABLE_GRP',
-                    'indovcons' => '',
+                    'indovcons' => 'COMSUMPTION_CAPITA_TABLE_GRP_COMPUTED',
                 ]
 
             ],
@@ -299,7 +358,7 @@ class BaseController extends Controller
                     'export' => 'K_EXPORT_DRIED_GRP',
                     'import' => 'J_IMPORT_DRIED_GRP',
                     'consumption' => 'N_CONSUMPTION_DRIED_GRP',
-                    'indovcons' => 'M_COMSUMPTION_CAPITA_GRP',
+                    'indovcons' => 'CONSUMPTION_DRIED_GRP_PER_CAPITA_COMPUTED',
                 ]
 
             ],
@@ -323,7 +382,7 @@ class BaseController extends Controller
                 'label' => $translator->trans('rin'),
                 'name' => 'rin_indovcons',
                 'stat' => [
-                    'indovcons' => '',
+                    'indovcons' => 'CONSUMPTION_WINE_CAPITA_COMPUTED',
                 ]
 
             ],
@@ -331,7 +390,7 @@ class BaseController extends Controller
                 'label' => $translator->trans('rtable'),
                 'name' => 'rtable_indovcons',
                 'stat' => [
-                    'indovcons' => '',
+                    'indovcons' => 'COMSUMPTION_CAPITA_TABLE_GRP_COMPUTED',
                 ]
 
             ],
@@ -339,7 +398,7 @@ class BaseController extends Controller
                 'label' => $translator->trans('rsec'),
                 'name' => 'rsec_indovcons',
                 'stat' => [
-                    'indovcons' => 'M_COMSUMPTION_CAPITA_GRP',
+                    'indovcons' => 'CONSUMPTION_DRIED_GRP_PER_CAPITA_COMPUTED',
                 ]
 
             ],
@@ -361,7 +420,6 @@ class BaseController extends Controller
                 }
             }
         }
-        //var_dump($aProducts);die;
         return $aProducts;
     }
 
@@ -390,7 +448,6 @@ class BaseController extends Controller
                 $formattedData['yAxis'][$productName][] = $this->getDataProductGraph($statType,$value, $formattedData['xAxis'],$translator,$mesure,$productName);
                 $formattedData['mesure'] = $translator->trans($mesure);
             });
-            //var_dump($formattedData );die;
         }
         return $formattedData;
     }
@@ -406,12 +463,14 @@ class BaseController extends Controller
             foreach ($aListData as $stat) {
                 $mesure = isset($stat['measureType']) ? $stat['measureType']:'';
                 if ($stat['value']) {
-                    $formattedData['data'][$stat['year']] = intval($stat['value']);
+                    $val = intval($stat['value'])>100 ? intval($stat['value']):floatval($stat['value']);
+                    $formattedData['data'][$stat['year']] = $val;
                 }
             }
             if ($mesure) {
                 $mesure = $translator->trans($mesure);
-                $formattedData['name'] = $productName . ' ('.$mesure.')';
+                //$formattedData['name'] = $productName . ' ('.$mesure.')';
+                $formattedData['name'] = $productName;
             }
         }
         $formattedData['data'] = array_values($formattedData['data']);
@@ -527,7 +586,7 @@ class BaseController extends Controller
         } else {
             if (count(array_intersect([$filtredCountry],$aSelectedCountry))){
                 return $this->getCountryCode($filtredCountry);;
-            } elseif(count(array_intersect($aSelectedCountry, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']))) {
+            } elseif(count(array_intersect($aSelectedCountry, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANIE']))) {
                 $result = $this->getDoctrine()->getRepository('OivBundle:Country')->checkFiltredCountry($filtredCountry,$aSelectedCountry);
                 if ($result) {
                     return $result->getIso3();
@@ -573,11 +632,51 @@ class BaseController extends Controller
 
     }
 
+    /**
+     * 
+     * @param string $maxYear
+     * @return number|string
+     */
     protected function getMaxYear($maxYear)
     {
-        if (date('Y') - $maxYear < 3) {
-            $maxYear = date('n')>8 ? date('Y')-2:date('Y')-3;
+        $maxYear = intval($maxYear);
+        $lastStatYear = $this->getLastStatYear();
+        if ($maxYear == 0 || $lastStatYear < $maxYear) {
+            $maxYear = $lastStatYear;
         }
         return $maxYear;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    protected function getLastStatYear()
+    {
+        $lastStatYear = date('Y');
+        if ($oParameters = $this->getDoctrine()->getRepository('OivBundle:Parameters')->findOneBy(['name' => 'LAST_STAT_YEAR'])) {
+            if ($oParameters->getValue()){
+                $lastStatYear = $oParameters->getValue();
+            }
+        }
+        return $lastStatYear;
+    }
+    
+    /**
+     * 
+     * @param string $table
+     * @param string $tag
+     * @return string[]
+     */
+    protected function getTaggedFields($table,$tag)
+    {
+        $class = 'OivBundle\\Entity\\'.$table;
+        $aFields =[];
+        foreach ($class::getConfigFields() as $name => $aTags) {
+            if (in_array($tag, $aTags)) {
+                $aFields[$name] = $name;
+            }
+        }
+        return $aFields;
     }
 }

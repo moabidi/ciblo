@@ -13,9 +13,9 @@
 </div>
 <div id="selected-statType" class="note col-md-7">
     <p>
-        <span class="caption-subject font-red-sunglo bold">{{ 'list'|trans|capitalize }}*</span>
+        <span class="caption-subject font-red-sunglo bold">{{ 'list'|trans|capitalize }}</span>
         {#<a data-action="deselectAll" href="javascript:;">{{ 'remove all'|trans }}</a><br>#}
-        <br><span>*Après la sélection des séries, cliquez sur les sélections ci-dessous pour afficher le graphique</span>
+        {#<br><span>*Après la sélection des séries, cliquez sur les sélections ci-dessous pour afficher le graphique</span>#}
     </p>
     {% for productName, product in filters.StatData.statType.values %}
     <p id="product-{{ productName|replace({' ':''}) }}" class="list-product hide">

@@ -2,131 +2,140 @@
 # SIMPLE SEARCH
 #########################
 oiv: World
-Country Plug: Country Plug
-Advanced Search on DataBase: Advanced Search on DataBase
-Choose: Choose
+Country Plug: Country profile
+Advanced Search on DataBase: Advanced Search on Database
+Choose: Select
 a country: a country
 a continent: a continent
 Countries: Countries
-View more: View more
+View more: Find out more
 View: View
-Total records: Total records
-Result of search: Result of search
+Total records: Total results
+
+Result of search: Search results
 Country: Country
-countryCode: Country
+countryCode: Country code
 countryNameFr: Country
-Database: Database
+Database: Data
 rtable: Table grapes
 rin: Wine
 rfresh: Fresh grapes
-rsec: Raisins
-area: Vignoble
-area rin: Area
-help area: Vineyard area (in production and not yet in production) intended for the production of wine grapes, table grapes or to dry
-help win: Grapes for all uses (pressing, direct human consumption, drying)
-help rin: All wines, including sparkling and special wines, excluding juices and musts
+rsec: Dried grapes
+area: Vineyard
+area rin: Surface area
+For last statistic estimations: For latest statistical estimates
+show graphic: Display chart
+help area: Vineyard surface area (in production or awaiting production) destined for the production of wine grapes, table grapes or dried grapes
+help win: Fresh grapes for direct human consumption
+help rtable: Fresh grapes for direct human consumption
+help rfresh: Grapes for all uses
+help rin: All wines, including sparkling wines and special wines, excluding juice and musts
+help rsec: In tonnes of dried fruit
 #Education
 city: City
-formationTitle: Title of the training
-university: Establishment
-tutelle: Guardianship
+formationTitle: Training course title
+university: Institution
+tutelle: Authority
 level: Level and category
-diploma: Diploma (s) awarded
-cooperation: Possible university cooperation
-month: Duration of training
-hourCourses: Number of hours of training
-credits: ECTS Credits
+diploma: Diploma(s) awarded
+cooperation: University partnerships, if any
+month: Training duration
+hourCourses: Number of training hours
+credits: ECTS credits
 prior: Prerequisites
-deadline: Deadline
+deadline: Date of enrolment
 contact: Contact
 adress: Address
-lastDate: Last update date
-internetAdress: Link
+lastDate: Last updated
+internetAdress: Web page
 #Appelation
-appellationCode: Code
-appellationName: IG/AO
-parentCode: Upper GI / AO code
-parentName: Upper geographical unit
+appellationCode: GI/AO code
+appellationName: GI/AO
+parentCode: Highest unit code
+parentName: Highest geographical unit
 typeNationalCode: National indication type
-typeInternationalCode: Type of international indication
-#productCategoryName: Type of product
-productCategoryName: Product
-productType: Categories of products
-#productType: Produits
-referenceName: Regulatory basis
-url: Link
+typeInternationalCode: International indication type
+#productCategoryName: Product type
+productCategoryName: Product type
+productType: Product categories
+#productType: Product categories
+referenceName: Legal basis
+url: Link to legal basis
 #Stat
 statType: Series
 measureType: Unit
 metricCompType: Product
 year: Year
 value: Value
-infoSource: Source info
-grapesDestination: Vocation of the grape
+infoSource: Source
+grapesDestination: Destination of grape
 #Variety
-isMainVariety: Main Variety
-areaCultivated: Area
+isMainVariety: Main variety
+areaCultivated: Surface area
 areaYear: Year cultivated area
-grapeVarietyName: Name variety
-codeVivc: VIVC
-infoCodeVivc: Vitis International Variety Catalog. This code is provided and recognized only by some countries.
-varietyNationalNameVivc: Code OIV
-synonym: Synonymous
-nationalVarietyId: Id national variety
-grapeColor: Color
+grapeVarietyName: Variety name
+codeVivc: VIVC code
+infoCodeVivc: Vitis International Variety Catalogue. This code is used and recognised only by certain countries
+varietyNationalNameVivc: Variety name?
+synonym: Synonym
+nationalVarietyId: National variety code
+grapeColor: Grape colour
+
+internetAdress: Link to website
 #Fiche OIV
-area: Area
-Individual Consumption: Individual consumption
-count variety: Number of varietal
-count education: Number of training
+area: Surface area
+Individual Consumption: Per capita consumption
+count variety: Number of grapevine varieties
+count education: Number of training courses
 production: Production
 prod: Production
 consumption: Consumption
-import: Import
-export: Export
-indovcons: Individual consumption
-total count variety: Total number of varietal
-total count education: Total number of training
-Zone: Zoned
+import: Imports
+export: Exports
+indovcons: Per capita consumption
+total count variety: Total number of grapevine varieties
+
+total count education: Total number of training courses
+
+Zone: Zone
 Database: Database
 World: World
-Naming: Naming
+Naming: Appellations
 Variety: Variety
 Varieties: Varieties
-Education: Educations
+Education: Training courses
 Statistic: Statistics
 Annual statistics of: Annual statistics of
 Download CSV: Download CSV
-Download JPEG image: Download JPEG image
-Download PDF document: Download PDF document
-Download PNG image: Download PNG image
-Download SVG vector image: Download SVG vector image
+Download JPEG image: Download JPEG
+Download PDF document: Download PDF
+Download PNG image: Download PNG
+Download SVG vector image: Download
 Download XLS: Download XLS
 in: in
 Advanced search: Advanced search
 Year min: Year min
 Year max: Year max
 Search: Search
-Data provided by Membership: Data provided by membership
+Data provided by Membership: Data provided by Member States
 Data not available: Data not available
 Click on a category or series: Click on a category or series
-for details of the data: for details of the data
-To have an advanced search with a comparison of the statistics: To have an advanced search with a comparison of the statistics
+for details of the data: for detailed view of data
+To have an advanced search with a comparison of the statistics: For an advanced search with comparison of statistics
 click here: click here
-GRAPHIC: GRAPHIC
+GRAPHIC: CHART
 No results found for your search: No results found for your search
 No results found: No results found
-error response: error response
+error response: Response error
 #APPELATION Type du produit
-AROMATISED_WINE: AROMATISED WINE
-GRAPE: GRAPE
-GRAPE_JUICE: GRAPE JUICE
-MISTELLE: MISTELLE
-NONE: Not classified
-SPECIAL_WINE: SPECIAL WINE
-SPIRITUOUS_BEVERAGE: SPIRITUOUS BEVERAGE
-WINE: WINE
-WINE_VINEGAR: WINE VINEGAR
+AROMATISED_WINE: Aromatised wine
+GRAPE: Grape
+GRAPE_JUICE: Grape juice
+MISTELLE: Mistelle
+SPECIAL_WINE: Special wine
+SPIRITUOUS_BEVERAGE: Spirituous beverage
+#WINE: Wine
+WINE_VINEGAR: Wine vinegar
 #APPELATION Type d'indication type 2
 GI: GI
 PDO: PDO
@@ -136,96 +145,103 @@ WINE_ORIGIN: Wine of origin
 Y: YES
 N: NO
 #Statistiques liste des produits
-AREA_VINEYARD: Vineyard area
+AREA_VINEYARD: Vineyard surface area
 GRAPES: Fresh grapes
 TABLE_GRAPES: Table grapes
-DRIED_GRAPES: Raisins
-AREA: AREA
+DRIED_GRAPES: Dried grapes
+WINE: Wine
+AREA: Surface area
 JUICE_GRAPES: Grape juice
-JUICE_MUST: Juices and mouts
+JUICE_MUST: Juice and musts
 POPULATION: Population
 #Statistiques categorie des statistiques
-CONSUMPTION: CONSUMPTION
-PRODUCTION: PRODUCTION
-IMPORTATION: IMPORT
-EXPORTATION: EXPORT
-TOTAL_AREA: TOTAL AREA
-CONSUMPTION_CAPITA: KAPITA CONSUMPTION
+CONSUMPTION: Consumption
+PRODUCTION: Production
+IMPORTATION: Imports
+EXPORTATION: Exports
+
+TOTAL_AREA: Total surface area
+CONSUMPTION_CAPITA: Per capita consumption
 #Statistiques indicator des statistiques
-A_SURFACE: Vineyard area
+A_SURFACE: Vineyard surface area
 CONSUMPTION_PRODUCT_GRAPES: CONSUMPTION_PRODUCT_GRAPES
-C_PROD_GRP: Production of fresh grapes
-F_PROD_TABLE_GRP: Production of table grapes
-G_PROD_DRIED_GRP: Production of raisins
-H_IMPORT_GRP: Imports of fresh grapes
+C_PROD_GRP: Fresh grapes production
+F_PROD_TABLE_GRP: Table grapes production
+G_PROD_DRIED_GRP: Dried grapes production
+H_IMPORT_GRP: Fresh grapes imports
 INDUSTRIAL_USE_WINE: Industrial uses of wine
-I_EXPORT_GRP: Exports of fresh grapes
-J_IMPORT_DRIED_GRP: Imports of raisins
-K_EXPORT_DRIED_GRP: Raisin exports
-L_COMSUMPTION_TABLE_GRP: Consumption of table grapes
+I_EXPORT_GRP: Fresh grapes exports
+J_IMPORT_DRIED_GRP: Dried grapes imports
+K_EXPORT_DRIED_GRP: Dried grapes exports
+L_COMSUMPTION_TABLE_GRP: Table grapes consumption
 M_COMSUMPTION_CAPITA_GRP: M_COMSUMPTION_CAPITA_GRP
 NATIONAL_GRAPE_ACCORDING_TO_VOCATION: NATIONAL_GRAPE_ACCORDING_TO_VOCATION
-N_CONSUMPTION_DRIED_GRP: Consumption of raisins
-POPULATION_PLUS_15: Population (+15)
-PRODUCTION_JUICE: Production of grape juice
-PRODUCTION_MUST: Juice production
+N_CONSUMPTION_DRIED_GRP: Dried grapes consumption
+POPULATION_PLUS_15: Population (15+)
+PRODUCTION_JUICE: Grape juice production
+PRODUCTION_MUST: Must production
 P_PRODUCTION_WINE: Wine production
 Q_IMPORT_WINE: Wine imports
-REPARTITION_PRODUCT_AREA: Distribution area of ​​the vineyard by variety of vines
+REPARTITION_PRODUCT_AREA: Distribution by variety
 R_EXPORT_WINE: Wine exports
 S_CONSUMPTION_WINE: Wine consumption
-TOTAL_AGRI_AREA: TOTAL_AGRI_AREA
 TOTAL_POPULATION: Population
 U1_STOCK_WINE: Wine stocks
+CONSUMPTION_CAPITA_15: Per capita consumption (15+)
+CONSUMPTION_WINE_CAPITA_COMPUTED: Consumption of wine per capita (+15)
+COMSUMPTION_CAPITA_GRP_COMPUTED: Consumption of table grapes per capita
+CONSUMPTION_DRIED_GRP_PER_CAPITA_COMPUTED: Consumption of dried grapes per capita
+COMSUMPTION_CAPITA_TABLE_GRP_COMPUTED: Consumption of table grapes per capita
 #Unite
-MILLE_HL: 1000 hl
-#MILLE_QX: 1000 qx
-MILLE_QX: tonnes
-MILLE_HA: ha
+MILLE_HL: 1000 hL
+#MILLE_QX: 1000 ql
 HA: ha
 TONNES: tonnes
+tonnes: tonnes
+1000 QX: tonnes
 #KG_CAPITA: 1000 kg
 KG_CAPITA: kg/capita
+MILLE_S: L/capita (15+)
+L_PER_CAPITA_15: l/capita (+15)
 #########################
 # ADV SEARCH
 #########################
-#Results: Résultats
-#Home: Accueil
-#Export to: Export en
-#Graphic: Graphique
-#list: Série
-#Your selection: Votre sélection
-#records: lignes
-#of: de
+Choose all continents: Select all continents
+Choose all countries: Select all countries
+Results: Results
+Home: Home
+Export to: Export to
+Graphic: Chart
+list: Series
+Your selection: Your selection
+records: lines
+of: of
+No data to exported: No data to export
+Please select at least one country: Please select at least one country
+Export type not available: Export type not available
+Year Min must be less than Year Max: Year min must be less than Year max
+All: All
+remove all: Remove all
+select all: Select all
+select all countries: Select all countries
+Refine your search: Refine your search
+Membre OIV: OIV Member
+tradeBloc: Continent
+World: World
+go to home: Go back to the homepage
+choose stat: Please select at least one series
+clic stats: After selecting the series, click on the selections to display the chart
+Reset: Reset
+Details: Details
+Connexion: Connexion
+Export: Export
+Login: Login
+Title oiv: International Organisation of Vine and Wine
 ##########################
-## BackOffice
-##########################
-#Add data: Ajouter des données
-#Import data: Importer des données
-#Reset: Reset
-#Submit: Valider
-#Select file: Sélectionner un fichier
-#Admin: Admin
-#Save Data: Enregistrer les données
-#Log Out: Déconnection
-#Profile: Profile
-#Name: Nom
-#Login: Login
-#Password: Mot de passe
-#Name is required: Nom est obligatoire
-#Login is required: Login est obligatoire
-#Password is required: Mot de passe est obligatoire
-#Login is required: Login est obligatoire
-#Re-type Your Password: Retaper le mot de passe
-#Your changes has been saved with success: Vos modifcations sont enregistrées avec succès
-#The value of name is not valid: La valeur de champ Nom n'est pas valide
-#The value of username is not valid: La valeur de champ Login n'est pas valide
-#The value of password is not valid: La valeur de champ Mot de passe n'est pas valide
-#You must enter the same passwords: Vous devez retaper le même mot de passe
-#
-#########################
-# Login
-#########################
-Enter your username and password: Saisir votre login et mot de passe
-pseudo: Username
-Identify: Login
+##### Trade Bloc
+#########################"
+Europe: Europe
+Asie: Asia
+Afrique: Africa
+Amerique: America
+Oceanie: Oceania

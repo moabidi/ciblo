@@ -3,12 +3,15 @@
 namespace OivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * VarietyData
  *
  * @ORM\Table(name="VARIETY_DATA")
  * @ORM\Entity(repositoryClass="OivBundle\Repository\VarietyDataRepository")
+ * @ORM\HasLifecycleCallbacks()
+ *
  */
 class VarietyData
 {
@@ -25,6 +28,7 @@ class VarietyData
      * @var integer
      *
      * @ORM\Column(name="VERSIONING", type="bigint", nullable=true)
+     * @Assert\NotBlank()
      */
     private $versioning = '1';
 
@@ -32,6 +36,7 @@ class VarietyData
      * @var string
      *
      * @ORM\Column(name="COUNTRY_CODE", type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $countryCode;
 
@@ -39,6 +44,7 @@ class VarietyData
      * @var string
      *
      * @ORM\Column(name="IS_MAIN_VARIETY", type="string", length=1, nullable=false)
+     * @Assert\Length(max=1)
      */
     private $isMainVariety;
 
@@ -88,6 +94,7 @@ class VarietyData
      * @var string
      *
      * @ORM\Column(name="NATIONAL_VARIETY_ID", type="string", length=10, nullable=true)
+     * @Assert\Length(max=10)
      */
     private $nationalVarietyId;
 
@@ -95,6 +102,7 @@ class VarietyData
      * @var string
      *
      * @ORM\Column(name="GRAPE_COLOR", type="string", length=25, nullable=true)
+     * @Assert\Length(max=25)
      */
     private $grapeColor;
 
@@ -109,6 +117,7 @@ class VarietyData
      * @var string
      *
      * @ORM\Column(name="INTERNET_ADRESS", type="string", length=4000, nullable=true)
+     * @Assert\Url()
      */
     private $internetAdress;
 
@@ -116,6 +125,7 @@ class VarietyData
      * @var bool
      *
      * @ORM\Column(name="USABLE_DATA", type="string", length=1, nullable=false)
+     * @Assert\Length(max=1)
      */
     private $usableData;
 
@@ -179,7 +189,11 @@ class VarietyData
      */
     public function setIsMainVariety($isMainVariety)
     {
-        $this->isMainVariety = $isMainVariety;
+        if ($isMainVariety) {
+            $this->isMainVariety = '1';
+        }else{
+            $this->isMainVariety = '0';
+        }
     }
 
     /**
@@ -315,7 +329,10 @@ class VarietyData
      */
     public function getLastDate()
     {
-        return $this->lastDate;
+        if ($this->lastDate) {
+            return $this->lastDate->format('Y-m-d H:i:s');
+        }
+        return $this->lastData;
     }
 
     /**
@@ -375,8 +392,15 @@ class VarietyData
     }
 
     /**
-     * @param $aHeader
-     * @return array|null
+     * @ORM\PrePersist
+     */
+    public function setCustumValues()
+    {
+        $this->setIsMainVariety($this->isMainVariety);
+    }
+
+    /**
+     * @return array
      */
     public static function getImportFieldsIdentifier()
     {
@@ -386,13 +410,40 @@ class VarietyData
             'areaCultivated' => 'Surface',
             'areaYear' => 'Année surface cultivée',
             'grapeVarietyName' => 'Nom variété',
-            'codeVivc' => 'VIVC',
-            'infoCodeVivc' => 'Vitis International Variety Catalogue',
-            'varietyNationalNameVivc' => 'Code OIV',
             'synonym' => 'Synonyme',
-            'nationalVarietyId' => 'Id variété nationale',
-            'grapeColor' => 'Couleur',
-            'internetAdress' => 'adresse internet',
+            'codeVivc' => 'Code VIVC',
+            'varietyNationalNameVivc' => 'Nom national de variété',
+            'nationalVarietyId' => 'Code national de variété',
+            'grapeColor' => 'Couleur de raisin',
+            'internetAdress' => 'Site internet',
+//            'versioning' => 'Version',
+//            'lastDate' => 'dernière date de mise à jour',
+//            'usableData' => 'Utilisé',
+        ];
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getConfigFields() {
+        return [
+            'id'=>['tab3'],
+            'countryNameFr' => ['tab1','tab2','tab3','export','exportBo','importBo'],
+            'countryCode' => ['form','required'],
+            'isMainVariety' => ['form','exportBo','importBo'],
+            'areaCultivated' => ['form','editable','exportBo','importBo'],
+            'areaYear' => ['form','editable','exportBo','importBo'],
+            'grapeVarietyName' => ['form','filter','tab1','tab2','tab3','export','exportBo','editable','importBo'],
+            'varietyNationalNameVivc'=> ['form','tab1','tab2','tab3','editable','exportBo','importBo'],
+            'synonym'=>['form','filter','tab2','tab3','export','exportBo','editable','importBo'],
+            'codeVivc' => ['form','tab1','tab2','tab3','export','exportBo','editable','importBo'],
+            'nationalVarietyId'=>['form','editable','exportBo','importBo'],
+            'grapeColor'=>['form','editable','exportBo','importBo'],
+            'internetAdress'=>['form','editable','exportBo','importBo'],
+            'versioning' => ['form','required'],
+            'usableData' => ['form','editable'],
+            'lastDate'=>['form','tab2','tab3'],
+            'lastData' => [],
         ];
     }
 }

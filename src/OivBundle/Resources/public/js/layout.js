@@ -385,6 +385,8 @@ var Layout = function () {
             $(".sidebar-search", sidebar).removeClass("open");
 
             if (body.hasClass("page-sidebar-closed")) {
+                $('.filter-country').removeClass('hide');
+                $('ul.page-sidebar-menu .db ul').removeClass('hide');
                 body.removeClass("page-sidebar-closed");
                 sidebarMenu.removeClass("page-sidebar-menu-closed");
                 if ($.cookie) {
@@ -392,6 +394,7 @@ var Layout = function () {
                 }
             } else {
                 body.addClass("page-sidebar-closed");
+                $('.filter-country').removeClass('show').addClass('hide');
                 sidebarMenu.addClass("page-sidebar-menu-closed");
                 if (body.hasClass("page-sidebar-fixed")) {
                     sidebarMenu.trigger("mouseleave");
@@ -562,7 +565,7 @@ var Layout = function () {
             handleSidebarToggler(); // handles sidebar hide/show
 
             if (global.isAngularJsApp()) {      
-                handleSidebarMenuActiveLink('match'); // init sidebar active links 
+                handleSidebarMenuActiveLink('match'); // init sidebar active links
             }
 
             global.addResizeHandler(handleFixedSidebar); // reinitialize fixed sidebar on window resize

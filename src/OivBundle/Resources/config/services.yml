@@ -3,6 +3,7 @@ parameters:
     oiv.entity.naming.class: OivBundle\Entity\NamingData
     oiv.entity.stat.class: OivBundle\Entity\StatData
     oiv.entity.variety.class: OivBundle\Entity\VarietyData
+    oiv.entity.parameters.class: OivBundle\Entity\Parameters
 
 services:
     oiv.education_repository:
@@ -24,4 +25,26 @@ services:
         class: OivBundle\Repository\VarietyDataRepository
         factory: ["@doctrine", getRepository]
         arguments: [%oiv.entity.variety.class%]
+
+    oiv.variety_repository:
+        class: OivBundle\Repository\ParametersRepository
+        factory: ["@doctrine", getRepository]
+        arguments: [%oiv.entity.parameters.class%]
         
+        
+# List Handler
+    oiv.handler.claculate_stat:
+        class: OivBundle\Handlers\HandleCalculatedStat
+        arguments: ["@monolog.logger.import_file_bdd","@doctrine"]
+
+    oiv.handler.parameter_stat:
+        class: OivBundle\Handlers\HandleParameterStat
+        arguments: ["@logger","@doctrine"]
+
+    oiv.handler.import_file:
+        class: OivBundle\Handlers\HandleImportFile
+        arguments: ["@logger","@doctrine","@translator"]
+
+    oiv.handler.naming_data:
+        class: OivBundle\Handlers\HandleNamingData
+        arguments: ["@logger","@doctrine"]

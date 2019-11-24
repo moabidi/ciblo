@@ -3,17 +3,17 @@
 #########################
 oiv: Monde
 Country Plug: Fiche Pays
-Advanced Search on DataBase: Recherche Avancée sur la Base des Données
+Advanced Search on DataBase: Recherche Avancée dans la Base des Données
 Choose: Sélectionner
 a country: un pays
 a continent: un continent
 Countries: Pays
 View more: En savoir plus
 View: Voir
-Total records: Résultat total
+Total records: Résultats totaux
 Result of search: Résultat de recherche
 Country: Pays
-countryCode: Pays
+countryCode: Code Pays
 countryNameFr: Pays
 Database: Données
 rtable: Raisins de table
@@ -23,10 +23,13 @@ rsec: Raisins secs
 area: Vignoble
 area rin: Surface
 For last statistic estimations: Pour les dernières estimations statistiques
-show graphic: afficher le graphique
+show graphic: Afficher le graphique
 help area: Superficie du vignoble (en production et non encore en production) destiné à la production de raisins de cuve, de table ou à sécher
-help win: Raisins destinés à toutes les utilisations (pressurage, consommation humaine directe, séchage)
+help win: Raisins frais destinés à la consommation humain directe
+help rtable: Raisins frais destinés à la consommation humain directe
+help rfresh: Raisins destinés pour tous les usages
 help rin: Tous vins, y compris les vins mousseux et spéciaux, à l’exclusion des jus et moûts
+help rsec: En tonnes de fruits secs
 #Education
 city: Ville
 formationTitle: Intitulé de la formation
@@ -36,26 +39,26 @@ level: Niveau et catégorie
 diploma: Diplôme(s) octroyé(s)
 cooperation: Coopérations universitaires éventuelles
 month: Durée de formation
-hourCourses: Nombre d'heure de formation
+hourCourses: Nombre d'heures de formation
 credits: Crédits ECTS
 prior: Pré-requis
-deadline: Deadline
+deadline: Date d'inscription
 contact: Contact
 adress: Adresse
-lastDate: dernière MAJ
-internetAdress: Adresse internet
+lastDate: Dernière mise à jour
+internetAdress: Site internet
 #Appelation
-appellationCode: Code
+appellationCode: Code IG/AO
 appellationName: IG/AO
-parentCode: Code IG/AO supérieure
+parentCode: Code unité supérieure
 parentName: Unité géographique supérieure
 typeNationalCode: Type d'indication national
 typeInternationalCode: Type d'indication international
 #productCategoryName: Type de produit
-productCategoryName: Produit
+productCategoryName: Type de produit
 productType: Catégories de produits
-#productType: Produits
-referenceName: Base reglementaire
+#productType: catégories de produits
+referenceName: Base règlementaire
 url: Lien sur base légale
 #Stat
 statType: Série
@@ -63,33 +66,33 @@ measureType: Unité
 metricCompType: Produit
 year: Année
 value: Valeur
-infoSource: Source info
+infoSource: Source
 grapesDestination: Vocation du raisin
 #Variety
 isMainVariety: Variéte Principale
 areaCultivated: Surface
 areaYear: Année surface cultivée
 grapeVarietyName: Nom variété
-codeVivc: VIVC
+codeVivc: Code VIVC
 infoCodeVivc: Vitis International Variety Catalogue. Ce code est fourni et reconnu uniquement par certains pays
-varietyNationalNameVivc: Code OIV
+varietyNationalNameVivc: Nom national de variété
 synonym: Synonyme
-nationalVarietyId: Id variété nationale
-grapeColor: Couleur
-internetAdress: adresse internet
+nationalVarietyId: Code national de variété
+grapeColor: Couleur de raisin
+internetAdress: Lien internet
 #Fiche OIV
 area: Superficie
-Individual Consumption: Consommation Individuelle
-count variety: Nombre de cépage
-count education: Nombre de formation
+Individual Consumption: Consommation per capita
+count variety: Nombre de cépages
+count education: Nombre de formations
 production: Production
 prod: Production
 consumption: Consommation
 import: Importations
 export: Exportations
-indovcons: Consommation individuelle
-total count variety: Nombre total de cépage
-total count education: Nombre total  de formation
+indovcons: Consommation per capita
+total count variety: Nombre total de cépages
+total count education: Nombre total  de formations
 Zone: Zone
 Database: Base de données
 World: Monde
@@ -100,9 +103,9 @@ Education: Formations
 Statistic: Statistiques
 Annual statistics of: Statistiques annuelles de
 Download CSV: Télécharger CSV
-Download JPEG image: Télécharger JPEG image
-Download PDF document: Télécharger PDF document
-Download PNG image: Télécharger PNG image
+Download JPEG image: Télécharger JPEG
+Download PDF document: Télécharger PDF
+Download PNG image: Télécharger PNG
 Download SVG vector image: Télécharger
 Download XLS: Télécharger XLS
 in: en
@@ -110,26 +113,25 @@ Advanced search: Recherche avancée
 Year min: Année min
 Year max: Année max
 Search: Recherche
-Data provided by Membership: Données fournies par les états membres
+Data provided by Membership: Données fournies par les Etats membres
 Data not available: Données non disponibles
 Click on a category or series: Cliquer sur une catégorie ou une série
 for details of the data: pour avoir le détail des données
-To have an advanced search with a comparison of the statistics: Pour avoir une recheche avancée avec une comparaison des statistiques
+To have an advanced search with a comparison of the statistics: Pour avoir une recherche avancée avec une comparaison des statistiques
 click here: cliquer ici
 GRAPHIC: GRAPHIQUE
-No results found for your search: Aucun résulat touvé pour votre recherche
+No results found for your search: Aucun résultat trouvé pour votre recherche
 No results found: Aucun résultat trouvé
 error response: Erreur de réponse
 #APPELATION Type du produit
-AROMATISED_WINE: AROMATISED WINE
-GRAPE: GRAPE
-GRAPE_JUICE: GRAPE JUICE
-MISTELLE: MISTELLE
-NONE: Non classé
-SPECIAL_WINE: SPECIAL WINE
-SPIRITUOUS_BEVERAGE: SPIRITUOUS BEVERAGE
-#WINE: WINE
-WINE_VINEGAR: WINE VINEGAR
+AROMATISED_WINE: Vin aromatisé
+GRAPE: Raisin
+GRAPE_JUICE: Jus de raisin
+MISTELLE: Mistelle
+SPECIAL_WINE: Vin spécial
+SPIRITUOUS_BEVERAGE: Boisson spiritueuse
+#WINE: Vin
+WINE_VINEGAR: Vinaigre de vin
 #APPELATION Type d'indication type 2
 GI: GI
 PDO: PDO
@@ -149,12 +151,15 @@ JUICE_GRAPES: Jus de raisins
 JUICE_MUST: Jus et mouts
 POPULATION: Population
 #Statistiques categorie des statistiques
-CONSUMPTION: CONSOMMATION
-PRODUCTION: PRODUCTION
-IMPORTATION: IMPORTATIONS
-EXPORTATION: EXPORTATIONS
-TOTAL_AREA: SUPERFICIE TOTALE
+CONSUMPTION: Consommation
+PRODUCTION: Production
+IMPORTATION: Importations
+EXPORTATION: Exportations
+CONSUMPTION_JUICE: Consommation
+STOCK_WINE: Stocks
+TOTAL_AREA: Superficie totale
 CONSUMPTION_CAPITA: Consommation per capita
+INDUSTRIAL_USE: Usages industriels
 #Statistiques indicator des statistiques
 A_SURFACE: Superficie du vignoble
 CONSUMPTION_PRODUCT_GRAPES: CONSUMPTION_PRODUCT_GRAPES
@@ -162,7 +167,7 @@ C_PROD_GRP: Production de raisins frais
 F_PROD_TABLE_GRP: Production de raisins de table
 G_PROD_DRIED_GRP: Production de raisins secs
 H_IMPORT_GRP: Importations de raisins frais
-INDUSTRIAL_USE_WINE: Usages indutriels de vin
+INDUSTRIAL_USE_WINE: Usages industriels de vin
 I_EXPORT_GRP: Exportations de raisins frais
 J_IMPORT_DRIED_GRP: Importations de raisins secs
 K_EXPORT_DRIED_GRP: Exportations de raisins secs
@@ -171,28 +176,70 @@ M_COMSUMPTION_CAPITA_GRP: M_COMSUMPTION_CAPITA_GRP
 NATIONAL_GRAPE_ACCORDING_TO_VOCATION: NATIONAL_GRAPE_ACCORDING_TO_VOCATION
 N_CONSUMPTION_DRIED_GRP: Consommation de raisins secs
 POPULATION_PLUS_15: Population (+15)
-PRODUCTION_JUICE: Production de Jus de raisins
-PRODUCTION_MUST: Production de Jus de mouts
+PRODUCTION_JUICE_MUST: Production de jus et mouts
+PRODUCTION_MUST: Production de mouts
 P_PRODUCTION_WINE: Production de vin
 Q_IMPORT_WINE: Importations de vin
-REPARTITION_PRODUCT_AREA: Répartition superficie du vignoble par variété des vignes
+REPARTITION_PRODUCT_AREA: Répartition par variété
 R_EXPORT_WINE: Exportations de vin
 S_CONSUMPTION_WINE: Consommation de vin
-TOTAL_AGRI_AREA: TOTAL_AGRI_AREA
 TOTAL_POPULATION: Population
 U1_STOCK_WINE: Stocks de vin
 CONSUMPTION_CAPITA_15: Consommation per capita (+15)
+CONSUMPTION_WINE_CAPITA_COMPUTED: Consommation de vin per capita (+15)
+#COMSUMPTION_CAPITA_GRP_COMPUTED: Consommation de raisins de table per capita
+CONSUMPTION_DRIED_GRP_PER_CAPITA_COMPUTED: Consommation de raisins secs per capita
+COMSUMPTION_CAPITA_TABLE_GRP_COMPUTED: Consommation de raisins de table per capita
+YIELD_COMPUTED: Rendement_calc
+INPUT_WINE: Input vin
+INPUT_DRIED_GRAPES: Input raisins secs
+INPUT_JUICE: Input JM
+T_COMSUMPTION_JUICE: Consommation de jus
+POPULATION_15: Population_15
+CONSUMPTION_COMPUTED: Consommation_calc
+PRODUCTION_COMPUTED: Production_calc
+INPUT_PRODUCTION_WINE_COMPUTED: Input vin
+INPUT_PRODUCTION_DRIED_GRP_COMPUTED: Input raisins secs
+INPUT_PRODUCTION_JUICE_MUST_COMPUTED: Input JM
+PRODUCTION_TABLE_GRP_COMPUTED: Production de raisins de table_calc
+COMSUMPTION_TABLE_GRP_COMPUTED: Consommation de raisins de table_calc
+COMSUMPTION_DRIED_GRP_COMPUTED: Consommation de raisins_secs_calc
+COMSUMPTION_WINE_COMPUTED: Consommation de vin_calc
+#T_COMSUMPTION_JUICE:
+
+# Calculated stat
+CONSUMPTION_M1: Consommation_calc_m1
+CONSUMPTION_M2: Consommation_calc_m2
+PRODUCTION_M1: Production_calc_m1
+PRODUCTION_M2: Production_calc_m2
+PRODUCTION_M3: Production_calc_m3
+PRODUCTION_M4: Production_calc_m4
+COMSUMPTION_TABLE_GRP_COMPUTED_M1: Consommation de raisins de table_calc_m1
+COMSUMPTION_TABLE_GRP_COMPUTED_M2: Consommation de raisins de table_calc_m2
+PRODUCTION_TABLE_GRP_COMPUTED_M1: Production de raisins de table_calc_m1
+PRODUCTION_TABLE_GRP_COMPUTED_M2: Production de raisins de table_calc_m2
+PRODUCTION_TABLE_GRP_COMPUTED_M3: Production de raisins de table_calc_m3
+PRODUCTION_TABLE_GRP_COMPUTED_M4: Production de raisins de table_calc_m4
+
 #Unite
 MILLE_HL: 1000 hl
+1000 hl: 1000 hl
 #MILLE_QX: 1000 qx
 MILLE_QX: tonnes
 1000 QX: tonnes
 MILLE_HA: ha
 HA: ha
+ha: ha
 TONNES: tonnes
+tonnes: tonnes
+TONNES_HECTARE: T/ha
+TONNES_PER_HECTARE: T/ha
 #KG_CAPITA: 1000 kg
 KG_CAPITA: kg/capita
-MILLE_S: l/capita +15
+kg/capita: kg/capita
+MILLE_S: 1000s
+L_PER_CAPITA_15: l/capita (+15)
+l/capita (+15): l/capita (+15)
 #########################
 # ADV SEARCH
 #########################
@@ -209,13 +256,25 @@ of: de
 No data to exported: Pas de données à exporter
 Please select at least one country: Veuillez sélectionner au moins un pays
 Export type not available: Type d'export pas disponible
-Year Min must be less than Year Max: Année min doit être inferieure à l'année Max
+Year Min must be less than Year Max: Année min doit être inférieure à l'année max
 All: Tout
 remove all: supprimer tout
 select all: sélectionner tout
 select all countries: sélectionner tous les pays
 Refine your search: Affiner votre recherche
 Membre OIV: Membre OIV
+tradeBloc: Continent
+World: Monde
+choose stat: Veuillez sélectionner au moins une série
+clic stats: Après la sélection des séries, cliquez sur les sélections pour afficher le graphique
+##########################
+##### Trade Bloc
+#########################"
+Europe: Europe
+Asie: Asie
+Afrique: Afrique
+Amerique: Amérique
+Oceanie: Océanie
 #########################
 # BackOffice
 #########################
@@ -236,15 +295,32 @@ Login is required: Login est obligatoire
 Password is required: Mot de passe est obligatoire
 Login is required: Login est obligatoire
 Re-type Your Password: Retaper le mot de passe
-Your changes has been saved with success: Vos modifcations sont enregistrées avec succès
-The value of name is not valid: La valeur de champ Nom n'est pas valide
-The value of username is not valid: La valeur de champ Login n'est pas valide
-The value of password is not valid: La valeur de champ Mot de passe n'est pas valide
-You must enter the same passwords: Vous devez retaper le même mot de passe
-
+Your changes has been saved with success: Vos modifications sont enregistrées avec succès
+The value of name is not valid: Nom n'est pas valide
+The value of username is not valid: Login n'est pas valide
+The value of password is not valid: Mot de passe n'est pas valide
+You must enter the same passwords: Ressaisir le même mot de passe
+Reset: Reset
+Details: Détails
+Connexion: Connexion
+Export: Export
+Login: S'identifier
+Title oiv: Organisation internationale de la vigne et du vin
+versioning: Version
+usableData: Utilisé
+Edit data: Modifier les données
+Parameters: Parametrages
+Last statistic year: Dernière année des statistiques en frontoffice
+calculated stat: Stat calculées
+Year of calculated statistic: Années des stats calculées
+Types of calculated statistic: Séries des stats calculées
+Calculated stat: Statistique calculée
+Calculate data: Calculer les données
+Next: Suivant
 #########################
 # Login
 #########################
 Enter your username and password: Saisir votre login et mot de passe
 pseudo: Login
 Identify: S'identifier
+go to home: Retour à la page d'accueil

@@ -1,6 +1,14 @@
 <li class="db {% if active|default(false) %}active open{% endif %}">
     <a class="db-link filter-submit" data-dbType="{{ dbType }}" href="javascript:;">
-        <i class="icon-magnifier"></i>
+        {% if dbType == 'stat' %}
+            <i class="icon-bar-chart"></i>
+        {% elseif dbType == 'education'  %}
+            <i class="icon-briefcase"></i>
+        {% elseif dbType == 'naming'  %}
+            <i class="icon-rocket"></i>
+        {% elseif dbType == 'variety'  %}
+            <i class="icon-diamond"></i>
+        {% endif %}
         <span class="title"><strong>{{ dbName|trans }}</strong></span>
         <span class="selected"></span>
         <span class="arrow"></span>
@@ -22,7 +30,12 @@
             <li class="sidebar-search-wrapper">
                 <a class="text-center">{{ 'Year min'|trans }}</a>
                 <select id="yearMin" class="form-control select2me" data-live-search="true" name="yearMin">
-                    {% for year in selectedYear..1995 %}
+                    <option value="">{{ 'Choose'|trans }}</option>
+                    {% set maxYearStat = lastStatYear  %}
+                    {% if isBo|default(false) %}
+                        {% set maxYearStat =  "now"|date("Y") %}
+                    {% endif %}
+                    {% for year in maxYearStat..1995 %}
                         <option value="{{ year }}"  {% if year == selectedYear %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
 
@@ -31,7 +44,8 @@
             <li class="sidebar-search-wrapper">
                 <a class="text-center">{{ 'Year max'|trans }}</a>
                 <select id="yearMax" class="form-control select2me" data-live-search="true" name="yearMax">
-                    {% for year in selectedYear..1995 %}
+                    <option value="">{{ 'Choose'|trans }}</option>
+                    {% for year in maxYearStat..1995 %}
                         <option value="{{ year }}" {% if year == selectedYear %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
 

@@ -3,6 +3,7 @@
 namespace OivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * NamingData
@@ -25,6 +26,7 @@ class NamingData
      * @var integer
      *
      * @ORM\Column(name="VERSIONING", type="bigint", nullable=true)
+     * @Assert\NotBlank()
      */
     private $versioning = '1';
 
@@ -32,6 +34,7 @@ class NamingData
      * @var string
      *
      * @ORM\Column(name="COUNTRY_CODE", type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $countryCode;
 
@@ -39,6 +42,7 @@ class NamingData
      * @var string
      *
      * @ORM\Column(name="APPELLATION_CODE", type="string", length=255, nullable=false)
+     * @Assert\NotBlank()
      */
     private $appellationCode;
 
@@ -46,6 +50,7 @@ class NamingData
      * @var string
      *
      * @ORM\Column(name="APPELLATION_NAME", type="string", length=255, nullable=false)
+     * @Assert\NotBlank()
      */
     private $appellationName;
 
@@ -87,7 +92,7 @@ class NamingData
     /**
      * @var string
      *
-     * @ORM\Column(name="PRODUCT_TYPE", type="string", length=25, nullable=false)
+     * @ORM\Column(name="PRODUCT_TYPE", type="string", length=255, nullable=true)
      */
     private $productType;
 
@@ -116,6 +121,7 @@ class NamingData
      * @var bool
      *
      * @ORM\Column(name="USABLE_DATA", type="string", length=1, nullable=false)
+     * @Assert\Length(max=1)
      */
     private $usableData;
 
@@ -126,12 +132,26 @@ class NamingData
      */
     private $lastData;
 
+    public function __clone()
+    {
+        // TODO: Implement __clone() method.
+        $this->id = null;
+    }
+
     /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -179,7 +199,7 @@ class NamingData
      */
     public function setAppellationCode($appellationCode)
     {
-        $this->appellationCode = $appellationCode;
+        $this->appellationCode = trim(ucwords($appellationCode));
     }
 
     /**
@@ -211,7 +231,7 @@ class NamingData
      */
     public function setParentCode($parentCode)
     {
-        $this->parentCode = $parentCode;
+        $this->parentCode = ucwords($this->setNullIfEmpty($parentCode));
     }
 
     /**
@@ -227,7 +247,7 @@ class NamingData
      */
     public function setParentName($parentName)
     {
-        $this->parentName = $parentName;
+        $this->parentName = $this->setNullIfEmpty($parentName);
     }
 
     /**
@@ -243,7 +263,7 @@ class NamingData
      */
     public function setTypeNationalCode($typeNationalCode)
     {
-        $this->typeNationalCode = $typeNationalCode;
+        $this->typeNationalCode = $this->setNullIfEmpty($typeNationalCode);
     }
 
     /**
@@ -275,7 +295,7 @@ class NamingData
      */
     public function setProductCategoryName($productCategoryName)
     {
-        $this->productCategoryName = $productCategoryName;
+        $this->productCategoryName = $this->setNullIfEmpty($productCategoryName);
     }
 
     /**
@@ -291,7 +311,7 @@ class NamingData
      */
     public function setProductType($productType)
     {
-        $this->productType = $productType;
+        $this->productType = $this->setNullIfEmpty($productType);
     }
 
     /**
@@ -307,7 +327,7 @@ class NamingData
      */
     public function setReferenceName($referenceName)
     {
-        $this->referenceName = $referenceName;
+        $this->referenceName = $this->setNullIfEmpty($referenceName);
     }
 
     /**
@@ -315,7 +335,10 @@ class NamingData
      */
     public function getLastDate()
     {
-        return $this->lastDate;
+        if ($this->lastDate) {
+            return $this->lastDate->format('Y-m-d H:i:s');
+        }
+        return $this->lastData;
     }
 
     /**
@@ -339,7 +362,7 @@ class NamingData
      */
     public function setUrl($url)
     {
-        $this->url = $url;
+        $this->url = $this->setNullIfEmpty($url);
     }
 
     /**
@@ -375,25 +398,107 @@ class NamingData
     }
 
     /**
+     * @param $val
+     * @return null|string
+     */
+    private function setNullIfEmpty($val) {
+     return trim($val) != '' ? trim($val):NULL;
+    }
+
+    /**
+     * @param bool $all
+     * @return array
+     */
+    public static function getImportFieldsIdentifier($all = false)
+    {
+        $aFields = [
+            'countryCode' => 'Pays',
+            'appellationName' => 'IG/AO',
+            'appellationCode' => 'Code IG/AO',
+            'parentCode' => 'Code unité supérieure',
+            'parentName' => 'Unité géographique supérieure',
+            'typeNationalCode' => 'Type d\'indication national',
+            'typeInternationalCode' => 'Type d\'indication international'
+        ];
+        if ($all) {
+            $aFields = array_merge($aFields,[
+                'productType' => 'Catégories de produits',
+                'productCategoryName' => 'Type de produits',
+                'referenceName' => 'Base reglementaire',
+                'url' => 'Lien sur base légale'
+            ]);
+        }
+        return $aFields;
+    }
+
+    /**
      * @param $aHeader
      * @return array|null
      */
-    public static function getImportFieldsIdentifier()
+    public static function getImportCustumFieldsIdentifier($isCtg = true)
+    {
+        if ($isCtg) {
+            return [
+                'appellationCode' => 'Code IG/AO',
+                'appellationName' => 'IG/AO',
+                'productType' => 'Catégories de produits',
+                'productCategoryName' => 'Type de produit'
+            ];
+        } else {
+            return [
+                'appellationCode' => 'Code IG/AO',
+                'appellationName' => 'IG/AO',
+                'referenceName' => 'Base règlementaire',
+                'url' => 'Lien sur base légale'
+            ];
+        }
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getConfigFields()
     {
         return [
-            'countryCode' => 'Pays',
-            'appellationCode' => 'Code',
-            'appellationName' => 'IG/AO',
-            'parentCode' => 'Code IG/AO supérieure',
-            'parentName' => 'Unité géographique supérieure',
-            'typeNationalCode' => 'Type d\'indication national',
-            'typeInternationalCode' => 'Type d\'indication international',
-            'productCategoryName' => 'Catégories de produits',
-            'productType' => 'Produits',
-            'referenceName' => 'Base reglementaire',
-            'url' => 'Lien sur base légale',
-            'lastDate' => 'dernière date de mise à jour',
+            'id'=>['tab3'],
+            'countryNameFr' => ['tab1','tab2','tab3','export','exportBo','importBo'],
+            'countryCode' => ['form','required'],
+            'appellationName' => ['form','filter','tab1','tab2','tab3','export','exportBo','importBo' ,'required','editable','importBoNamingProduct','importBoNamingReference'],
+            'appellationCode' => ['form','tab2','tab3','importBo','required','importBoNamingProduct','importBoNamingReference'],
+            'parentName' => ['form','filter','tab2','tab3','export','exportBo','importBo','editable'],
+            'parentCode' => ['form','filter','tab3','exportBo','importBo'],
+            'typeNationalCode' => ['form','filter', 'tab1', 'tab2','tab3','export','exportBo','importBo','required','editable'],
+            'typeInternationalCode' => ['form','filter', 'tab1', 'tab2','tab3','export','exportBo','importBo','editable'],
+            'productType' => ['filter','tab2','tab3','export','exportBo','editable','importBoNamingProduct'],
+            'productCategoryName' => ['filter','export','exportBo','editable','importBoNamingProduct'],
+            'referenceName' => ['tab2','tab3','export','exportBo','editable','importBoNamingReference'],
+            'url' => ['tab3','export','exportBo','editable','importBoNamingReference'],
+            'usableData' => ['editable'],
+            'versioning' => ['form','required'],
+            'lastDate' => ['form','tab2','tab3'],
+            'lastData' => [],
         ];
+    }
+
+    /**
+     * @param $tag
+     * @return array
+     */
+    public static function getIndexCodeByTag($tag)
+    {
+        $aHeader = [];
+        foreach (NamingData::getConfigFields() as $name => $aTags) {
+            if (in_array($tag, $aTags)) {
+                $aHeader[$name] = $name;
+            }
+        }
+        $aIndex = [];
+        $aHeader = array_values($aHeader);
+        $aIndex['indexAppelationCode'] = array_search('appellationCode', $aHeader);
+        $aIndex['indexAppelationName'] = array_search('appellationName', $aHeader);
+        $aIndex['indexParentCode'] = array_search('parentCode', $aHeader);
+        $aIndex['indexParentName'] = array_search('parentName', $aHeader);
+        return $aIndex;
     }
 }
 

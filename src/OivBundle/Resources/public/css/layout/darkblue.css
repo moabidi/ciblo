@@ -518,7 +518,7 @@ Page Header
 }
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .sidebar-toggler,
 .page-sidebar .sidebar-toggler {
-  background: url(../../img/sidebar_inline_toggler_icon_darkblue.jpg);
+  background: url('/bundles/oiv/img/sidebar_inline_toggler_icon_darkblue.jpg');
 }
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .sidebar-search .input-group,
 .page-sidebar .sidebar-search .input-group {

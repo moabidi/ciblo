@@ -14,7 +14,7 @@
                         <input type="text" name="valueMax" id="value-max-naming" class="value-max"/>
                     </li>
 
-                {% elseif fieldName != 'productCategoryName' or (isBo|default(false) and fieldName == 'productCategoryName') %}
+                {% elseif (fieldName not in ['productCategoryName','parentCode','parentName']) or (isBo|default(false) and fieldName == 'productCategoryName') %}
                 <li class="filter">
                     <a class="text-center filter-name">{{ fieldName|trans }}</a>
 

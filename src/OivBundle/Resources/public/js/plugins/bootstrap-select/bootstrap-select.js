@@ -113,8 +113,10 @@
 
   // part of this is duplicated in i18n/defaults-en_US.js. Make sure to update both.
   Selectpicker.DEFAULTS = {
-    noneSelectedText: 'Nothing selected',
-    noneResultsText: 'No results match',
+    noneSelectedText: 'Pas de selection',
+    noneResultsText: 'Aucun résultat',
+    addNewOptionText: 'Ajouter',
+    addNewOption: false,
     countSelectedText: function (numSelected, numTotal) {
       return (numSelected == 1) ? "{0} item selected" : "{0} items selected";
     },
@@ -491,7 +493,9 @@
       if (this.options.size == 'auto') {
         var getSize = function () {
           var minHeight,
-              lisVis = that.$lis.not('.hide');
+              lisVis;
+          if (that.$lis)
+            lisVis = that.$lis.not('.hide');
 
           posVert();
           menuHeight = selectOffsetBot - menuExtras;
@@ -503,7 +507,7 @@
             menuHeight = selectOffsetTop - menuExtras;
           }
 
-          if ((lisVis.length + lisVis.filter('.dropdown-header').length) > 3) {
+          if (typeof lisVis !== undefined && (lisVis.length + lisVis.filter('.dropdown-header').length) > 3) {
             minHeight = liHeight * 3 + menuExtras - 2;
           } else {
             minHeight = 0;
@@ -852,7 +856,9 @@
 
     liveSearchListener: function () {
       var that = this,
-          no_results = $('<li class="no-results"></li>');
+      no_results = $('<li class="no-results"></li>');
+      if (that.options.addNewOption)
+        no_results = $('<li class="no-results add-option"></li>');
 
       this.$newElement.on('click.dropdown.data-api touchstart.dropdown.data-api', function () {
         that.$menu.find('.active').removeClass('active');
@@ -871,6 +877,15 @@
         e.stopPropagation();
       });
 
+      this.$newElement.on('click.dropdown.data-api', '.add-option .btn', function (e) {
+        //e.stopPropagation();
+        var newOption = $(this).parent().find('span').eq(1).text();
+        that.$element.html(that.$element.html()+'<option value="'+newOption+'" data-val="">'+newOption+'</option>');
+        that.$element.val(newOption);
+        that.refresh();
+        that.$element.trigger('change');
+      });
+
       this.$searchbox.on('input propertychange', function () {
         if (that.$searchbox.val()) {
 
@@ -882,8 +897,15 @@
 
           if (!that.$menu.find('li').filter(':visible:not(.no-results)').length) {
             if (!!no_results.parent().length) no_results.remove();
-            no_results.html(that.options.noneResultsText + ' "' + htmlEscape(that.$searchbox.val()) + '"').show();
-            that.$menu.find('li').last().after(no_results);
+            if (that.options.addNewOption)
+            	no_results.html('<span class="btn blue"><i class="fa fa-plus"></i>'+that.options.addNewOptionText + '</span> <span>' + htmlEscape(that.$searchbox.val()) + '</span>').show();
+            else
+	           no_results.html(that.options.noneResultsText + ' "' + htmlEscape(that.$searchbox.val()) + '"').show();
+            if (that.$menu.find('li').length) {
+              that.$menu.find('li').last().after(no_results);
+            } else {
+              that.$menu.find('ul').html(no_results);
+            }
           } else if (!!no_results.parent().length) {
             no_results.remove();
           }

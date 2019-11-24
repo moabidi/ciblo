@@ -4,6 +4,7 @@
 <html>
 <head>
     <title>Export PDF OIV</title>
+    <meta charset="UTF-8">
     <style type="text/css">
         body {
             font-size: 10px;
@@ -14,6 +15,7 @@
         table {
             border-spacing: 0;
             border-collapse: separate !important;
+            width: 100%;
         }
         th {
             white-space: nowrap;
@@ -34,7 +36,7 @@
         <img src="{{ app.request.getSchemeAndHttpHost() ~ asset('/bundles/oiv/img/frontend/logo-small.png')}}">
     </div>
     <div style="float: left; padding-left: 20px;">
-        <h1>Organisation internationale de la vigne et du vin</h1>
+        <h1>{{ 'Title oiv'|trans }}</h1>
     </div>
 </div>
 <div style="top: 70px;">
@@ -45,9 +47,11 @@
         <thead style="top: 0;position: sticky;">
         <tr role="row" class="heading">
             {% for fieldName, value in globalResult.0 %}
-                <th class="{% if fieldName == 'countryCode' %}sorting_asc{% else %}sorting{% endif %}" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1">
-                    {{ fieldName|trans }}
-                </th>
+                {% if fieldName != 'url' %}
+                    <th class="{% if fieldName == 'countryCode' %}sorting_asc{% else %}sorting{% endif %}" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1">
+                        {{ fieldName|trans }}
+                    </th>
+                {% endif %}
             {% endfor %}
         </tr>
         </thead>
@@ -55,7 +59,13 @@
         {% for row in globalResult %}
             <tr role="row" class="{{ loop.index0 % 2 ? 'odd':'even'}}">
                 {% for fieldName, value in row %}
-                    <td>{{ value|raw }}</td>
+                    {% if fieldName != 'url' %}
+                        {% if fieldName == 'referenceName' %}
+                            <td><a href="{{ row['url'] }}" target="_blank">{{ value|raw }}</a></td>
+                        {% else %}
+                            <td>{{ value|raw }}</td>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
             </tr>
         {% endfor %}

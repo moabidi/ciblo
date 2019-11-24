@@ -1,16 +1,56 @@
 <form id="import-{{ dbType|default('stat') }}" class="{{ display|default('hide') }}" enctype="multipart/form-data" method="post">
     <div class="row fileupload-buttonbar">
-        <div class="col-md-offset-3 col-lg-6">
-                    <span class="btn fileinput-button">
-                        <span> {{ 'Select file'|trans }} </span>
-                        <input type="file" name="dataFile">
-                    </span>
+        <div class="col-md-offset-3 col-lg-6 {% if dbType|default('') == 'naming' %}upload-naming{% endif %}">
+            <a id="link-import-file-{{ dbType|default('') }}" target="_blank" href="{{ path('generate-model-imported-file') }}?dbType={{ dbType }}">
+                {% if dbType|default('stat') == 'stat' %}
+                    Télécharger le model de fichier à importer (toutes  séries – tous pays HORS SERIE CALCULE)
+                {% else %}
+                    Télécharger le model de fichier à importer (par un seul pays séléctionné)
+                {% endif %}
+            </a>
         </div>
     </div>
+    {% if dbType|default('') == 'naming' %}
+    <div class="row fileupload-buttonbar">
+        <div class="col-lg-6 upload-product hide">
+            <a target="_blank" href="{{ path('generate-model-imported-file') }}?dbType={{ dbType }}&fileType=product">Télécharger le model de fichier à importer (type de produits)</a>
+        </div>
+        <div class="col-lg-6 upload-product hide">
+            <a target="_blank" href="{{ path('generate-model-imported-file') }}?dbType={{ dbType }}&fileType=reference">Télécharger le model de fichier à importer (base légale)</a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row fileupload-buttonbar">
+        <div class="col-md-offset-3 col-lg-6 {% if dbType|default('') == 'naming' %}upload-naming{% endif %}">
+            <span class="btn fileinput-button">
+                <span> {{ 'Select file'|trans }} </span>
+                <input type="file" name="dataFile">
+            </span>
+        </div>
+    </div>
+    {% if dbType|default('') == 'naming' %}
+    <div class="row fileupload-buttonbar">
+        <div class="col-lg-6 upload-product hide">
+            <span class="btn fileinput-button">
+                <span> {{ 'Select file'|trans }} </span>
+                <input type="file" name="dataFileProduts">
+            </span>
+        </div>
+        <div class="col-lg-6 upload-product hide">
+            <span class="btn fileinput-button">
+                <span> {{ 'Select file'|trans }} </span>
+                <input type="file" name="dataFileReferences">
+            </span>
+        </div>
+    </div>
+    {% endif %}
     <div class="form-actions">
         <div class="row">
             <div class="col-md-offset-4 col-md-8">
                 <button type="button" class="btn red reset-upload">{{ 'Reset'|trans }}</button>
+                {% if dbType|default('') == 'naming' %}
+                <button id="btn-import-file-product" type="button" class="btn yellow upload-product hide" data-dbType="{{ dbType|default() }}">{{ 'Next'|trans }}</button>
+                {% endif %}
                 <button type="submit" class="btn yellow btn-upload-data" data-dbType="{{ dbType|default() }}">{{ 'Submit'|trans }}</button>
                 <button type="submit" class="btn yellow btn-import-data hide" data-dbType="{{ dbType|default() }}" data-save="1">{{ 'Save Data'|trans }}</button>
             </div>

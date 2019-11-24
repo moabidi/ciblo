@@ -3,6 +3,7 @@
 namespace OivBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * EducationData
@@ -25,6 +26,7 @@ class EducationData
      * @var integer
      *
      * @ORM\Column(name="VERSIONING", type="bigint", nullable=true)
+     * @Assert\NotBlank()
      */
     private $versioning = '1';
 
@@ -32,6 +34,7 @@ class EducationData
      * @var string
      *
      * @ORM\Column(name="COUNTRY_CODE", type="string", length=255, nullable=false)
+     * @Assert\NotBlank()
      */
     private $countryCode;
 
@@ -39,6 +42,7 @@ class EducationData
      * @var string
      *
      * @ORM\Column(name="FORMATION_TITLE", type="string", length=255, nullable=false)
+     * @Assert\NotBlank()
      */
     private $formationTitle;
 
@@ -47,7 +51,7 @@ class EducationData
      *
      * @ORM\Column(name="UNIVERSITY", type="string", length=1000, nullable=false)
      */
-    private $university;
+    private $university ='';
 
     /**
      * @var string
@@ -68,21 +72,21 @@ class EducationData
      *
      * @ORM\Column(name="DIPLOMA", type="string", length=1000, nullable=false)
      */
-    private $diploma;
+    private $diploma ='';
 
     /**
      * @var string
      *
      * @ORM\Column(name="COOPERATION", type="string", length=2000, nullable=false)
      */
-    private $cooperation;
+    private $cooperation ='';
 
     /**
      * @var string
      *
      * @ORM\Column(name="MONTH", type="string", length=1000, nullable=false)
      */
-    private $month;
+    private $month ='';
 
     /**
      * @var string
@@ -95,6 +99,7 @@ class EducationData
      * @var string
      *
      * @ORM\Column(name="CREDITS", type="string", length=255, nullable=true)
+     *
      */
     private $credits;
 
@@ -103,28 +108,28 @@ class EducationData
      *
      * @ORM\Column(name="PRIOR", type="string", length=1000, nullable=false)
      */
-    private $prior;
+    private $prior='';
 
     /**
      * @var string
      *
      * @ORM\Column(name="DEADLINE", type="string", length=255, nullable=false)
      */
-    private $deadline;
+    private $deadline='';
 
     /**
      * @var string
      *
      * @ORM\Column(name="CONTACT", type="string", length=255, nullable=false)
      */
-    private $contact;
+    private $contact='';
 
     /**
      * @var string
      *
      * @ORM\Column(name="CITY", type="string", length=255, nullable=false)
      */
-    private $city;
+    private $city='';
 
     /**
      * @var string
@@ -137,6 +142,7 @@ class EducationData
      * @var \DateTime
      *
      * @ORM\Column(name="LAST_DATE", type="datetime", nullable=false)
+     *
      */
     private $lastDate;
 
@@ -151,6 +157,7 @@ class EducationData
      * @var bool
      *
      * @ORM\Column(name="USABLE_DATA", type="string", length=1, nullable=false)
+     * @Assert\Length(max=1)
      */
     private $usableData;
 
@@ -159,7 +166,7 @@ class EducationData
      *
      * @ORM\Column(name="LAST_DATA", type="string", length=1, nullable=false)
      */
-    private $lastData;
+    private $lastData='1';
 
     /**
      * @return int
@@ -430,6 +437,9 @@ class EducationData
      */
     public function getLastDate()
     {
+        if ($this->lastDate) {
+            return $this->lastDate->format('Y-m-d H:i:s');
+        }
         return $this->lastDate;
     }
 
@@ -497,22 +507,55 @@ class EducationData
     {
         return [
             'countryCode' => 'Pays',
+            'city' => 'Ville',
             'formationTitle' => 'Intitulé de la formation',
             'university' => 'Établissement',
-            'tutelle' => 'Tutelle',
+             'tutelle' => 'Tutelle',
             'level' => 'Niveau et catégorie',
             'diploma' => 'Diplôme(s) octroyé(s)',
-            'cooperation' => 'Coopérations universitaires éventuelles',
-            'month' => 'Durée de formation',
-            'hourCourses' => 'Nombre d\'heure de formation',
-            'credits' => 'Crédits ECTS',
-            'prior' => 'Pré-requis',
-            'deadline' => 'Deadline',
-            'contact' => 'Adresse et contact',
-            'adress' => 'Adresse',
-            'lastDate' => 'dernière date de mise à jour',
-            'internetAdress' => 'Lien'
+             'cooperation' => 'Coopérations universitaires éventuelles',
+             'month' => 'Durée de formation',
+             'hourCourses' => 'Nombre d\'heures de formation',
+             'credits' => 'Crédits ECTS',
+             'prior' => 'Pré-requis',
+             'deadline' => 'Date d\'inscription',
+             'contact' => 'Contact',
+             'adress' => 'Adresse',
+             'internetAdress' => 'Site internet',
+//             'versioning' => 'Version',
+//             'lastDate' => 'dernière date de mise à jour',
+//             'usableData' => 'Utilisé',
             ];
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getConfigFields() {
+        return [
+            'id'=>['tab3'],
+            'countryNameFr' => ['tab1','tab2','tab3','export','exportBo','importBo'],
+            'countryCode' => ['form','required','editable'],
+            'city' => ['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'formationTitle' => ['form','filter','tab1','tab2','tab3','export','exportBo','required','editable','importBo'],
+            'university' => ['form','filter','tab1','tab2','tab3','export','exportBo','editable','importBo'],
+            'tutelle' => ['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'level' => ['form','filter','tab1','tab2','tab3','export','exportBo','editable','importBo'],
+            'diploma' => ['form','tab1','tab2','tab3','export','exportBo','editable','importBo'],
+            'cooperation' => ['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'month'=> ['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'hourCourses'=>['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'credits'=>['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'prior'=>['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'deadline'=>['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'contact'=>['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'adress'=>['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'internetAdress'=>['form','tab2','tab3','export','exportBo','editable','importBo'],
+            'versioning' => ['form','required'],
+            'usableData' => ['form','editable'],
+            'lastDate'=>['form','tab2','tab3','export','exportBo'],
+            'lastData' => [],
+        ];
     }
 }
 

@@ -1,0 +1,38 @@
+<div class="portlet box purple">
+    {% include 'OivBundle:backOffice/blocks:caption-panel.html.twig' %}
+    <div class="portlet-body form">
+        <form id="form-claculatetd-stat" name="claculatetdStat" role="form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{ 'Year of calculated statistic'|trans }}<span class="required" aria-required="true">* </span></label>
+                    <div class="col-md-4">
+                        <select name="calculatedStatYear" class="db-field form-control required selectpicker" data-live-search="true">
+                            <option value="" selected>Tout</option>
+                            {% for year in ("now"|date('Y'))..("now"|date('Y'))-5 %}
+                                <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{ 'Types of calculated statistic'|trans }}<span class="required" aria-required="true">* </span></label>
+                    <div class="col-md-4">
+                        <select name="calculatedStat" class="db-field form-control required selectpicker" data-live-search="true">
+                            <option value="" selected>Tous</option>
+                            {% for stat in calcStat %}
+                                <option value="{{ stat }}">{{ stat|trans }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-4 col-md-8">
+                        <button type="submit" class="btn yellow btn-calculated-stat" >{{ 'Calculate data'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

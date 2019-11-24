@@ -33,7 +33,7 @@ class OivMemberShipRepository extends BaseRepository
                 ->setParameter('countryCode', $aCriteria['countryCode'])
                 ->setParameter('year', $aCriteria['year']);
         }
-        $result = $this->_queryBuilder->getQuery()->getOneOrNullResult();
+        $result = $this->_queryBuilder->getQuery()->useResultCache(true)->setResultCacheLifetime(3600)->getOneOrNullResult();
         if (isset($result['oivMembership'])) {
             return $result['oivMembership'];
         }
@@ -49,7 +49,7 @@ class OivMemberShipRepository extends BaseRepository
             ->where('o.oivMembership = \'1\'')
             ->andWhere('o.year  = '.date('Y'));
         $this->addCountryCriteria($aCriteria);
-        $result = $this->_queryBuilder->getQuery()->getArrayResult();
+        $result = $this->_queryBuilder->getQuery()->useResultCache(true)->setResultCacheLifetime(3600)->getArrayResult();
         return$result;
     }
 
@@ -63,7 +63,7 @@ class OivMemberShipRepository extends BaseRepository
             $aCountryCode = explode(',',$aCriteria['countryCode']);
             if (in_array('oiv',$aCountryCode)) {
                 $this->_queryBuilder->leftJoin('OivBundle:Country','c','WITH','c.iso3 = o.iso3');
-            }elseif ( count(array_intersect($aCountryCode, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE']))) {
+            }elseif ( count(array_intersect($aCountryCode, ['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANIE']))) {
                 if (count($aCountryCode) ==1) {
                     $this->_queryBuilder
                         ->innerJoin('OivBundle:Country', 'c', 'WITH', 'c.iso3 = o.iso3 AND c.tradeBloc  = :tradeBloc')

@@ -21,17 +21,32 @@ class OivController extends BaseController
      */
     public function resultSearchAction(Request $request)
     {
-        $selectedYear = $this->getMaxYear(date('Y')-2);
+        $selectedYear = $this->getLastStatYear();
         $selectedCountryCode = $request->query->get('countryCode','oiv');
         $aCriteria = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear];
+        $aCriteria['countryName'] = 'countryName'.ucfirst($this->get('translator')->getLocale());
         $aParams['stats'] = $this->getStatsCountry($aCriteria);
-        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
+        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountries($aCriteria['countryName']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
-        $aParams['selectedCountry'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => $selectedCountryCode]);
+        $selectedCountry = $this->getDoctrine()->getRepository('OivBundle:Country')->findOneBy(['iso3' => $selectedCountryCode]);
+        $aParams['selectedCountry'] = null;
+        if($selectedCountry) {
+            $aParams['selectedCountry'] = [
+                'iso3' => $selectedCountry->getIso3(),
+                'iso2' => $selectedCountry->getIso2(),
+                'countryNameEn' => $selectedCountry->getCountryNameEn(),
+                'countryNameFr' => $selectedCountry->getCountryNameFr(),
+                'countryNameIt' => $selectedCountry->getCountryNameIt(),
+                'countryNameEs' => $selectedCountry->getCountryNameEs(),
+                'countryNameDe' => $selectedCountry->getCountryNameDe(),
+                'tradeBloc' => $selectedCountry->getTradeBloc(),
+            ];
+        }
+        //var_dump($aParams['selectedCountry']);die;
         if (!$aParams['selectedCountry'] ) {
             foreach ($aParams['tradeBlocs'] as $trade) {
                 if ($selectedCountryCode == $trade['tradeBloc'] ) {
-                    $aParams['selectedCountry'] = ['iso3' => $selectedCountryCode, 'countryNameFr' => $selectedCountryCode];
+                    $aParams['selectedCountry'] = ['iso3' => $selectedCountryCode,'iso2' => $selectedCountryCode, 'countryNameDe' => $selectedCountryCode, 'countryNameEn' => $selectedCountryCode,'countryNameEs' => $selectedCountryCode,'countryNameIt' => $selectedCountryCode,'countryNameFr' => $selectedCountryCode];
                     break;
                 }
             }
@@ -39,6 +54,7 @@ class OivController extends BaseController
         //$aParams['isMemberShip'] = $this->getDoctrine()->getRepository('OivBundle:OivMemberShip')->isMemberShip($aCriteria);
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['selectedYear'] = $selectedYear;
+        $aParams['lastStatYear'] = $this->getLastStatYear();
         $oTranslator = $this->get('translator');
         $aParams['transData'] = [
             'infoCodeVivc'=>$oTranslator->trans('infoCodeVivc'),
@@ -48,7 +64,7 @@ class OivController extends BaseController
             'error_response'=> $oTranslator->trans('error response'),
 
         ];
-        $host = $request->getScheme().'://'. $request->getHttpHost().'/'.$request->getLocale();
+        $host = $request->getScheme().'://127.0.0.1:1987/'.$request->getLocale();
         $aParams['header'] = file_get_contents($host.'/header');
         $aParams['footer'] = file_get_contents($host.'/footer');
         $aParams['navMobile'] = file_get_contents($host.'/nav-mobile');
@@ -89,18 +105,32 @@ class OivController extends BaseController
                 $aCriteria['bo'] = 1;
             }else{
                 $aCriteria['isMainVariety'] = 1;
+                if ($request->request->has('yearMax') && !$request->request->get('yearMax')) {
+                    $aCriteria['yearMax'] = $this->getMaxYear(date('Y')-2);
+                }
+                $aCriteria['countryName'] = 'countryName'.ucfirst($this->get('translator')->getLocale());
             }
+
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
             if ($count  && ($count>$offset)) {
                 $result = $this->getResultGLobalSearch($table, $aCriteria, $view, $offset, $limit,$sort,$order);
                 $result = $this->formatDataTable($result);
                 $result = $this->getParamsPagination($result, $count, $offset, $limit);
+                if ($request->request->has('bo') && $table == 'NamingData') {
+                    $namingRepository = $this->getDoctrine()->getRepository('OivBundle:NamingData');
+                    array_walk($result['data'], function (&$val) use ($namingRepository) {
+                        $aListBase = $namingRepository->getInfoNaming($val['appellationName'],$val['appellationCode'],false);
+                        $val['listReferenceName'] = array_map(function($row){
+                            return $row['referenceName'];
+                        }, $aListBase);
+                        $val['listReferenceName'] = implode('</br>',$val['listReferenceName']);
+                    });
+                }
                 $result['dbType'] = $request->request->get('dbType');
                 $result['textViewMore'] = $this->get('translator')->trans('View more');
                 $result['textView'] = $this->get('translator')->trans('View');
             }
         }
-        //var_dump($result);
         return new JsonResponse($result);
     }
 
@@ -114,6 +144,7 @@ class OivController extends BaseController
         $result = [];
         $aCriteria = $this->getCriteriaRequest($request);
         $aCriteria['isMainVariety'] = 1;
+        $aCriteria['countryName'] = 'countryName'.ucfirst($this->get('translator')->getLocale());
         $table = ucfirst($request->request->get('dbType')).'Data';
         if (class_exists('OivBundle\\Entity\\'.$table)) {
             $count = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getTotalResult($aCriteria);
@@ -143,8 +174,15 @@ class OivController extends BaseController
     {
         $result = [];
         if ($appellationName = $request->request->get('appellationName')) {
+            $appellationCode = $request->request->get('appellationCode');
             $isCtg = $request->request->get('isCtg', true);
-            $result['data'] =  $this->getDoctrine()->getRepository('OivBundle:NamingData')->getInfoNaming($appellationName, $isCtg);
+            $result['data'] =  $this->getDoctrine()->getRepository('OivBundle:NamingData')->getInfoNaming($appellationName, $appellationCode, $isCtg,false);
+            $otranslator = $this->get('translator');
+            array_walk($result['data'], function(&$v)use($otranslator){
+                if(isset($v['productType'])) {
+                    $v['productType'] = $otranslator->trans($v['productType']);
+                }
+            });
             $result['isCtg'] = $isCtg;
             $result['appellationName'] = $appellationName;
         }

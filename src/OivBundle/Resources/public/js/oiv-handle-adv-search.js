@@ -92,16 +92,23 @@ $(function($){
                 if (response.isCtg == '1') {
                     var prevCtg = '';
                     $.each(response.data, function (key, items) {
-                        if (prevCtg != items.productType) {
-                            html += prevCtg != '' ? '</p></a>' : '';
-                            html += '<a href="javascript:;" class="list-group-item">';
-                            html += '<h4 class="list-group-item-heading">' + items.productType + '</h4>';
+                        if (prevCtg == '' || prevCtg == items.productType) {
+                            html += prevCtg == '' ? '<a href="javascript:;" class="list-group-item">' : ', ';
+                            html += '<span class="list-group-item-heading">' + items.productCategoryName + '</span>';
+                        } else {
                             html += '<p class="list-group-item-text">';
+                            html += '<button class="btn btn-primary" type="button">' + prevCtg + '</button>';
+                            html += '</p></a>';
+                            html += '<a href="javascript:;" class="list-group-item">';
+                            html += '<span class="list-group-item-heading">' + items.productCategoryName + '</span>';
                         }
-                        html += '<button class="btn btn-primary" type="button">' + items.productCategoryName + '</button>';
                         prevCtg = items.productType;
                     });
-                    html += '</p></a>';
+                    if (html !='') {
+                        html += '<p class="list-group-item-text">';
+                        html += '<button class="btn btn-primary" type="button">' + prevCtg + '</button>';
+                        html += '</p></a>';
+                    }
                 } else {
                     $.each(response.data, function (key, items) {
                         if(items.url) {
@@ -132,6 +139,7 @@ $(function($){
             $.handleSearch._g1._data = response.yAxis[response.statType];
             $.handleSearch._g1._title = response.label;
             $.handleSearch._g1._mesure = response.mesure;
+            $.handleSearch._g1._axisName = $.handleSearch._trans.year;
             $.handleSearch._g1._init();
             $('a[href="#tab_graph"]').trigger('click');
         };
@@ -151,7 +159,7 @@ $(function($){
             if (typeof content.data != 'undefined') {
                 if (changeHeader) {
                     $.each(content.labelfields, function (key, val) {
-                        if (val != 'id') {
+                        if (key != 'id' && key != 'appellationCode') {
                             hearder += '<th data-sort="' + key + '" class="sorting" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1" >' + val + '</th>';
                             hearderFilter += '<td rowspan="1" colspan="1"><a><input name="'+ key +'" class="form-control form-filter input-sm filter-col" type="text"><i class="fa fa-remove"></i><i class="icon-magnifier"></i></a></td>';
                         }
@@ -162,13 +170,19 @@ $(function($){
                     classCSS = key%2 ? 'odd':'even';
                     body += '<tr role="row '+classCSS+'">';
                     $.each(items, function (key, val) {
-                        if (key != 'id') {
-                            if (key == 'productCategoryName' || key =='productType' || key=='referenceName') {
-                                val = '<a class="info-naming" data-appellationName="'+items.appellationName+'" data-fieldName="'+key+'">' + val + ' ' +content.textView +'</a>';
-                            } else if (key == 'url' && val) {
+                        if (key != 'id' && key != 'appellationCode') {
+                            var style= '';
+                            if (key == 'productCategoryName' || key =='productType' || key=='referenceName' || key=='appellationCode') {
+                                val = '<a class="info-naming" data-appellationCode="'+items.appellationCode+'" data-appellationName="'+items.appellationName+'" data-fieldName="'+key+'">' + val + ' ' +content.textView +'</a>';
+                            } else if ((key == 'url'|| key == 'internetAdress') && val) {
+                                val = (val.indexOf('http') == 0||val.indexOf('HTTP') == 0) ? val:'http://'+val;
                                 val = '<a target="_blank" href="'+val+'">'+content.textViewMore+'</a>';
+                            } else if (key == 'value') {
+                            	val = (val || val==0) ? val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "):'';
+                                style = ' style="text-align: right;"';
                             }
-                            body += '<td>' + val + '</td>';
+                            val  = val!==null && val !=='null' ? val: '';
+                            body += '<td'+style+'>' + val + '</td>';
                         }
                     });
                     body += '</tr>';
@@ -234,6 +248,7 @@ $(function($){
                         $(this).parents().eq(2).addClass('active open');
                         $('.current-db-search').text($(this).parents().eq(2).find('span.title').text());
                     }
+                    $('#container-graphic').html('<span>'+$.handleSearch._trans.clic_stat+' </span>');
                     $('#tab_graph').removeClass('active');
                     $('a[href=#tab_graph]').removeClass('show').addClass('hide');
                     if ($(this).attr('data-dbtype') == 'stat') {
@@ -241,7 +256,7 @@ $(function($){
                         $('#selected-statType').removeClass('hide').addClass('show');
                         $('a[href=#tab_graph]').removeClass('hide').addClass('show');
                         if (!$('#StatData-statType').val()) {
-                            alert('Veuillez sélectionner au moin une série');
+                            alert($.handleSearch._trans.choose_stat);
                             return false;
                         }
                     } else {
@@ -320,6 +335,8 @@ $(function($){
                     html += ' à <span class="label label-md label-warning" style="font-size: 14px;">'+$("#yearMax").val()+'</span>';
                 }
                 $('#selected-year p:nth-child(2)').html(html);
+                $('#container-graphic').html('<span>'+$.handleSearch._trans.clic_stat+' </span>');
+                $('body').find('#selected-statType button').removeClass('active');
             });
             var html = '';
             if ($('#yearMin').val() == $('#yearMax').val()) {
@@ -342,7 +359,7 @@ $(function($){
                 var offset = $(this).attr('data-offset');
                 var limit = $('#limit-pg').val();
                 /** Set default filter */
-                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab2':data;
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+$.handleSearch._lastStatYear+'&view=tab2':data;
                 data += $.handleSearch._dataTableFilter;
                 data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
                 $.handleSearch._sendRequest(view, 'POST', data,false);
@@ -360,7 +377,7 @@ $(function($){
                 var offset = '0';
                 var limit = $(this).val();
                 /** Set default filter */
-                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab2':data;
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+$.handleSearch._lastStatYear+'&view=tab2':data;
                 data += $.handleSearch._dataTableFilter;
                 data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
                 $.handleSearch._sendRequest(view, 'POST', data, false);
@@ -377,7 +394,7 @@ $(function($){
                 var order = $(this).hasClass('sorting_asc') ? 'DESC':'ASC';
                 $.handleSearch._dataSort = '&sort='+sort+'&order='+order;
                 /** Set default filter */
-                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab2':data;
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+$.handleSearch._lastStatYear+'&view=tab2':data;
                 data += $.handleSearch._dataTableFilter;
                 data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
                 $.handleSearch._sendRequest(view, 'POST', data, false);
@@ -410,7 +427,7 @@ $(function($){
                     var offset = '0';
                     var limit = $('#limit-pg').val();
                     /** Set default filter */
-                    data = data == undefined ? 'dbType=stat&countryCode=oiv&year=' + ((new Date()).getFullYear() - 2) + '&view=tab2' : data;
+                    data = data == undefined ? 'dbType=stat&countryCode=oiv&year=' + $.handleSearch._lastStatYear + '&view=tab2' : data;
                     data += $.handleSearch._dataTableFilter;
                     data += '&offset=' + offset + '&limit=' + limit + $.handleSearch._dataSort;
                     $.handleSearch._sendRequest(view, 'POST', data, false);
@@ -434,7 +451,7 @@ $(function($){
                     var offset = '0';
                     var limit = $('#limit-pg').val();
                     /** Set default filter */
-                    data = data == undefined ? 'dbType=stat&countryCode=oiv&year=' + ((new Date()).getFullYear() - 2) + '&view=tab2' : data;
+                    data = data == undefined ? 'dbType=stat&countryCode=oiv&year=' + $.handleSearch._lastStatYear + '&view=tab2' : data;
                     data += $.handleSearch._dataTableFilter;
                     data += '&offset=' + offset + '&limit=' + limit + $.handleSearch._dataSort;
                     $.handleSearch._sendRequest(view, 'POST', data, false);
@@ -467,11 +484,12 @@ $(function($){
             $(this).parents().eq(1).find('select, input').val('');
             if ($(this).parents().eq(1).find('select#yearMin').length) {
                 $(this).parents().eq(1).find('select#yearMin').val($('select#yearMin option:nth-child(1)').val());
-                $(this).parents().eq(1).find('select#yearMax').val($('select#yearMin option:nth-child(1)').val());
+                $(this).parents().eq(1).find('select#yearMax').val($('select#yearMax option:nth-child(1)').val());
             }
             $(this).parents().eq(1).find('select').trigger('change');
             $(this).parents().eq(1).find('select.bs-select').selectpicker('refresh');
             $('#datatable_orders tbody').html('');
+            $('#container-graphic').html('<span>*'+$.handleSearch._trans.clic_stat+' </span>');
             $('#pagination-result .pagination').addClass('hide');
             $('#pagination-result #info-pg').addClass('hide');
           });
@@ -537,7 +555,7 @@ $(function($){
          */
         this._initGetInfoNaming = function () {
             $('body').on('click','td .info-naming' ,function () {
-                var data = 'appellationName=' + $(this).attr('data-appellationName');
+                var data = 'appellationName=' + $(this).attr('data-appellationName')+'&appellationCode='+$(this).attr('data-appellationCode');
                 data += $(this).attr('data-fieldname') == 'referenceName' ? '&isCtg=0':'&isCtg=1';
                 $.handleSearch._sendRequest('info-naming', 'POST', data, false);
             });
@@ -566,7 +584,7 @@ $(function($){
 
         this._checkFilterYear = function () {
             $('#yearMax, #yearMin').on('change', function(e) {
-               if ($('#yearMax').val() < $('#yearMin').val()) {
+               if (($('#yearMax').val() < $('#yearMin').val()) && $('#yearMin').val() !='' && $('#yearMax').val() != '') {
                    alert($.handleSearch._trans.error_year);
                }
             });
@@ -610,9 +628,13 @@ $(function($){
             },
             afterSelect: function(){
                 this.qs1.cache();
+                $('#container-graphic').html('<span>'+$.handleSearch._trans.clic_stat+' </span>');
+                $('body').find('#selected-statType button').removeClass('active');
             },
             afterDeselect: function(){
                 this.qs1.cache();
+                $('#container-graphic').html('<span>'+$.handleSearch._trans.clic_stat+' </span>');
+                $('body').find('#selected-statType button').removeClass('active');
             }
         });
         $('.bs-select').selectpicker({
@@ -622,6 +644,18 @@ $(function($){
         $('.bs-select').selectpicker('refresh');
         setTimeout(function() {
             $('#StatData-statType').trigger('change');
+            $('#stat button.filter-submit').trigger('click');
+
+            $('#container_scroll').kinetic();
+            $('#attach').on('click', function () {
+                if ($(this).hasClass('active')) {
+                    $('#container_scroll').kinetic('detach');
+                    $(this).removeClass('active');
+                } else {
+                    $('#container_scroll').kinetic('attach');
+                    $(this).addClass('active');
+                }
+            });
         },500);
         $('.select2me').select2({
             placeholder: "Select",

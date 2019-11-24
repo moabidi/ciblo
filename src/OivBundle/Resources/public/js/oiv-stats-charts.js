@@ -11,9 +11,12 @@ $(function ($) {
         this._title = '';
         this._subtitle = '';
         this._mesure = '';
+        this._axisName = 'Année';
         this._lang = {};
 
         this._init = function () {
+            var axisName = this._axisName;
+            var mesure = this._mesure;
             Highcharts.setOptions({
                 lang: this._lang
             });
@@ -26,7 +29,18 @@ $(function ($) {
                 exporting: {
                     buttons: {
                         contextButton: {
-                            menuItems: ["downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG","downloadCSV","downloadXLS"]
+                            menuItems: ["downloadPNG", "downloadJPEG", "downloadPDF"]
+                        }
+                    },
+                    csv: {
+                        columnHeaderFormatter: function(item, key, keyLength) {
+                            if (item.coll == 'xAxis') {
+                                return axisName;
+                            }else if(item.name) {
+                                return item.name + ' ('+mesure+')';
+                            } else {
+                                return false;
+                            }
                         }
                     }
                 },
@@ -44,7 +58,7 @@ $(function ($) {
                     crosshair: true
                 },
                 yAxis: {
-                    allowDecimals: false,
+                    allowDecimals: true,
                     min: 0,
                     title: {
                         text: this._mesure
@@ -57,7 +71,6 @@ $(function ($) {
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true,
-                    valueDecimals: 0
                 },
                 plotOptions: {
                     column: {

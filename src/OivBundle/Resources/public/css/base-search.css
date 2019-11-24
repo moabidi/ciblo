@@ -331,4 +331,13 @@ body .filter-search {
     padding-top: 5px;
     margin: 10px;
 }
+tr#area td:nth-child(2),tr#area td:nth-child(3),tr#area td:nth-child(4),tr#area td:nth-child(5) {
+    border: none;
+}
+#products thead.area th:nth-child(2),#products thead.area th:nth-child(3),#products thead.area th:nth-child(4),#products thead.area th:nth-child(5) {
+    border: none;
+}
+#container-g1 g.highcharts-legend g.highcharts-legend-item:nth-child(5),#container-g3 g.highcharts-legend g.highcharts-legend-item:nth-child(5),#container-g3 g.highcharts-legend g.highcharts-series-2,#container-g2 g.highcharts-legend g.highcharts-legend-item:nth-child(5),#container-g4 g.highcharts-legend g.highcharts-legend-item:nth-child(5) {
+    display: none;
+}
 /*** End fiche country  **/

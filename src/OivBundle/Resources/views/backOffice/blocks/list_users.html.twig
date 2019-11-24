@@ -1,0 +1,87 @@
+{% extends 'OivBundle:backOffice:index_form.html.twig' %}
+{% block center_logo %}{% endblock center_logo %}
+{% block header %}
+    <div class="page-header navbar navbar-fixed-top">
+        <div class="page-header-inner">
+            <!-- BEGIN LOGO -->
+            <div class="page-logo">
+                <a href="index.html">
+                    <img src="/bundles/oiv/img/frontend/logo-small.png" alt="logo" class="logo-default">
+                </a>
+                <div class="menu-toggler sidebar-toggler hide">
+                </div>
+            </div>
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+            </a>
+            <div class="top-menu">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown dropdown-user">
+                        <a href="{{ path('result-search') }}">{{ 'Country Plug'|trans }}</a>
+                    </li>
+                    <li class="dropdown dropdown-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <img alt="" class="img-circle" src=" {{ asset('/bundles/oiv/img/frontend/logo-small.png') }}"/>
+                            <span class="username username-hide-on-mobile"> {{ app.user.name }} </span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="{{ path('manager_backoffice') }}">
+                                    <i class="icon-key"></i> {{ 'Home'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="icon-key"></i> {{ 'Profile'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('oiv_logout') }}">
+                                    <i class="icon-key"></i> {{ 'Log Out'|trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock header %}
+{% block content %}
+<div class="content" style="margin-top: 40px; width: 400px;">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Gestion des utilisateurs</h3>
+            <div class="table-scrollable" style="overflow-y: auto;">
+                <table id="datatable_orders" class="table table-striped table-bordered table-hover dataTable no-footer"
+                       aria-describedby="datatable_orders_info" role="grid">
+
+                        <thead style="top: 0;position: sticky;">
+                            <tr role="row" class="heading">
+                                <th>Name</th>
+                                <th>Login</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in 1..5 %}
+                            <tr role="row" class="{{ loop.index0 % 2 ? 'odd':'even'}}">
+                                <td>Name A</td>
+                                <td>Login A</td>
+                                <td>Role A</td>
+                                <td>
+                                    <a href="{{ path('edit_user') }}" class="btn-edit-data btn btn-sm yellow margin-bottom" value="">
+                                        <i class="fa fa-edit"></i> Editer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -4,6 +4,7 @@
 $(function($){
 
     $.handleSearch = new function() {
+
         this._locale;
         this._g1;
         this._g2;
@@ -276,11 +277,7 @@ $(function($){
             $('#nextYear,#prevYear').on('click', function () {
                if ( $(this).attr('data-year')) {
                    var year = parseInt($(this).attr('data-year'));
-                   var currentYear = (new Date()).getFullYear();
-                   if ((new Date()).getMonth()< 8) {
-                       currentYear = currentYear - 1;
-                   }
-                   if (year > (currentYear-2) || year < 1995) {
+                   if (year > $.handleSearch._lastStatYear || year < 1995) {
                        alert ($.handleSearch._trans.data_not_available);
                        return false;
                    }
@@ -434,7 +431,7 @@ $(function($){
                 var order = $(this).hasClass('sorting_asc') ? 'DESC':'ASC';
                 $.handleSearch._dataSort = '&sort='+sort+'&order='+order;
                 /** Set default filter */
-                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+((new Date()).getFullYear()-2)+'&view=tab1':data;
+                data = data == undefined ? 'dbType=stat&countryCode=oiv&year='+$.handleSearch._lastStatYear+'&view=tab1':data;
                 data += $.handleSearch._dataTableFilter;
                 data += '&offset='+offset+'&limit='+limit+$.handleSearch._dataSort;
                 $.handleSearch._sendRequest(view, 'POST', data, false);

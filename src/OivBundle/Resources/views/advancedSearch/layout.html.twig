@@ -21,7 +21,7 @@
         <!-- BEGIN LOGO -->
         <div class="page-logo">
             <a href="index.html">
-                <img src="{{ asset('/bundles/oiv/img/frontend/logo-small.png') }}" alt="logo" class="logo-default"/>
+                <img style="height: 54px;margin: 5px;" src="{{ asset('/bundles/oiv/img/OIV.png') }}" alt="logo" class="logo-default"/>
             </a>
             <div class="menu-toggler sidebar-toggler hide">
             </div>
@@ -55,9 +55,10 @@
             </h3>
             <div class="portlet">
                 <div class="portlet-title">
-                    <div class="caption">
+                    <div id="label-selectedFilter" class="caption">
                         <i class="fa fa-shopping-cart"></i>{{ 'Your selection'|trans }}
-                    </div></div>
+                    </div>
+                </div>
             </div>
             <!-- END PAGE HEADER-->
             <!-- BEGIN PAGE CONTENT-->
@@ -70,7 +71,8 @@
                     <div class="portlet">
                         <div class="portlet-title">
                             <div class="caption">
-                                <i class="fa fa-shopping-cart"></i>{{ 'Results'|trans }}
+                                <span><i class="fa fa-list"></i>Résultats</span>
+                                <span id="attach" class="active pointer"><i class="fa fa-arrows-alt active"></i> Scroll</span>
                             </div>
                             {% block actions %}{% endblock %}
                         </div>

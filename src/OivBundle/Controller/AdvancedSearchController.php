@@ -22,7 +22,7 @@ class AdvancedSearchController extends BaseController
     public function indexAction(Request $request)
     {
         $selectedCountryCode = $request->query->get('countryCode','oiv');
-        $selectedYear = $request->query->get('year',date('Y')-2);
+        $selectedYear = $request->query->get('year',$this->getLastStatYear());
         $selectedYear = $this->getMaxYear($selectedYear);
         $aStatType  = $this->getDoctrine()->getRepository('OivBundle:StatDataParameter')->getListProduct('public');
         array_walk($aStatType, function(&$v, $k){
@@ -32,16 +32,17 @@ class AdvancedSearchController extends BaseController
             }
             $v = implode(',',$list);
         });
-        $aStatType = implode(',',$aStatType);// var_dump($aStatType);die;
+        $aStatType = implode(',',$aStatType);
         $aCriteria  = ['countryCode' => $selectedCountryCode, 'year' => $selectedYear, 'statType'=>$aStatType];
-        //$aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->findBy([], ['countryNameFr' => 'ASC']);
-        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountries();
+        $aCriteria['countryName'] = 'countryName'.ucfirst($this->get('translator')->getLocale());
+        $aParams['countries'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getCountries($aCriteria['countryName']);
         $aParams['tradeBlocs'] = $this->getDoctrine()->getRepository('OivBundle:Country')->getDistinctValueField('tradeBloc');
         $aParams['filters'] = $this->getFiltredFiled();
         $aParams['countResult'] = $this->getDoctrine()->getRepository('OivBundle:StatData')->getTotalResult($aCriteria);
         $aParams['globalResult'] = $this->getResultGLobalSearch('StatData', $aCriteria,'tab2');
         $aParams['countryCode'] = $selectedCountryCode;
         $aParams['selectedYear'] = $selectedYear;
+        $aParams['lastStatYear'] = $this->getLastStatYear();
         $oTranslator = $this->get('translator');
         $aParams['transData'] = [
             'infoCodeVivc'=>$oTranslator->trans('infoCodeVivc'),
@@ -54,6 +55,9 @@ class AdvancedSearchController extends BaseController
             'no_type_export'=> $oTranslator->trans('Export type not available'),
             'error_year'=> $oTranslator->trans('Year Min must be less than Year Max'),
             'text_all'=> $oTranslator->trans('All'),
+            'year'=> $oTranslator->trans('year'),
+            'clic_stat'=> $oTranslator->trans('clic stats'),
+            'choose_stat'=> $oTranslator->trans('choose stat'),
         ];
         return $this->render('OivBundle:advancedSearch:index.html.twig',$aParams);
     }
@@ -103,8 +107,10 @@ class AdvancedSearchController extends BaseController
         if (count($aCountries) && $aCountries[0] && $statType) {
             $aCriteria = [];
             $aResults = [];
-            $aCriteria['yearMin'] = $request->request->get('yearMin','1995');
+            $aCriteria['yearMin'] = $request->request->get('yearMin',1995);
             $aCriteria['yearMax'] = $request->request->get('yearMax',date('Y')-2);
+            $aCriteria['yearMin'] = $aCriteria['yearMin'] ? $aCriteria['yearMin']:'1995';
+            $aCriteria['yearMax'] = $aCriteria['yearMax'] ? $aCriteria['yearMax']:$this->getMaxYear(date('Y')-2);
             $repository = $this->get('oiv.stat_repository');
             $mesure = '1000 QX';
             foreach ($aCountries as $countryCode) {
@@ -118,7 +124,9 @@ class AdvancedSearchController extends BaseController
                 $formattedData['xAxis'][]= $y;
             }
             array_walk($aResults, function ($value, $countryCode) use (&$formattedData, $statType, $translator, $mesure) {
-                if( in_array($countryCode,['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANTE','oiv'])){
+                if( in_array($countryCode,['AFRIQUE','AMERIQUE','ASIE','EUROPE','OCEANIE'])){
+                    $countryCode = ucfirst(strtolower($translator->trans(ucfirst(strtolower($countryCode)))));
+                }elseif($countryCode == 'oiv'){
                     $countryCode = ucfirst(strtolower($translator->trans($countryCode)));
                 }
                 $formattedData['yAxis'][$statType][] = $this->getDataProductGraph($countryCode,$value, $formattedData['xAxis'],$translator,$mesure);

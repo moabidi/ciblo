@@ -28,7 +28,8 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
         "spraed/pdf-generator-bundle": "^1.4",
-        "symfony/serializer": "3.0"
+        "symfony/serializer": "3.0",
+        "knplabs/knp-snappy-bundle": "^1.5"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

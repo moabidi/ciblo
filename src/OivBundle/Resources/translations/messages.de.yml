@@ -1,0 +1,247 @@
+#########################
+# SIMPLE SEARCH
+#########################
+oiv: Welt
+Country Plug: Länderdatei
+Advanced Search on DataBase: Erweiterte Suche in der Datenbank
+Choose: Auswählen
+a country: ein Land
+a continent: einen Kontinent
+Countries: Länder
+View more: Nähere Informationen
+View: Ansehen
+Total records: Gesamtergebnisse
+
+Result of search: Suchergebnis
+Country: Land
+countryCode: Ländercode
+countryNameFr: Ländername
+Database: Daten
+rtable: Tafeltrauben
+rin: Wein
+rfresh: Frische Weintrauben
+rsec: Getrocknete Weinrauben
+area: Rebfläche
+area rin: Fläche
+For last statistic estimations: Letzte statistische Schätzungen
+show graphic: Schaubild anzeigen
+help area: Rebfläche (im Ertrag oder noch nicht im Ertrag) zur Erzeugung von Keltertrauben, Tafeltrauben oder getrockneten Weintrauben)
+help win: Frische Trauben für den direkten menschlichen Verzehr
+help rtable: Frische Trauben für den direkten menschlichen Verzehr
+help rfresh: Trauben für alle Zwecke
+help rin: Alle Weine, einschl. Schaumweine und Spezialweine mit Ausnahme von Säften und Mosten
+help rsec: In Tonnen getrockneter Früchte
+#Education
+city: Stadt
+formationTitle: Bezeichnung der Ausbildung
+university: Ausbildungseinrichtung
+tutelle: Aufsicht
+level: Stufe und Kategorie
+diploma: Verliehene(r) Abschluss/Abschlüsse
+cooperation: Eventuelle Hochschul kooperationen
+month: Ausbildungsdauer
+hourCourses: Zahl der Ausbildungsstunden
+credits: ECTS-Leistungspunkte
+prior: Voraussetzungen
+deadline: D	ate d’inscription Einschreibungsdatum
+contact: Kontakt
+adress: Anschrift
+lastDate: letzte Aktualisierung
+internetAdress: Internet-Link
+#Appelation
+appellationCode: Code GA/UB
+appellationName: GA/UB
+parentCode: Code höhere Einheit
+parentName: Höhere geographische Einheit
+typeNationalCode: Typ des nationalen Codes
+typeInternationalCode: Typ des internationalen Codes
+#productCategoryName: Art des Erzeugnisses
+productCategoryName: Art des Erzeugnisses
+productType: Produktkategorien
+#productType: Produktkategorien
+referenceName: Rechtsgrundlage
+url: Link zur Rechtsgrundlage
+#Stat
+statType: Serie
+measureType: Einheit
+metricCompType: Erzeugnis
+year: Jahr
+value: Wert
+infoSource: Quelle
+grapesDestination: Verwendung der Trauben
+#Variety
+isMainVariety: Hauptsorte
+areaCultivated: Anbaufläche
+areaYear: Jahr Anbaufläche
+grapeVarietyName: Sortenname
+codeVivc: VIVC-Code
+infoCodeVivc: Internationaler Rebsortenkatalog (VIVC). Dieser Code wird nur von einigen Ländern bereitgestellt und anerkannt
+varietyNationalNameVivc: Sortenname
+synonym: Synonym
+nationalVarietyId: Nationaler Sortencode
+grapeColor: Traubenfarbe
+
+internetAdress: Internet-Link
+#Fiche OIV
+area: Fläche
+Individual Consumption: Pro-Kopf-Verbrauch
+count variety: Anzahl der Rebsorten
+count education: Anzahl der Ausbildungen
+production: Produktion
+prod: Produktion
+consumption: Verbrauch
+import: Einfuhren
+export: Ausfuhren
+indovcons: Pro-Kopf-Verbrauch
+total count variety: Gesamtzahl der Rebsorten
+total count education: Gesamtzahl der Ausbildungen
+
+Zone: Zone
+Database: Datenbank
+World: Welt
+Naming: Appellationen
+Variety: Sorte
+Varieties: Sorten
+Education: Ausbildungen
+Statistic: Statistiken
+Annual statistics of: Jährliche Statistiken von
+Download CSV: CSV herunterladen
+Download JPEG image: JPEG herunterladen
+Download PDF document: PDF herunterladen
+Download PNG image: PNG herunterladen
+Download SVG vector image: herunterladen
+Download XLS: XLS herunterladen
+in: in
+Advanced search: Erweiterte Suche
+Year min: Jahr min.
+Year max: Jahr max.
+Search: Suche
+Data provided by Membership: Von den Mitgliedstaaten bereitgestellte Daten
+Data not available: Daten nicht verfügbar
+Click on a category or series: Kategorie oder Serie anklicken
+for details of the data: Um Einzelheiten der Daten abzurufen
+To have an advanced search with a comparison of the statistics: Für eine erweiterte Suche mit Vergleich der Statistiken
+click here: hier klicken
+GRAPHIC: Schaubild
+No results found for your search: Kein Ergebnis für Ihre Suche gefunden
+No results found: Kein Ergebnis gefunden
+error response: Fehlermeldung
+#APPELATION Type du produit
+AROMATISED_WINE: Vin aromatisé
+GRAPE: Raisin
+GRAPE_JUICE: Jus de raisin
+MISTELLE: Mistelle
+SPECIAL_WINE: Vin spécial
+SPIRITUOUS_BEVERAGE: Boisson spiritueuse
+#WINE: Vin
+WINE_VINEGAR: Vinaigre de vin
+#APPELATION Type d'indication type 2
+GI: GI
+
+PDO: PDO
+PGI: PGI
+WINE_ORIGIN: Wine of origin
+#CEPAGE Variété principale
+Y: OUI Ja
+N: NON Nein
+#Statistiques liste des produits
+AREA_VINEYARD: Rebfläche
+GRAPES: Frische Weintrauben
+TABLE_GRAPES: Tafeltrauben
+DRIED_GRAPES: Getrocknete Weintrauben
+WINE: Wein
+AREA: Fläche
+JUICE_GRAPES: Traubensaft
+JUICE_MUST: Saft und Most
+POPULATION: Bevölkerung
+#Statistiques categorie des statistiques
+CONSUMPTION: Verbrauch
+PRODUCTION: Produktion
+IMPORTATION: Einfuhren
+EXPORTATION: Ausfuhren
+
+TOTAL_AREA: Gesamtfläche
+CONSUMPTION_CAPITA: Pro-Kopf-Verbrauch
+#Statistiques indicator des statistiques
+A_SURFACE: Rebfläche
+CONSUMPTION_PRODUCT_GRAPES: VERBRAUCH-ERZEUGNIS-TRAUBEN
+C_PROD_GRP: Erzeugung von frischen Trauben
+F_PROD_TABLE_GRP: Erzeugung von Tafeltrauben
+G_PROD_DRIED_GRP: Erzeugung von getrockneten Weintrauben
+H_IMPORT_GRP: Einfuhren von frischen Weintrauben
+INDUSTRIAL_USE_WINE: Wein für industrielle Verwendungszwecke
+I_EXPORT_GRP: Ausfuhren von frischen Weintrauben
+J_IMPORT_DRIED_GRP: Einfuhren von getrockneten Weintrauben
+K_EXPORT_DRIED_GRP: Ausfuhren von getrockneten Weintrauben
+L_COMSUMPTION_TABLE_GRP: Verbrauch von frischen Weintrauben
+M_COMSUMPTION_CAPITA_GRP: M_COMSUMPTION_CAPITA_GRP
+NATIONAL_GRAPE_ACCORDING_TO_VOCATION: NATIONAL_GRAPE_ACCORDING_TO_VOCATION
+N_CONSUMPTION_DRIED_GRP: Verbrauch von getrockneten Weintrauben
+POPULATION_PLUS_15: Bevölkerung (+15)
+PRODUCTION_JUICE: Herstellung von Traubensaft
+PRODUCTION_MUST: Herstellung von Most
+P_PRODUCTION_WINE: Herstellung von Wein
+Q_IMPORT_WINE: Einfuhren von Wein
+REPARTITION_PRODUCT_AREA: Aufteilung nach Sorten
+R_EXPORT_WINE: Ausfuhren von Wein
+S_CONSUMPTION_WINE: Weinverbrauch
+TOTAL_POPULATION: Bevölkerung
+U1_STOCK_WINE: Weinbestände
+CONSUMPTION_CAPITA_15: Pro-Kopf-Verbrauch (+15)
+CONSUMPTION_WINE_CAPITA_COMPUTED: Weinverbrauch pro Kopf (+15)
+COMSUMPTION_CAPITA_GRP_COMPUTED: Verbrauch von Tafeltrauben pro Kopf
+CONSUMPTION_DRIED_GRP_PER_CAPITA_COMPUTED: Verbrauch von Rosinen pro Kopf
+COMSUMPTION_CAPITA_TABLE_GRP_COMPUTED: Verbrauch von Tafeltrauben pro Kopf
+#Unite
+MILLE_HL: 1000 hl
+#MILLE_QX: 1000 dz
+HA: ha
+TONNES: tonnen
+tonnes: tonnen
+1000 QX: tonnen
+#KG_CAPITA: 1000 kg
+KG_CAPITA: kg pro Kopf
+MILLE_S: l pro Kopf (+15)
+L_PER_CAPITA_15: l pro Kopf (+15)
+#########################
+# ADV SEARCH
+#########################
+Choose all continents: Alle Kontinente auswählen
+Choose all countries: Alle Länder auswählen
+Results: Ergebnisse
+Home: Startseite
+Export to: Export nach
+Graphic: Schaubild
+list: Serie
+Your selection: Ihre Auswahl
+records: Zeilen
+of: von
+No data to exported: keine Daten zu exportieren
+Please select at least one country: Bitte mindestens ein Land auswählen
+Export type not available: Art der Ausfuhr nicht verfügbar
+Year Min must be less than Year Max: Jahr min. muss niedriger als Jahr max. sein
+All: Alles
+remove all: alles streichen
+select all: alles auswählen
+select all countries: alle Länder auswählen
+Refine your search: Suche weiter eingrenzen
+Membre OIV: OIV-Mitglied
+tradeBloc: Kontinent
+World: Welt
+go to home: Zurück zur Startseite
+choose stat: Bitte wählen Sie mindestens eine Serie aus
+clic stats: Klicken Sie nach der Auswahl der Serie auf die Auswahl, um das Diagramm anzuzeigen
+Reset: Zurücksetzen
+Details: Einzelheiten
+Connexion: einloggen
+Export: Ausfuhr
+Login: Anmeldung
+Title oiv: Internationale Organisation für Rebe und Wein
+##########################
+##### Trade Bloc
+#########################"
+Europe: Europa
+Asie: Asien
+Afrique: Afrika
+Amerique: Amerika
+Oceanie: Ozeanien

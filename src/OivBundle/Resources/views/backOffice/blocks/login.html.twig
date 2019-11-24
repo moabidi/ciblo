@@ -1,5 +1,6 @@
 {% extends 'OivBundle:backOffice:index_form.html.twig' %}
-{% block form %}
+{% block content %}
+<div class="content">
     <form action="{{ path('oiv_check_login') }}" class="login-form"  method="post">
         <h3 class="form-title">{{ 'Connexion'|trans }}</h3>
         {% if error|default() %}
@@ -24,4 +25,5 @@
             <button type="submit" class="btn btn-success uppercase">{{ 'Identify'|trans }}</button>
         </div>
     </form>
-{% endblock form %}
+</div>
+{% endblock content %}

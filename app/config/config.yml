@@ -38,6 +38,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        host: http://127.0.0.1:1987
 
 # Doctrine Configuration
 doctrine:
@@ -60,11 +62,36 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
 
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
-    host:      "%mailer_host%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
+    host: "%mailer_host%"
+    username: "%mailer_user%"
+    password: "%mailer_password%"
+#    spool: { type: memory }
+    port: 465
+    encryption: ssl
+    auth-mode: login
+
+# Generator pdf from html
+#knp_snappy:
+#    pdf:
+#        enabled:    true
+#        binary:     /usr/local/bin/wkhtmltopdf #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" for Windows users
+#        options:    []
+#    image:
+#        enabled:    true
+#        binary:     /usr/local/bin/wkhtmltoimage #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\"" for Windows users
+#        options:    []
+monolog:
+    handlers:
+        import_file_to_bdd:
+            type: stream
+            path: "%kernel.logs_dir%/import_file.log"
+            level: info
+            channels: [import_file_bdd]
+    channels: [import_file_bdd]

@@ -1,0 +1,247 @@
+#########################
+# SIMPLE SEARCH
+#########################
+oiv: Mundo
+Country Plug: Ficha país
+Advanced Search on DataBase: Búsqueda avanzada en la base de datos
+Choose: Seleccionar
+a country: un país
+a continent: un continente
+Countries: País
+View more: Más información
+View: Ver
+Total records: Resultados totales
+
+Result of search: Resultado de la búsqueda
+Country: País
+countryCode: Código país
+countryNameFr: País
+Database: Datos
+rtable: Uvas de mesa
+rin: Vino
+rfresh: Uvas frescas
+rsec: Pasas
+area: Viñedo
+area rin: Superficie
+For last statistic estimations: Para las últimas estimaciones estadísticas
+show graphic: Mostrar el gráfico
+help area: Superficie de viñedo (en fase de producción o todavía improductivo) destinada a la producción de uvas de vinificación, uvas de mesa o pasas
+help win: Uvas frescas para consumo humano directo.
+help rtable: Uvas frescas para consumo humano directo.
+help rfresh: Uvas para todos los usos.
+help rin: Todos los vinos, incluidos los espumosos y los vinos especiales, pero no los zumos y los mostos
+help rsec: En toneladas de fruta seca
+#Education
+city: Localidad
+formationTitle: Nombre del curso de formación
+university: Centro
+tutelle: Organismo regulador
+level: Nivel y categoría
+diploma: Títulos(s) otorgado(s)
+cooperation: Colaboración con universidades
+month: Duración del curso de formación
+hourCourses: Horas lectivas
+credits: Créditos ECTS
+prior: Requisitos
+deadline: Fecha de matrícula
+contact: Contacto
+adress: Dirección
+lastDate: Última actualización
+internetAdress: Dirección web
+#Appelation
+appellationCode: Código IG/DO
+appellationName: IG/DO
+parentCode: Código unidad superior
+parentName: Unidad geográfica superior
+typeNationalCode: Tipo de indicación nacional
+typeInternationalCode: Tipo de indicación internacional
+#productCategoryName: Tipo de producto
+productCategoryName: Tipo de producto
+productType: Categorías de producto
+#productType: Categorías de producto
+referenceName: Base jurídica
+url: Enlace a base jurídica
+#Stat
+statType: Serie
+measureType: Unidad
+metricCompType: Producto
+year: Año
+value: Valor
+infoSource: Fuente
+grapesDestination: Destino de la uva
+#Variety
+isMainVariety: Variedad principal
+areaCultivated: Superficie
+areaYear: Año superficie cultivada
+grapeVarietyName: Nombre de la variedad
+codeVivc: Código VIVC
+infoCodeVivc: Catálogo Internacional de Variedades de Vitis. Solo algunos países utilizan y reconocen este código.
+varietyNationalNameVivc: ¿Nombre de la variedad?
+synonym: Sinónimo
+nationalVarietyId: Código nacional de la variedad
+grapeColor: Color de la uva
+
+internetAdress: Dirección web
+#Fiche OIV
+area: Superficie
+Individual Consumption: Consumo per cápita
+count variety: Número de variedades
+count education: Número de cursos de formación
+production: Producción
+prod: Producción
+consumption: Consumo
+import: Importaciones
+export: Exportaciones
+indovcons: Consumo per cápita
+total count variety: Número total de variedades
+
+total count education: Número total de cursos de formación
+
+Zone: Zona
+Database: Base de datos
+World: Mundo
+Naming: Denominaciones
+Variety: Variedad
+Varieties: Variedades
+Education: Cursos de formación
+Statistic: Estadísticas
+Annual statistics of: Estadísticas anuales de
+Download CSV: Descargar CSV
+Download JPEG image: Descargar JPEG
+Download PDF document: Descargar PDF
+Download PNG image: Descargar PNG
+Download SVG vector image: Descargar
+Download XLS: Descargar XLS
+in: en
+Advanced search: Búsqueda avanzada
+Year min: Año mín.
+Year max: Año máx.
+Search: Búsqueda
+Data provided by Membership: Datos facilitados por los Estados miembros
+Data not available: Datos no disponibles
+Click on a category or series: Haga clic en una categoría o serie
+for details of the data: para consultar los datos en detalle
+To have an advanced search with a comparison of the statistics: Para una búsqueda avanzada con comparación de estadísticas
+click here: haga clic aquí
+GRAPHIC: GRÁFICO
+No results found for your search: No se ha encontrado ningún resultado para su búsqueda
+No results found: No se ha encontrado ningún resultado
+error response: Error de respuesta
+#APPELATION Type du produit
+AROMATISED_WINE: Vino aromatizado
+GRAPE: Uva
+GRAPE_JUICE: Zumo de uva
+MISTELLE: Mistela
+SPECIAL_WINE: Vino especial
+SPIRITUOUS_BEVERAGE: Bebida espirituosa
+#WINE: Vino
+WINE_VINEGAR: Vinagre de vino
+#APPELATION Type d'indication type 2
+GI: GI
+PDO: PDO
+PGI: PGI
+WINE_ORIGIN: Wine of origin
+#CEPAGE Variété principale
+Y: SÍ
+N: NO
+#Statistiques liste des produits
+AREA_VINEYARD: Superficie del viñedo
+GRAPES: Uvas frescas
+TABLE_GRAPES: Uvas de mesa
+DRIED_GRAPES: Pasas
+WINE: Vino
+AREA: Superficie
+JUICE_GRAPES: Zumo de uva
+JUICE_MUST: Zumos y mostos
+POPULATION: Población
+#Statistiques categorie des statistiques
+CONSUMPTION: Consumo
+PRODUCTION: Producción
+IMPORTATION: Importaciones
+EXPORTATION: Exportaciones
+
+TOTAL_AREA: Superficie total
+CONSUMPTION_CAPITA: Consumo per cápita
+#Statistiques indicator des statistiques
+A_SURFACE: Superficie de viñedo
+CONSUMPTION_PRODUCT_GRAPES: CONSUMPTION_PRODUCT_GRAPES
+C_PROD_GRP: Producción de uvas frescas
+F_PROD_TABLE_GRP: Producción de uvas de mesa
+G_PROD_DRIED_GRP: Producción de pasas
+H_IMPORT_GRP: Importaciones de uvas frescas
+INDUSTRIAL_USE_WINE: Usos industriales del vino
+I_EXPORT_GRP: Exportaciones de uvas frescas
+J_IMPORT_DRIED_GRP: Importaciones de pasas
+K_EXPORT_DRIED_GRP: Exportaciones de pasas
+L_COMSUMPTION_TABLE_GRP: Consumo de uvas de mesa
+M_COMSUMPTION_CAPITA_GRP: M_COMSUMPTION_CAPITA_GRP
+NATIONAL_GRAPE_ACCORDING_TO_VOCATION: NATIONAL_GRAPE_ACCORDING_TO_VOCATION
+N_CONSUMPTION_DRIED_GRP: Consumo de pasas
+POPULATION_PLUS_15: Población (+15)
+PRODUCTION_JUICE: Producción de zumo de uva
+PRODUCTION_MUST: Producción de mosto
+P_PRODUCTION_WINE: Producción de vino
+Q_IMPORT_WINE: Importaciones de vino
+REPARTITION_PRODUCT_AREA: Reparto por variedad
+R_EXPORT_WINE: Exportaciones de vino
+S_CONSUMPTION_WINE: Consumo de vino
+TOTAL_POPULATION: Población
+U1_STOCK_WINE: Existencias de vino
+CONSUMPTION_CAPITA_15: Consumo per cápita (+15)
+CONSUMPTION_WINE_CAPITA_COMPUTED: Consumo de vino per cápita (+15)
+COMSUMPTION_CAPITA_GRP_COMPUTED: Consumo de uvas de mesa per cápita
+CONSUMPTION_DRIED_GRP_PER_CAPITA_COMPUTED: Consumo de pasas per cápita
+COMSUMPTION_CAPITA_TABLE_GRP_COMPUTED: Consumo de uvas de mesa per cápita
+#Unite
+MILLE_HL: 1000 hL
+#MILLE_QX: 1000 qq
+HA: ha
+TONNES: toneladas
+tonnes: toneladas
+1000 QX: toneladas
+#KG_CAPITA: 1000 kg
+KG_CAPITA: kg/persona
+MILLE_S: L/persona (+15)
+L_PER_CAPITA_15: L/persona (+15)
+#########################
+# ADV SEARCH
+#########################
+Choose all continents: Seleccionar todos los continentes
+Choose all countries: Seleccionar todos los países
+Results: Resultados
+Home: Inicio
+Export to: Exportar en
+Graphic: Gráfico
+list: Serie
+Your selection: Su selección
+records: líneas
+of: de
+No data to exported: No hay datos para exportar
+Please select at least one country: Seleccione un país como mínimo
+Export type not available: Tipo de exportación no disponible
+Year Min must be less than Year Max: El año mín. debe ser anterior al año máx.
+All: Todo
+remove all: Eliminar todo
+select all: Seleccionar todo
+select all countries: Seleccionar todos los países
+Refine your search: Restringir la búsqueda
+Membre OIV: Miembro de la OIV
+tradeBloc: Continente
+World: Mundo
+go to home: Volver al inicio
+choose stat: Por favor seleccione al menos una serie
+clic stats: Después de seleccionar la serie, haga clic en las selecciones para mostrar el gráfico
+Reset: Reiniciar
+Details: Detalles
+Connexion: Acceder
+Export: Exportar
+Login: Iniciar sesión
+Title oiv: Organización Internacional de la Viña y el Vino
+##########################
+##### Trade Bloc
+#########################"
+Europe: Europa
+Asie: Asia
+Afrique: Africa
+Amerique: América
+Oceanie: Oceanía
