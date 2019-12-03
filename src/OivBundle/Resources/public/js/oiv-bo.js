@@ -230,8 +230,9 @@ $(function($){
                     var prevCtg = '';
                     $.each(response.data, function (key, items) {
                         if (prevCtg == '' || prevCtg == items.productType) {
-                            html += prevCtg == '' ? '<a href="javascript:;" class="list-group-item">' : ', ';
-                            html += '<span class="list-group-item-heading">' + items.productCategoryName + '</span>';
+                            html += prevCtg == '' ? '<a href="javascript:;" class="list-group-item">' : '';
+                            html += (prevCtg != '' && items.productCategoryName !== null && items.productCategoryName != '') ? ', ':'';
+                            html += (items.productCategoryName !== null && items.productCategoryName != '') ? '<span class="list-group-item-heading">' + items.productCategoryName + '</span>':'';
                         } else {
                             html += '<p class="list-group-item-text">';
                             html += '<button class="btn btn-primary" type="button">' + prevCtg + '</button>';
@@ -331,32 +332,49 @@ $(function($){
                         }
                     }
                 });
-                if (typeof content.namingProducts != 'undefined') {
+                if (typeof content.namingProducts != 'undefined' &&  content.namingProducts.length >0) {
                     var elm = $('#naming-products-edit table tbody tr').first().clone();
                     $(elm).find('div.bs-select').remove();
-                    $('#naming-products-edit table tbody').html('');
-                    $.each(content.namingProducts, function(key, val){
-                        if ($('#naming-products-edit table tbody tr').eq(key).length == 0) {
-                            $('#naming-products-edit table tbody').append('<tr>'+$(elm).html()+'</tr>');
-                        }
-                        var editElm = $('body').find('#naming-products-edit table tbody tr').eq(key);
-                        $(editElm).find('input[name="products[]"]').val(val.productCategoryName);
-                        $(editElm).find('select[name="categories[]"]').val(val.productType);
-                        $(editElm).find('select[name="categories[]"]').attr('data-val',val.productType);
+                    if (content.namingProducts.length >0) {
+                        $('#naming-products-edit table tbody').html('');
+                            $.each(content.namingProducts, function(key, val){
+                                if ($('#naming-products-edit table tbody tr').eq(key).length == 0) {
+                                    $('#naming-products-edit table tbody').append('<tr>'+$(elm).html()+'</tr>');
+                                }
+                                var editElm = $('body').find('#naming-products-edit table tbody tr').eq(key);
+                                $(editElm).find('input[name="products[]"]').val(val.productCategoryName);
+                                $(editElm).find('select[name="categories[]"]').val(val.productType);
+                                $(editElm).find('select[name="categories[]"]').attr('data-val',val.productType);
+                                $(editElm).find('select[name="categories[]"]').selectpicker('refresh');
+
+                        });
+                    } else {
+                        $('#naming-products-edit table tbody').append('<tr>' + $(elm).html() + '</tr>');
+                        var editElm = $('body').find('#naming-products-edit table tbody tr').eq(0);
+                        $(editElm).find('input[name="products[]"]').val('');
+                        $(editElm).find('select[name="categories[]"]').val('');
+                        $(editElm).find('select[name="categories[]"]').attr('data-val','');
                         $(editElm).find('select[name="categories[]"]').selectpicker('refresh');
-                    });
+                    }
                 }
                 if (typeof content.namingReferences != 'undefined') {
                     var elm = $('#naming-references-edit table tbody tr').first();
                     $('#naming-references-edit table tbody').html('');
-                    $.each(content.namingReferences, function(key, val){
-                        if ($('#naming-references-edit table tbody tr').eq(key).length == 0) {
-                            $('#naming-references-edit table tbody').append('<tr>'+$(elm).html()+'</tr>');
-                        }
-                        var editElm = $('body').find('#naming-references-edit table tbody tr').eq(key);
-                        $(editElm).find('input[name="references[]"]').val(val.referenceName);
-                        $(editElm).find('input[name="urls[]"]').val(val.url);
-                    });
+                    if (content.namingReferences.length >0) {
+                        $.each(content.namingReferences, function (key, val) {
+                            if ($('#naming-references-edit table tbody tr').eq(key).length == 0) {
+                                $('#naming-references-edit table tbody').append('<tr>' + $(elm).html() + '</tr>');
+                            }
+                            var editElm = $('body').find('#naming-references-edit table tbody tr').eq(key);
+                            $(editElm).find('input[name="references[]"]').val(val.referenceName);
+                            $(editElm).find('input[name="urls[]"]').val(val.url);
+                        });
+                    } else {
+                        $('#naming-references-edit table tbody').append('<tr>' + $(elm).html() + '</tr>');
+                        var editElm = $('body').find('#naming-references-edit table tbody tr').eq(0);
+                        $(editElm).find('input[name="references[]"]').val('');
+                        $(editElm).find('input[name="urls[]"]').val('');
+                    }
                 }
                 $('#form-edit-' + content.dbType).find('select').trigger('change');
                 $('#form-edit-' + content.dbType).find('input[type=checkbox]').uniform('update');
@@ -453,7 +471,63 @@ $(function($){
                     hearder += '<th>Actions</th>';
                     hearderFilter += '<td><button class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i></button></td>';
                     $.each(content.labelfields, function (key, val) {
-                        if (key != 'id') {
+
+                        if(key == 'tradeBloc'){
+                            hearder += '<th data-sort="' + key + '" class="sorting '+key+'" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1" ><span>' + val + '</span></th>';
+                            hearderFilter += '<td rowspan="1" colspan="1" class="'+key+'"><a><select name="countryCode" class="form-control form-filter input-sm filter-col">' +
+                                '<option value="">Tout</option><option value="AFRIQUE">Afrique</option>' +
+                                '<option value="AMERIQUE">Amérique</option><option value="ASIE">Asie</option>' +
+                                '<option value="EUROPE">Europe</option><option value="OCEANIE">Océanie</option>' +
+                                '</select><i class="fa fa-remove"></i><i class="icon-magnifier"></i></a></td>';
+                        }else if(key == 'measureType'){
+                            hearder += '<th data-sort="' + key + '" class="sorting '+key+'" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1" ><span>' + val + '</span></th>';
+                            hearderFilter += '<td rowspan="1" colspan="1" class="'+key+'"><a><select name="'+ key +'" class="form-control form-filter input-sm filter-col">' +
+                                '<option value="">Tout</option><option value="TONNES">Tonnes</option>' +
+                                '<option value="MILLE_S">1000s</option><option value="MILLE_HL">1000 hl</option>' +
+                                '<option value="HA">HA</option><option value="TONNES_PER_HECTARE">T/ha</option>' +
+                                '<option value="KG_CAPITA">kg/capita</option><option value="L_PER_CAPITA_15">l/capita (+15)</option>' +
+                                '</select><i class="fa fa-remove"></i><i class="icon-magnifier"></i></a></td>';
+                        }else if(key == 'statType'){
+                            hearder += '<th data-sort="' + key + '" class="sorting '+key+'" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1" ><span>' + val + '</span></th>';
+                            hearderFilter += '<td rowspan="1" colspan="1" class="'+key+'"><a><select name="'+ key +'" class="form-control form-filter input-sm filter-col">' +
+                                '<option value="">Tout</option>' +
+                                '<option value="C_PROD_GRP">Production de raisins frais</option>'+
+                                '<option value="I_EXPORT_GRP">Exportations de raisins frais</option>'+
+                                '<option value="H_IMPORT_GRP">Importations de raisins frais</option>'+
+                                '<option value="F_PROD_TABLE_GRP">Production de raisins de table</option>'+
+                                '<option value="L_COMSUMPTION_TABLE_GRP">Consommation de raisins de table</option>'+
+                                '<option value="COMSUMPTION_CAPITA_TABLE_GRP_COMPUTED">Consommation de raisins de table per capita</option>'+
+                                '<option value="G_PROD_DRIED_GRP">Production de raisins secs</option>'+
+                                '<option value="K_EXPORT_DRIED_GRP">Exportations de raisins secs</option>'+
+                                '<option value="J_IMPORT_DRIED_GRP">Importations de raisins secs</option>'+
+                                '<option value="N_CONSUMPTION_DRIED_GRP">Consommation de raisins secs</option>'+
+                                '<option value="CONSUMPTION_DRIED_GRP_PER_CAPITA_COMPUTED">Consommation de raisins secs per capita</option>'+
+                                '<option value="P_PRODUCTION_WINE">Production de vin</option>'+
+                                '<option value="R_EXPORT_WINE">Exportations de vin</option>'+
+                                '<option value="Q_IMPORT_WINE">Importations de vin</option>'+
+                                '<option value="S_CONSUMPTION_WINE">Consommation de vin</option>'+
+                                '<option value="CONSUMPTION_WINE_CAPITA_COMPUTED">Consommation de vin per capita (+15)</option>'+
+                                '<option value="YIELD_COMPUTED">Rendement_calc</option>'+
+                                '<option value="REPARTITION_PRODUCT_AREA">Répartition par variété</option>'+
+                                '<option value="T_COMSUMPTION_JUICE">Consommation de jus</option>'+
+                                '<option value="PRODUCTION_JUICE_MUST">Production de jus et mouts</option>'+
+                                '<option value="INPUT_PRODUCTION_WINE_COMPUTED">Input vin</option>'+
+                                '<option value="INPUT_PRODUCTION_DRIED_GRP_COMPUTED">Input raisins secs</option>'+
+                                '<option value="INPUT_PRODUCTION_JUICE_MUST_COMPUTED">Input JM</option>'+
+                                '<option value="COMSUMPTION_DRIED_GRP_COMPUTED">Consommation de raisins_secs_calc</option>'+
+                                '<option value="COMSUMPTION_WINE_COMPUTED">Consommation de vin_calc</option>'+
+                                '<option value="INDUSTRIAL_USE_WINE">Usages industriels de vin</option>'+
+                                '<option value="U1_STOCK_WINE">Stocks de vin</option>'+
+                                '<option value="TOTAL_POPULATION">Population</option>'+
+                                '<option value="POPULATION_PLUS_15">Population (+15)</option>'+
+                                '<option value="COMSUMPTION_TABLE_GRP_COMPUTED_M1">Consommation de raisins de table_calc_m1</option>'+
+                                '<option value="COMSUMPTION_TABLE_GRP_COMPUTED_M2">Consommation de raisins de table_calc_m2</option>'+
+                                '<option value="PRODUCTION_TABLE_GRP_COMPUTED_M1">Production de raisins de table_calc_m1</option>'+
+                                '<option value="PRODUCTION_TABLE_GRP_COMPUTED_M2">Production de raisins de table_calc_m2</option>'+
+                                '<option value="PRODUCTION_TABLE_GRP_COMPUTED_M3">Production de raisins de table_calc_m3</option>'+
+                                '<option value="PRODUCTION_TABLE_GRP_COMPUTED_M4">Production de raisins de table_calc_m4</option>'+
+                                '</select><i class="fa fa-remove"></i><i class="icon-magnifier"></i></a></td>';
+                        }else if (key != 'id' && key != 'listReferenceName') {
                             hearder += '<th data-sort="' + key + '" class="sorting '+key+'" tabindex="0" aria-controls="datatable_orders" rowspan="1" colspan="1" ><span>' + val + '</span></th>';
                             hearderFilter += '<td rowspan="1" colspan="1" class="'+key+'"><a><input name="'+ key +'" class="form-control form-filter input-sm filter-col" type="text"><i class="fa fa-remove"></i><i class="icon-magnifier"></i></a></td>';
                         }
@@ -1007,7 +1081,7 @@ $(function($){
         this._initSearchTable = function() {
             $('body').on('click','#datatable_orders tr.filter .icon-magnifier', function () {
                 var values = '';
-                $('body').find('#datatable_orders tr.filter input').each(function(){
+                $('body').find('#datatable_orders tr.filter input,#datatable_orders tr.filter select').each(function(){
                     if ($(this).val()) {
                         values += '&tableFilters['+$(this).attr('name')+']='+$(this).val();
                     }
@@ -1139,6 +1213,17 @@ $(function($){
          */
         this._initKeypSearch = function() {
             $(document).on("keyup", "thead input.form-filter", function () {
+                if ($('.pagination.dataTables_length').hasClass('hide')) {
+                    var value = $(this).val().toLowerCase();
+                    var index = $(this).parents().eq(1).index() + 1;
+                    var table = $(this).parents().eq(4);
+                    $(table).find("tbody tr").filter(function () {
+                        $(this).toggle($(this).find('td:nth-child(' + index + ')').text().toLowerCase().indexOf(value) > -1)
+                    });
+                    $('#count-result').text($(table).find("tbody tr:visible").length);
+                }
+            });
+            $(document).on("change", "thead select.form-filter", function () {
                 if ($('.pagination.dataTables_length').hasClass('hide')) {
                     var value = $(this).val().toLowerCase();
                     var index = $(this).parents().eq(1).index() + 1;

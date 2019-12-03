@@ -45,7 +45,7 @@ class HandleNamingData
         $aProductsType = isset($aRequestedData['products']) ? $aRequestedData['products']:[];
         $aCategories = isset($aRequestedData['categories']) ? $aRequestedData['categories']:[];
         $aReferences = isset($aRequestedData['references']) ? $aRequestedData['references']:[];
-        $aUrls = isset($aRequestedData['urls']) ? $aRequestedData['references']:[];
+        $aUrls = isset($aRequestedData['urls']) ? $aRequestedData['urls']:[];
         $maxLengthProduct = count($aCategories);
         $maxReference = count($aReferences);
         if ($maxLengthProduct == 0 || $maxReference ==0){
@@ -151,15 +151,21 @@ class HandleNamingData
      */
 	public function checkContentAppelationCode($data,$tag)
 	{
-		$aAllAppellationCode = $this->_oDoctrine->getRepository('OivBundle:NamingData')->getAllAppelationCode();
         $aIndex = NamingData::getIndexCodeByTag($tag);
-        $this->checkNotDuplicatedCode($data,$aIndex['indexAppelationCode']);
+        $aAllAppellationCode = $this->_oDoctrine->getRepository('OivBundle:NamingData')->getAllAppelationCode(['countryCode'=>$data[0][$aIndex['indexCountryCode']]]);
+        $this->checkNotDuplicatedCode($data,$aIndex['indexAppelationCode'],$aIndex['indexParentCode']);
         /** Add new code and name to the existent list that is given from db */
         array_walk($data, function($val) use (&$aAllAppellationCode,$aIndex) {
             if ($val[$aIndex['indexAppelationCode']] && $val[$aIndex['indexAppelationName']] && !isset($aAllAppellationCode[$aIndex['indexAppelationCode']])) {
                 $aAllAppellationCode[$val[$aIndex['indexAppelationCode']]] = $val[$aIndex['indexAppelationName']];
             }
         });
+        /** Set All AppellationCode to Upper */
+        $aUpperAllAppellationCode = [];
+        foreach($aAllAppellationCode as $code => $name) {
+            $aUpperAllAppellationCode[strtoupper($code)] = $name;
+        }
+        $aAllAppellationCode = $aUpperAllAppellationCode;
         /** check that all code/name exist */
         $aCurrentAppellationCode = [];
         $aCurrentAppelationName = [];
@@ -199,19 +205,22 @@ class HandleNamingData
      * Threow eror if data has duplicated code
      * @param $data
      * @param $indexAppelationCode
+     * @param $indexParentCode
      * @throws \Exception
      */
-    public static function checkNotDuplicatedCode($data,$indexAppelationCode)
+    public static function checkNotDuplicatedCode(&$data,$indexAppelationCode,$indexParentCode)
     {
         $aUniqueCode = [];
-        foreach ($data as $index => $row){
-            $uper = ucwords(trim($row[$indexAppelationCode]));
+        foreach ($data as $index => &$row){
+            $uper = strtoupper(trim($row[$indexAppelationCode]));
             $lower = strtolower(trim($row[$indexAppelationCode]));
             if (isset($aUniqueCode[$uper]) || isset($aUniqueCode[$lower])) {
                 throw new \Exception('Code dupliqué plusieur fois : '.$row[$indexAppelationCode]);
             }
             $aUniqueCode[$uper] = true;
             $aUniqueCode[$lower] = true;
+            $row[$indexAppelationCode] = $uper;
+            $row[$indexParentCode] = strtoupper(trim($row[$indexParentCode]));
         }
     }
 
@@ -225,7 +234,7 @@ class HandleNamingData
 	public static function searchCode($aAllAppellationCode, $code, $name, $line,$isParent=false)
 	{
         $line = $line+2;
-	    $code = ucwords($code);
+	    $code = strtoupper($code);
 		if( trim($code) == '' && trim($name) == '' && !$isParent) {
 			throw new \Exception('Code et Nom appellation sont vide dans la ligne '.$line);
 		} elseif (trim($code) == '') {

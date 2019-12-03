@@ -310,6 +310,18 @@ class BaseRepository extends EntityRepository
         }
     }
 
+    /**
+     * @param array $aCriteria
+     */
+    protected function addMeasureTypeCriteria($aCriteria = [])
+    {
+        if (!empty($aCriteria['measureType'])) {
+            $this->_queryBuilder
+                ->Andwhere('o.measureType = :measureType')
+                ->setParameter('measureType',$aCriteria['measureType']);
+        }
+    }
+
 
 
 }

@@ -273,6 +273,7 @@ class StatDataRepository extends BaseRepository
         $this->addCountryCriteria($aCriteria);
         $this->addYearCriteria($aCriteria);
         $this->addValueCriteria($aCriteria);
+        $this->addMeasureTypeCriteria($aCriteria);
 
         if ($zone) {
             $this->_queryBuilder

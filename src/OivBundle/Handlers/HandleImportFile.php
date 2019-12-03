@@ -83,7 +83,7 @@ class HandleImportFile
                 $alistCtgAppelation = $this->_oDoctrine->getRepository('OivBundle:NamingData')->getDistinctValueField('productType');
                 $aIdentifierCtgAppelation = [];
                 foreach ($alistCtgAppelation as $ctg) {
-                    $aIdentifierCtgAppelation[$ctg['productType']] = $this->_oTranslator->trans($ctg['productType']);
+                    $aIdentifierCtgAppelation[$ctg['productType']] = strtolower($this->_oTranslator->trans($ctg['productType']));
                 }
             }
             if (in_array($table,['NamingData','EducationData','VarietyData'])) {
@@ -99,7 +99,8 @@ class HandleImportFile
                 if ($table == 'StatData') {
                     $row[$indexStatType] = array_search($row[$indexStatType],$aIdentifierStatType);
                 }elseif ($table == 'NamingData'){
-                    $row[$indexProductType] = array_search($row[$indexProductType],$aIdentifierCtgAppelation);
+                    $identifierProductType = array_search(strtolower($row[$indexProductType]),$aIdentifierCtgAppelation);
+                    $row[$indexProductType] = $identifierProductType ? $identifierProductType:$row[$indexProductType];
                 }
 
                 $oData = new $class();

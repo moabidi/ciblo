@@ -84,8 +84,8 @@ class BaseController extends Controller
     protected function getExportGLobalSearch($table, $aCriteria = [], $view=false, $offset=0, $limit =200, $sort= null, $order = null)
     {
         $groupBy = $view == 'importBo' && $table == 'NamingData' ? 'appellationCode':null;
-        $groupBy = $view == 'importBoNamingProduct' && $table == 'NamingData' ? 'productCategoryName':$groupBy;
-        $groupBy = $view == 'importBoNamingReference' && $table == 'NamingData' ? 'referenceName':$groupBy;
+        $groupBy = $view == 'importBoNamingProduct' && $table == 'NamingData' ? 'productCategoryName,o.productType,o.appellationCode':$groupBy;
+        $groupBy = $view == 'importBoNamingReference' && $table == 'NamingData' ? 'referenceName,o.url,o.appellationCode':$groupBy;
         $result = $this->getDoctrine()->getRepository('OivBundle:' . $table)->getExportResult($aCriteria,$offset, $limit, $sort, $order,$groupBy);
         //var_dump($view,in_array($view, ['tab2','tab3','export','exportBo','importBo','importBoNamingProduct','importBoNamingReference']),$result);die;
         if (in_array($view, ['tab2','tab3','export','exportBo','importBo','importBoNamingProduct','importBoNamingReference']) && $result) {
@@ -154,14 +154,15 @@ class BaseController extends Controller
             $results = $this->getExportGLobalSearch($table, $aCriteria, $view,0,null,$sort);
             if (in_array($view, ['importBoNamingProduct','importBoNamingReference']) && isset($aCriteria['appellationName']) && count($aCriteria['appellationName'])) {
                 /** add new code to the result to be exported on file */
-                array_walk($results, function ($row) use (&$aCriteria) {
+                array_walk($results, function (&$row) use (&$aCriteria) {
+                    $row['appellationCode'] = strtoupper($row['appellationCode']);
                     if (isset($aCriteria['appellationName'][$row['appellationCode']])) {
                         unset($aCriteria['appellationName'][$row['appellationCode']]);
                     }
                 });
                 if (count($aCriteria['appellationName'])) {
                     array_walk($aCriteria['appellationName'], function ($name,$code) use (&$results) {
-                        $results[] = [$name,$code,'',''];
+                        $results[] = [$name,strtoupper($code),'',''];
                     });
                 }
             }

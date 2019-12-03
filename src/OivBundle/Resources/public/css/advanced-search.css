@@ -202,6 +202,21 @@ span#attach.active {
 .pointer {
     cursor: pointer
 }
+#datatable_orders thead td.countryCode input.form-filter,#datatable_orders thead th.countryCode span,
+#datatable_orders thead td.appellationCode input.form-filter,#datatable_orders thead th.appellationCode span,
+#datatable_orders thead td.parentCode input.form-filter,#datatable_orders thead th.parentCode span,
+#datatable_orders thead td.typeNationalCode input.form-filter,#datatable_orders thead th.typeNationalCode span,
+#datatable_orders thead td.productType input.form-filter,#datatable_orders thead th.productType span,
+#datatable_orders thead td.url input.form-filter,#datatable_orders thead th.url span,
+#datatable_orders thead td.typeInternationalCode input.form-filter,#datatable_orders thead th.typeInternationalCode span,
+#datatable_orders thead td.lastDate input.form-filter,#datatable_orders thead th.lastDate span,
+#datatable_orders thead td.year input.form-filter,#datatable_orders thead th.year span,
+#datatable_orders thead td.tradeBloc input.form-filter,#datatable_orders thead th.tradeBloc span,
+#datatable_orders thead td.measureType input.form-filter,#datatable_orders thead th.measureType span,
+#datatable_orders thead td.value input.form-filter,#datatable_orders thead th.value span{
+    width: 80px;
+    white-space: normal;
+}
 
 /** End popup Naming **/
 @media (min-width: 992px) {

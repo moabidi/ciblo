@@ -155,13 +155,13 @@ class NamingDataRepository extends BaseRepository
         $this->_queryBuilder = $this->getEntityManager()->createQueryBuilder();
         if ($isCtg) {
             $this->_queryBuilder
-                ->select('o.productCategoryName, o.productType')
-                ->andWhere('o.productCategoryName is not null');
+                ->select('o.productCategoryName, o.productType');
+                //->andWhere('o.productCategoryName is not null');
             if ($groupByCtg) {
                 $this->_queryBuilder
                     ->orderBy('o.productCategoryName','ASC')
-                    ->addOrderBy('o.productType','ASC')
-                    ->addGroupBy('o.productCategoryName');
+                    ->addOrderBy('o.productType','ASC');
+                    //->addGroupBy('o.productCategoryName');
             }else{
                 $this->_queryBuilder
                     ->orderBy('o.productType','ASC')
@@ -171,7 +171,6 @@ class NamingDataRepository extends BaseRepository
         } else {
             $this->_queryBuilder
                 ->select('o.referenceName, o.url')
-                ->andWhere('o.productCategoryName is not null')
                 ->addOrderBy('o.referenceName', 'ASC');
             if ($groupByCtg) {
                 $this->_queryBuilder->addGroupBy('o.referenceName');

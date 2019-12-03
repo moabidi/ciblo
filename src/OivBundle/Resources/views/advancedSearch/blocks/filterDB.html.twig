@@ -17,15 +17,15 @@
         {% include 'OivBundle:filters:'~ tpl ~'.html.twig' with {'isAdvSearch':true} %}
         {% if dbType == 'stat' %}
             {% if isBo|default(false) %}
-            <li class="sidebar-search-wrapper">
-                <a class="text-center">{{ 'Membre OIV'|trans }}
-                    <div class="checkbox-list" style="float: right;">
-                        <label class="checkbox-inline" style="vertical-align: top;">
-                            <input id="memberShip" name="memberShip" class="db-field" type="checkbox" value="1" style="float: right;">
-                        </label>
-                    </div>
-                </a>
-            </li>
+            {#<li class="sidebar-search-wrapper">#}
+                {#<a class="text-center">{{ 'Membre OIV'|trans }}#}
+                    {#<div class="checkbox-list" style="float: right;">#}
+                        {#<label class="checkbox-inline" style="vertical-align: top;">#}
+                            {#<input id="memberShip" name="memberShip" class="db-field" type="checkbox" value="1" style="float: right;">#}
+                        {#</label>#}
+                    {#</div>#}
+                {#</a>#}
+            {#</li>#}
             {% endif %}
             <li class="sidebar-search-wrapper">
                 <a class="text-center">{{ 'Year min'|trans }}</a>

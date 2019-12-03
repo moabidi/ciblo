@@ -199,7 +199,7 @@ class NamingData
      */
     public function setAppellationCode($appellationCode)
     {
-        $this->appellationCode = trim(ucwords($appellationCode));
+        $this->appellationCode = trim(strtoupper($appellationCode));
     }
 
     /**
@@ -231,7 +231,7 @@ class NamingData
      */
     public function setParentCode($parentCode)
     {
-        $this->parentCode = ucwords($this->setNullIfEmpty($parentCode));
+        $this->parentCode = strtoupper($this->setNullIfEmpty($parentCode));
     }
 
     /**
@@ -415,8 +415,8 @@ class NamingData
             'countryCode' => 'Pays',
             'appellationName' => 'IG/AO',
             'appellationCode' => 'Code IG/AO',
-            'parentCode' => 'Code unité supérieure',
             'parentName' => 'Unité géographique supérieure',
+            'parentCode' => 'Code unité supérieure',
             'typeNationalCode' => 'Type d\'indication national',
             'typeInternationalCode' => 'Type d\'indication international'
         ];
@@ -494,6 +494,7 @@ class NamingData
         }
         $aIndex = [];
         $aHeader = array_values($aHeader);
+        $aIndex['indexCountryCode'] = array_search('countryCode', $aHeader);
         $aIndex['indexAppelationCode'] = array_search('appellationCode', $aHeader);
         $aIndex['indexAppelationName'] = array_search('appellationName', $aHeader);
         $aIndex['indexParentCode'] = array_search('parentCode', $aHeader);
